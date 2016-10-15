@@ -9,7 +9,7 @@ const passport = require('passport');
 
 const port = 3000;
 
-// load local modules
+// load signup modules
 const apiRouter = require('../api-server');
 const database = require('../bin/database');
 const authRouter = require('../auth-server');

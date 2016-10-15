@@ -1,14 +1,15 @@
 
-const signupRouter = require('./api/signup');
+const localAccountRouter = require('./api/local-account');
+const socialAccountRouter = require('./api/social-account');
 const userRouter = require('./api/user');
 
 exports.initialize = (app) => {
     // Set Passport
 
     // Set API routes
-    // app.route('/signup'), signupRouter(app));
-    // enter into router, when start '/users'
-    // app.route('/users', userRouter(app));
+    // enter into router, when start the path, ex.'/signup-account/*'
+    app.use('/local-account', localAccountRouter);
+    app.use('/social-account', socialAccountRouter);
     app.use('/users', userRouter);
 };
 

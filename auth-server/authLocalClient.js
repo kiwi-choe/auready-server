@@ -1,7 +1,7 @@
 const OauthClient = require('../models/oauthClient');
 const predefine = require('./predefine');
 
-// Register local client info
+// Register signup client info
 const trustedClientInfo = {
     name: 'localAccount',
     grantType: [

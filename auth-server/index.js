@@ -6,14 +6,14 @@ exports.initialize = (app) => {
     // Start oauth2 server
     authServer.initialize();
 
-    // Add local account client info
-    require('./authLocalAccount')();
+    // Add signup client info
+    require('./authLocalClient')();
 
     // Set PassportStrategy
-    passportStrategy.PublicClient();
-    passportStrategy.Bearer();
+    passportStrategy.setBasic();
+    passportStrategy.setBearer();
 
     // Set routes for auth
-    app.route('/oauth2/token', require('./auth.controller')(app));
+    app.use('/auth/token', require('./auth.controller'));
 }
 

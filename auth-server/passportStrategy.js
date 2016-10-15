@@ -1,6 +1,7 @@
 const passport = require('passport');
-const PublicClientStrategy = require('passport-oauth2-public-client').Strategy;
+const BasicStrategy = require('passport-http').BasicStrategy;
 const BearerStrategy = require('passport-http-bearer').Strategy;
+var oauth2orize = require('oauth2orize');
 
 const predefine = require('./predefine');
 const tokenizer = require('../utils/tokenizer');
@@ -8,40 +9,59 @@ const tokenizer = require('../utils/tokenizer');
 const OauthClient = require('../models/oauthClient');
 const User = require('../models/user');
 
-const publicClientStrategy = () => {
+const basicStrategy = () => {
 
-    passport.use(new PublicClientStrategy({
+    passport.use(new BasicStrategy({
         passReqToCallback: true
-    }, (req, clientId, done) => {
-        console.log(req.body);
-        if(req.body.grant_type === predefine.oauth2.type.password.name) {
-            // Find client by id
-            OauthClient.findOne({clientId: req.body.client_id}, (err, oauthClient) => {
-                if(err) {
-
-                }
-                if(!oauthClient) {
-
-                }
-                if(oauthClient.grantType[0] !== req.body.grant_type) {
-
-                }
-                // if there is no error, oauth2 processing is continued
-                return done(null, oauthClient);
-            });
-        }
-        else {
-            // this error will be handled by oauth2orize
-            const error = new oauth2orize.TokenError(
-                req.body.grant_type + ' type is not supported',
-                'unsupported_grant_type');
+    }, (req, clientId, clientSecret, done) => {
+        console.log('enter basic strategy');
+        if (!req.body.grant_type) {
+            var error = new oauth2orize.TokenError(
+                'there is no grant_type field in body',
+                'invalid_request');
             return done(error);
         }
+
+        switch (req.body.grant_type) {
+            case predefine.oauth2.type.password.name:
+                break;
+            default:
+                var error = new oauth2orize.TokenError(
+                    'This client cannot be used for ' + req.body.grant_type,
+                    'unsupported_grant_type');
+                return done(error);
+        }
+
+        // validate client credential
+        OauthClient.findOne({
+            clientId: clientId,
+            clientSecret: clientSecret
+        }, (err, oauthClient) => {
+            if (err) {
+                var error = new oauth2orize.TokenError(
+                    'server error during validating client credential',
+                    'server_error');
+                return done(error);
+            }
+            if (oauthClient === null) {
+                // this error will be handled by oauth2orize
+                var error = new oauth2orize.TokenError(
+                    'Client authentication failed',
+                    'invalid_client');
+                return done(error);
+            }
+            if (oauthClient.grantType[0] !== req.body.grant_type) {
+                done(new oauth2orize.TokenError(
+                    'This client cannot be used for ' + req.body.grant_type,
+                    'unsupported_grant_type'));
+            }
+            return done(null, oauthClient);
+        });
     }));
 };
 
 const bearerStrategy = () => {
-    
+
     passport.use(new BearerStrategy({
         passReqToCallback: true
     }, (req, accessToken, done) => {
@@ -71,12 +91,8 @@ const bearerStrategy = () => {
     }));
 };
 
-const localSignupStrategy = () => {
-
-};
 
 module.exports = {
-    PublicClient: publicClientStrategy,
-    Bearer: bearerStrategy,
-    LocalSignup: localSignupStrategy
+    setBasic: basicStrategy,
+    setBearer: bearerStrategy
 }

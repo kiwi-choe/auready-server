@@ -26,7 +26,7 @@ const initialize = () => {
     });
 
     // set exchange token
-    require('./exchangeToken')(server);
+    // require('./exchangeToken')(server);
 };
 
 const token = () => {
