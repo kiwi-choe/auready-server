@@ -2,6 +2,7 @@
 global.__appbase_dirname = __dirname;
 
 const express = require('express');
+const expressSession = require('express-session');
 const app = express();
 const bodyParser = require('body-parser');
 
@@ -17,6 +18,12 @@ const authRouter = require('../auth-server');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
+app.use(expressSession({
+	secret: 'keyboard cat',
+	key: 'sid',
+	resave: false,
+	saveUninitialized: true
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 

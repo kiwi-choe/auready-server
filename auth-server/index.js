@@ -10,10 +10,9 @@ exports.initialize = (app) => {
     require('./authLocalClient')();
 
     // Set PassportStrategy
-    passportStrategy.setBasic();
-    passportStrategy.setBearer();
+    passportStrategy.setup();
 
     // Set routes for auth
-    app.use('/auth/token', require('./auth.controller'));
-}
+    // app.use('/auth/token', require('./auth.controller'));
+};
 

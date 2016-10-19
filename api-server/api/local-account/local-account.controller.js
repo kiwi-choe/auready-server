@@ -4,35 +4,27 @@ const passportStrategy = require('../../../auth-server/passportStrategy');
 exports.signup = (req, res, next) => {
 
     // Set Local signup strategy by passport.authenticate method
-    passport.authenticate('local-signup', {session: false},
-        (err, user, info) => {
-            console.log('success to LocalSignup strategy');
-            if(err) return next(err);
-
-            // error
-            if(!user) {
-                console.log(info);
-                res.sendStatus(400);
-            }
-
-        })(req, res, next);
-
-    
+    passport.authenticate('local-signup', (err, user, info) => {
+        console.log('success to LocalSignup strategy');
+        if (err) return res.sendStatus(401);
+        if (!user) {
+            console.log(info);
+            return res.sendStatus(400);
+        }
+        // 201 code: registered a new user; signup success
+        return res.sendStatus(201);
+    })(req, res, next);
 };
 
 exports.login = (req, res, next) => {
-    passport.authenticate('local-login', {session: true},
-        (err, user, info) => {
-            if(err) return next(err);
-            if(!user) {
-                console.log(info);
-                return res.json(400, info);
-            }
+    passport.authenticate('local-login', (err, user, info) => {
+        if (err) return res.sendStatus(401);
+        if (!user) {
+            console.log(info);
+            return res.sendStatus(400);
+        }
 
-            req.login(user, err => {
-                if(err) return next(err);
-                return res.json(200);
-            });
-        })(req, res, next);
+        return res.sendStatus(200);
+
+    })(req, res, next);
 };
-

@@ -9,7 +9,7 @@ const tokenizer = require('../utils/tokenizer');
 const OauthClient = require('../models/oauthClient');
 const User = require('../models/user');
 
-const basicStrategy = () => {
+exports.setup = () => {
 
     passport.use(new BasicStrategy({
         passReqToCallback: true
@@ -58,9 +58,6 @@ const basicStrategy = () => {
             return done(null, oauthClient);
         });
     }));
-};
-
-const bearerStrategy = () => {
 
     passport.use(new BearerStrategy({
         passReqToCallback: true
@@ -90,9 +87,3 @@ const bearerStrategy = () => {
         });
     }));
 };
-
-
-module.exports = {
-    setBasic: basicStrategy,
-    setBearer: bearerStrategy
-}

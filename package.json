@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node bin/www",
-    "test": "node_modules/.bin/mocha api-server/api/signup/signup.spec.js"
+    "test": "node_modules/.bin/mocha api-server/api/local-account/local-account.spec.js"
   },
   "author": "",
   "license": "ISC",
@@ -15,12 +15,13 @@
     "body-parser": "^1.15.2",
     "dev": "^0.1.3",
     "express": "^4.14.0",
+    "express-session": "^1.14.1",
     "mongoose": "^4.6.2",
     "oauth2orize": "^1.5.0",
     "passport": "^0.3.2",
+    "passport-http": "^0.3.0",
     "passport-http-bearer": "^1.0.1",
-    "passport-local": "^1.0.0",
-    "passport-oauth2-public-client": "^0.1.0"
+    "passport-local": "^1.0.0"
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.16.0",

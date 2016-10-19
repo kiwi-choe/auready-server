@@ -3,30 +3,37 @@ const LocalStrategy = require('passport-local').Strategy;
 
 const User = require('../../../models/user');
 
-const localSignupStrategy = () => {
+exports.setup = () => {
 
-    passport.use('local-signup', new LocalStrategy({
+  passport.use('local-signup', new LocalStrategy({
         usernameField: 'email',
-        passwordField: 'password',
-        passReqToCallback: true
-    }, (req, email, password, done) => {
+        passwordField: 'password'
+    }, (email, password, done) => {
         console.log('localSignup strategy');
         if (email) {
             email = email.toLowerCase();
         }
 
-        if (req.user && req.user.signup && req.user.signup.email) {
-            // in case of invalid access, just return current data
-            return done(null, req.user);
-        }
-
         // Validate email and password
-        // If success to signup-account,
-        // try to login rightly => req.login()  // passport method
-    }));
-};
+        User.findOne({'local.email': email},
+            (err, user) => {
+                if (err) {
+                    return done(err);
+                }
+                if (user) {
+                    console.log('WARNING! an user with email exists');
+                    return done(null, false, {reason: 'registered email'});
+                }
 
-const localLoginStrategy = () => {
+                let newUser = new User();
+                newUser.local.email = email;
+                newUser.local.password = newUser.generateHash(password);
+                newUser.save((err) => {
+                    if (err) throw err;
+                    return done(null, newUser);
+                });
+            });
+    }));
 
     passport.use('local-login', new LocalStrategy({
         usernameField: 'email',
@@ -39,17 +46,17 @@ const localLoginStrategy = () => {
         }
 
         // Validate email and password
-        User.findOne({ 'local.email': email }, (err, user) => {
+        User.findOne({'local.email': email}, (err, user) => {
             if (err) {
                 return done(err);
             }
 
             if (!user) {
-                return done(null, false, { reason: 'invalid-email' });
+                return done(null, false, {reason: 'invalid-email'});
             }
 
             if (!user.validPassword(password)) {
-                return done(null, false, { reason: 'invalid-password' });
+                return done(null, false, {reason: 'invalid-password'});
             }
 
             // return the logged in user
@@ -57,8 +64,3 @@ const localLoginStrategy = () => {
         });
     }));
 };
-
-module.exports = {
-    setLocalSignup: localSignupStrategy,
-    setLocalLogin: localLoginStrategy
-}
