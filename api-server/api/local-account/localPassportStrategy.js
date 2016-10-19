@@ -37,9 +37,8 @@ exports.setup = () => {
 
     passport.use('local-login', new LocalStrategy({
         usernameField: 'email',
-        passwordField: 'password',
-        passReqToCallback: true
-    }, (req, email, password, done) => {
+        passwordField: 'password'
+    }, (email, password, done) => {
         console.log('local login strategy');
         if (email) {
             email = email.toLowerCase();
