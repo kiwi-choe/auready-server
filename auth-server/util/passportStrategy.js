@@ -68,7 +68,7 @@ exports.setup = () => {
                 return done(err);
             }
             User.findOne({
-                '_id': token.userID
+                '_id': token.userId
             }, function (err, user) {
                 if (err) {
                     return done(err);

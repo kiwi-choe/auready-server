@@ -13,9 +13,7 @@ const config = {
     },
 
     headerForApi: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer' + ' ' + accessToken
+        Authorization: 'Bearer' + ' ' + accessToken
     },
 
     bodyForAuth: {
@@ -27,7 +25,7 @@ const config = {
     }
 };
 
-describe.only('POST /auth/token', () => {
+describe('POST /auth/token', () => {
     it('should return 200 code and return access token', done => {
         request
             .post('/auth/token')
@@ -52,3 +50,38 @@ describe.only('POST /auth/token', () => {
             });
     });
 });
+
+describe('DELETE /auth/token', () => {
+    it('should return 200 code and return access token', done => {
+        request
+            .delete('/auth/token')
+            .set({Authorization: 'Bearer ' + 'XzC0wn6rFFgD7H81hogf2STZJEl3VFogqCduvsG8Qys19KQuLJpBC9Yn8zuyDQVfO92QmaAGX4FQYcCpOjc4ubAkNhTz5kHqVVtKdmyAdr8BPtFQGq3rIqcDK92KcXT6UE9MauQYgEMzDreuspzy0KKXYVUvcn6sYReSHSEB0caLqAMAlcHc7gpNpc7usdZTFZPlimNaJPwVKOtRFUftpHx6VwcFSGOA059sVgR6ZtHoNSRWoZR57hvZFqi0VJU6'})
+            .expect(200)
+            .end((err, res) => {
+                if (err) throw err;
+                done();
+            });
+    });
+
+    it('should return 401(Unauthorized) code without Authorization header', done => {
+        request
+            .delete('/auth/token')
+            .expect(401)
+            .end((err, res) => {
+                if (err) throw err;
+                done();
+            });
+    });
+
+    it('should return 403(Unauthorized) code with the wrong access token', done => {
+        request
+            .delete('/auth/token')
+            .set({Authorization: 'Bearer ' + 'wrong_access_token'})
+            .expect(403)
+            .end((err, res) => {
+                if (err) throw err;
+                done();
+            });
+    });
+});
+
