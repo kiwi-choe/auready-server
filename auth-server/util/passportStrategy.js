@@ -4,10 +4,10 @@ const BearerStrategy = require('passport-http-bearer').Strategy;
 var oauth2orize = require('oauth2orize');
 
 const predefine = require('./predefine');
-const tokenizer = require('../utils/tokenizer');
+const tokenizer = require('../../utils/tokenizer');
 
-const OauthClient = require('../models/oauthClient');
-const User = require('../models/user');
+const OauthClient = require('../../models/oauthClient');
+const User = require('../../models/user');
 
 exports.setup = () => {
 

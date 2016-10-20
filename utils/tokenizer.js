@@ -9,8 +9,8 @@ const createToken = (clientID, userID, grantType, cb) => {
         token.refreshToken = utils.uid(256);
     }
     token.expiredIn = grantType.token_duration;
-    token.clientID = clientID;
-    token.userID = userID;
+    token.clientId = clientID;
+    token.userId = userID;
     // TODO add scope
     token.save((err) => {
         if (err) {
@@ -30,7 +30,7 @@ const refreshToken = (token, cb) => {
     token.createdTime = Date.now();
     // TODO update scope
     Token.update({
-        userID: token.userID,
+        userId: token.userId,
         refreshToken: token.refreshToken
     }, {
         accessToken: token.accessToken,

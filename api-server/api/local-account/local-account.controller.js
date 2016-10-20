@@ -1,5 +1,5 @@
 const passport = require('passport');
-const passportStrategy = require('../../../auth-server/passportStrategy');
+const passportStrategy = require('../../../auth-server/util/passportStrategy');
 
 exports.signup = (req, res, next) => {
 

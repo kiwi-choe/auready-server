@@ -15,7 +15,7 @@ const apiRouter = require('../api-server');
 const database = require('../bin/database');
 const authRouter = require('../auth-server');
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(expressSession({

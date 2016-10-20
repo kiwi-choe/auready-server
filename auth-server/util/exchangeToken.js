@@ -1,9 +1,9 @@
 const oauth2orize = require('oauth2orize');
-const tokenizer = require('../utils/tokenizer');
+const tokenizer = require('../../utils/tokenizer');
 const predefine = require('./predefine');
 
-const User = require('../models/user');
-const Token = require('../models/token');
+const User = require('../../models/user');
+const Token = require('../../models/token');
 
 module.exports = (server) => {
     if (!server) {
@@ -19,7 +19,7 @@ module.exports = (server) => {
         // check username type
         let query;
         let isLocalAccount = true;
-        query = {'local.id': username};
+        query = {'local.email': username};
 
         User.findOne(query, (err, user) => {
             if (err) {
@@ -49,16 +49,26 @@ module.exports = (server) => {
                 'userId': user.id
             }, (err, token) => {
                 if (err) {
-
+                    return done(new oauth2orize.TokenError(
+                        'Error occurs during finding token',
+                        'server_error'
+                    ));
                 }
                 if (token) {
                     console.log('token exists already');
                     // Check access token expiration
-
+                    return done(null,
+                        token.accessToken,
+                        token.refreshToken,
+                        {
+                            expires_in: token.expiredIn,
+                            user_id: user.id
+                        }
+                    );
                 } else {
                     tokenizer.create(client.clientId, user.id, predefine.oauth2.type.password,
                         (err, newToken) => {
-                            if(err) {
+                            if (err) {
                                 return done(new oauth2orize.TokenError(
                                     'Error occurs during creating token',
                                     'server_error'
@@ -68,8 +78,8 @@ module.exports = (server) => {
                                 newToken.accessToken,
                                 newToken.refreshToken,
                                 {
-                                    expiresIn: newToken.expiredIn,
-                                    userID: user.id
+                                    expires_in: newToken.expiredIn,
+                                    user_id: user.id
                                 }
                             );
                         });
@@ -80,7 +90,7 @@ module.exports = (server) => {
 
     server.exchange(oauth2orize.exchange.refreshToken((client, refreshToken, scope, done) => {
         Token.findOne({
-            clientID: client.clientID,
+            clientId: client.clientId,
             refreshToken: refreshToken
         }, (err, token) => {
             if (err) {
@@ -106,9 +116,7 @@ module.exports = (server) => {
                 return done(null,
                     updatedToken.accessToken,
                     updatedToken.refreshToken,
-                    {
-                        expiresIn: updatedToken.expiredIn
-                    }
+                    {expires_in: updatedToken.expiredIn}
                 );
             });
         });

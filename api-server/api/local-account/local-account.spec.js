@@ -28,7 +28,7 @@ describe('POST /local-account/signup', () => {
     });
 });
 
-describe.only('POST /local-account/login', () => {
+describe('POST /local-account/login', () => {
     it('should return 200 status code', (done) => {
         request(server)
             .post('/local-account/login')
@@ -40,7 +40,7 @@ describe.only('POST /local-account/login', () => {
             });
     });
 
-    it.only('should return 400 status code with unregistered email', (done) => {
+    it('should return 400 status code with unregistered email', (done) => {
         request(server)
             .post('/local-account/login')
             .expect(400)
@@ -51,7 +51,7 @@ describe.only('POST /local-account/login', () => {
             });
     });
 
-    it.only('should return 400 status code with invalid password', (done) => {
+    it('should return 400 status code with invalid password', (done) => {
         request(server)
             .post('/local-account/login')
             .expect(400)

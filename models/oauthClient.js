@@ -9,6 +9,7 @@ const utils = require('../utils/utils');
 const schema = mongoose.Schema({
     name: String,
     clientId: String,
+    clientSecret: String,
     //grantType is only 'password'
     grantType: [String, Boolean]
     // so, don't need redirectURI // redirectURI: String,

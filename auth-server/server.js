@@ -13,7 +13,9 @@ const initialize = () => {
     server = oauth2orize.createServer();
 
     // serialization & deserialization
-    server.serializeClient((client, done) => done(null, client.clientId));
+    server.serializeClient((client, done) => {
+        done(null, client.clientId);
+    });
     server.deserializeClient((id, done) => {
         OauthClient.findOne({
             'clientId': id
@@ -26,7 +28,7 @@ const initialize = () => {
     });
 
     // set exchange token
-    // require('./exchangeToken')(server);
+    require('./util/exchangeToken')(server);
 };
 
 const token = () => {
