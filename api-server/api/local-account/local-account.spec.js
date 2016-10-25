@@ -2,7 +2,7 @@ const assert = require('assert');
 const should = require('should');
 const request = require('supertest');
 
-const server = require('../../../bin/www');
+const server = require(__appbase_dirname + '/www');
 
 describe('POST /local-account/signup', () => {
 

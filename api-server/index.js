@@ -8,6 +8,6 @@ exports.initialize = (app) => {
     // Set API routes
     // enter into router, when start the path, ex.'/signup-account/*'
     app.use('/local-account', localAccountRouter);
-    // app.use('/social-account', socialAccountRouter);
+    app.use('/social-account', socialAccountRouter);
     // app.use('/users', userRouter);
 };

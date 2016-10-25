@@ -1,7 +1,7 @@
 const assert = require('assert');
 const should = require('should');
 
-const server = require('../bin/www');
+const server = require(__appbase_dirname + '/www');
 const request = require('supertest')(server);
 
 
