@@ -6,7 +6,7 @@ const userRouter = require('./api/user');
 exports.initialize = (app) => {
 
     // Set API routes
-    // enter into router, when start the path, ex.'/signup-account/*'
+    // enter into router, when start the path, ex.'/social-account/*'
     app.use('/local-account', localAccountRouter);
     app.use('/social-account', socialAccountRouter);
     // app.use('/users', userRouter);

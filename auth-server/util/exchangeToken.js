@@ -1,9 +1,9 @@
 const oauth2orize = require('oauth2orize');
-const tokenizer = require('../../utils/tokenizer');
+const tokenizer = require(__appbase_dirname + '/utils/tokenizer');
 const predefine = require('./predefine');
 
-const User = require('../../models/user');
-const Token = require('../../models/token');
+const User = require(__appbase_dirname + '/models/user');
+const Token = require(__appbase_dirname + '/models/token');
 
 module.exports = (server) => {
     if (!server) {
@@ -18,8 +18,14 @@ module.exports = (server) => {
         // client is already verified using middleware(basic), but cannot be sure user
         // check username type
         let query;
-        let isLocalAccount = true;
-        query = {'local.email': username};
+        let isLocalAccount = false;
+        if (username === 'google') {
+            query = {'google.token': password};
+        }
+        else {
+            isLocalAccount = true;
+            query = {'local.email': username};
+        }
 
         User.findOne(query, (err, user) => {
             if (err) {
@@ -90,8 +96,8 @@ module.exports = (server) => {
 
     server.exchange(oauth2orize.exchange.refreshToken((client, refreshToken, scope, done) => {
         Token.findOne({
-            clientId: client.clientId,
-            refreshToken: refreshToken
+            'clientId': client.clientId,
+            'refreshToken': refreshToken
         }, (err, token) => {
             if (err) {
                 return done(new oauth2orize.TokenError(

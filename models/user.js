@@ -5,6 +5,12 @@ const schema = mongoose.Schema({
     local: {
         email: String,
         password: String
+    },
+    google: {
+        id: String,
+        token: String,
+        name: String,
+        email: String
     }
 });
 
