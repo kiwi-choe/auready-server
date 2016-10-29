@@ -12,10 +12,6 @@ const config = {
         Authorization: 'Basic dEVZUUFGaUFBbUxyUzJEbDpZbUUyTFlUR0t1bmxWVzVPcktObFdGOUtRWlVaT0hEeQ=='
     },
 
-    headerForApi: {
-        Authorization: 'Bearer' + ' ' + accessToken
-    },
-
     bodyForAuthLocal: {
         client_id: 'tEYQAFiAAmLrS2Dl',
         client_secret: 'YmE2LYTGKunlVW5OrKNlWF9KQZUZOHDy',

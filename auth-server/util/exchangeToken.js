@@ -20,11 +20,11 @@ module.exports = (server) => {
         let query;
         let isLocalAccount = false;
         if (username === 'google') {
-            query = {'google.token': password};
+            query = {'password': password};
         }
         else {
             isLocalAccount = true;
-            query = {'local.email': username};
+            query = {'email': username};
         }
 
         User.findOne(query, (err, user) => {

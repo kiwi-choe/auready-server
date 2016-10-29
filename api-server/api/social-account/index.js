@@ -43,7 +43,7 @@ router.post('/login/:socialapp', (req, res) => {
             console.log(tokenInfo);
             let userinfo = {
                 name: tokenInfo.name,
-                email: tokenInfo.email,
+                email: req.params.socialapp,
                 password: req.body.id_token
             };
             registerSocialAccount(userinfo, done => {
