@@ -12,7 +12,8 @@ exports.signup = (req, res, next) => {
             return res.sendStatus(400);
         }
         // 201 code: registered a new user; signup success
-        return res.sendStatus(201);
+        console.log(user);
+        return res.status(201).json(user);
     })(req, res, next);
 };
 

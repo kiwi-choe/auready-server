@@ -5,10 +5,11 @@ const User = require('../../../models/user');
 
 exports.setup = () => {
 
-  passport.use('local-signup', new LocalStrategy({
+    passport.use('local-signup', new LocalStrategy({
         usernameField: 'email',
-        passwordField: 'password'
-    }, (email, password, done) => {
+        passwordField: 'password',
+        passReqToCallback: true
+    }, (req, email, password, done) => {
         console.log('localSignup strategy');
         if (email) {
             email = email.toLowerCase();
@@ -26,6 +27,7 @@ exports.setup = () => {
                 }
 
                 let newUser = new User();
+                newUser.name = req.body.name;
                 newUser.email = email;
                 newUser.password = newUser.generateHash(password);
                 newUser.save((err) => {

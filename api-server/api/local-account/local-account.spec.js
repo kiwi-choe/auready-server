@@ -10,9 +10,11 @@ describe('POST /local-account/signup', () => {
         request(server)
             .post('/local-account/signup')
             .expect(201)
-            .send({email: 'kiwi', password: '123'})
+            .send({name: 'nameofkiwi', email: 'kiwi', password: '123'})
             .end((err, res) => {
                 if (err) throw err;
+                res.body.should.have.property('name', 'nameofkiwi');
+                res.body.should.have.property('email', 'kiwi');
                 done();
             });
     });
