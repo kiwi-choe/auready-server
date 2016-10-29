@@ -15,7 +15,7 @@ exports.setup = () => {
         }
 
         // Validate email and password
-        User.findOne({'local.email': email},
+        User.findOne({'email': email},
             (err, user) => {
                 if (err) {
                     return done(err);
@@ -26,8 +26,8 @@ exports.setup = () => {
                 }
 
                 let newUser = new User();
-                newUser.local.email = email;
-                newUser.local.password = newUser.generateHash(password);
+                newUser.email = email;
+                newUser.password = newUser.generateHash(password);
                 newUser.save((err) => {
                     if (err) throw err;
                     return done(null, newUser);
@@ -45,7 +45,7 @@ exports.setup = () => {
         }
 
         // Validate email and password
-        User.findOne({'local.email': email}, (err, user) => {
+        User.findOne({'email': email}, (err, user) => {
             if (err) {
                 return done(err);
             }
