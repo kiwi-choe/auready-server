@@ -3,11 +3,7 @@ const bcrypt = require('bcrypt-nodejs');
 
 /*
 * social-account case
-* {
-*   name: social's name,
-*   email: socialapp name,
-*   password: social's token
-* }
+* {password: social's token}
 * */
 const schema = mongoose.Schema({
     name: String,
