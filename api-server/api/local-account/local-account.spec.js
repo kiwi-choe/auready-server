@@ -4,17 +4,21 @@ const request = require('supertest');
 
 const server = require('../../../www');
 
+const test_name = 'nameofkiwi2';
+const test_email = 'kiwi2@gmail.com';
+const test_password = '123';
+
 describe('POST /local-account/signup', () => {
 
     it('should return 201 status code', (done) => {
         request(server)
             .post('/local-account/signup')
             .expect(201)
-            .send({name: 'nameofkiwi', email: 'kiwi', password: '123'})
+            .send({name: test_name, email: test_email, password: test_password})
             .end((err, res) => {
                 if (err) throw err;
-                res.body.should.have.property('name', 'nameofkiwi');
-                res.body.should.have.property('email', 'kiwi');
+                res.body.should.have.property('name', test_name);
+                res.body.should.have.property('email', test_email);
                 done();
             });
     });
@@ -35,7 +39,7 @@ describe('POST /local-account/login', () => {
         request(server)
             .post('/local-account/login')
             .expect(200)
-            .send({email: 'kiwi', password: '123'})
+            .send({email: test_email, password: test_password})
             .end((err, res) => {
                 if(err) throw err;
                 done();
@@ -57,7 +61,7 @@ describe('POST /local-account/login', () => {
         request(server)
             .post('/local-account/login')
             .expect(400)
-            .send({email: 'kiwi', password: 'invalid password'})
+            .send({email: test_email, password: 'invalid password'})
             .end((err, res) => {
                 if(err) throw err;
                 done();
