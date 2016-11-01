@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ef065afe-73c9-4586-81e8-a92f957a6564" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-server/api/user/index.js" afterPath="$PROJECT_DIR$/api-server/api/user/index.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-server/api/user/user.controller.js" afterPath="$PROJECT_DIR$/api-server/api/user/user.controller.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-server/api/user/user.spec.js" afterPath="$PROJECT_DIR$/api-server/api/user/user.spec.js" />
@@ -49,11 +49,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/api-server/index.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="195">
               <caret line="13" column="2" selection-start-line="13" selection-start-column="2" selection-end-line="13" selection-end-column="2" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="195">
+              <caret line="13" column="1" selection-start-line="13" selection-start-column="1" selection-end-line="13" selection-end-column="1" />
               <folding />
             </state>
           </provider>
@@ -466,7 +476,7 @@
       <workItem from="1477700650890" duration="17955000" />
       <workItem from="1477732919739" duration="4707000" />
       <workItem from="1477880995547" duration="4006000" />
-      <workItem from="1477967802968" duration="5249000" />
+      <workItem from="1477967802968" duration="5619000" />
     </task>
     <servers />
   </component>
@@ -503,7 +513,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="217999000" />
+    <option name="totallyTimeSpent" value="218369000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="963" y="52" width="930" height="972" extended-state="4" />
@@ -786,14 +796,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" column="1" selection-start-line="13" selection-start-column="1" selection-end-line="13" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/api-server/api/social-account/social-account.spec.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -926,6 +928,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
           <caret line="13" column="2" selection-start-line="13" selection-start-column="2" selection-end-line="13" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="13" column="1" selection-start-line="13" selection-start-column="1" selection-end-line="13" selection-end-column="1" />
           <folding />
         </state>
       </provider>
