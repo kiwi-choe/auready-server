@@ -88,11 +88,23 @@ describe('POST /auth/token: social-google', () => {
 });
 
 describe('DELETE /auth/token', () => {
-    it('should return 200 code and return access token', done => {
+    it('should return 200 code', done => {
         request
             .delete('/auth/token')
-            .set({Authorization: 'Bearer ' + 'XzC0wn6rFFgD7H81hogf2STZJEl3VFogqCduvsG8Qys19KQuLJpBC9Yn8zuyDQVfO92QmaAGX4FQYcCpOjc4ubAkNhTz5kHqVVtKdmyAdr8BPtFQGq3rIqcDK92KcXT6UE9MauQYgEMzDreuspzy0KKXYVUvcn6sYReSHSEB0caLqAMAlcHc7gpNpc7usdZTFZPlimNaJPwVKOtRFUftpHx6VwcFSGOA059sVgR6ZtHoNSRWoZR57hvZFqi0VJU6'})
+            .set({Authorization: 'Bearer ' + 'sCDrvzidcuDI9nxfJWtjx3YVuGfogUG5j0kGpDZNAI6GZENDWmXUMQaXyZibNKzGoW2wrZcjRq2a16p77PIXr2p6VJhG2QtfDJCPUVHCeMhvt2aCjDh5nGHosqmQksr9yGbK3l6rxt4imvnzubBSOxYjtp4k6ZZHHgrXrBpn2BCB4x1xv05LI5helrOvS6FXhPI5PMV0z312mUlHyNOUlMfYh9s1O1q9hAgt5IBgmrXlxPQZCqlnnxIIZ0nI51EM'})
             .expect(200)
+            .send({'accessToken': 'sCDrvzidcuDI9nxfJWtjx3YVuGfogUG5j0kGpDZNAI6GZENDWmXUMQaXyZibNKzGoW2wrZcjRq2a16p77PIXr2p6VJhG2QtfDJCPUVHCeMhvt2aCjDh5nGHosqmQksr9yGbK3l6rxt4imvnzubBSOxYjtp4k6ZZHHgrXrBpn2BCB4x1xv05LI5helrOvS6FXhPI5PMV0z312mUlHyNOUlMfYh9s1O1q9hAgt5IBgmrXlxPQZCqlnnxIIZ0nI51EM'})
+            .end((err, res) => {
+                if (err) throw err;
+                done();
+            });
+    });
+
+    it('should return 204 code with no body has accessToken', done => {
+        request
+            .delete('/auth/token')
+            .set({Authorization: 'Bearer ' + 'sCDrvzidcuDI9nxfJWtjx3YVuGfogUG5j0kGpDZNAI6GZENDWmXUMQaXyZibNKzGoW2wrZcjRq2a16p77PIXr2p6VJhG2QtfDJCPUVHCeMhvt2aCjDh5nGHosqmQksr9yGbK3l6rxt4imvnzubBSOxYjtp4k6ZZHHgrXrBpn2BCB4x1xv05LI5helrOvS6FXhPI5PMV0z312mUlHyNOUlMfYh9s1O1q9hAgt5IBgmrXlxPQZCqlnnxIIZ0nI51EM'})
+            .expect(204)
             .end((err, res) => {
                 if (err) throw err;
                 done();
