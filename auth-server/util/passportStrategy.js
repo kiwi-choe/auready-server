@@ -4,10 +4,11 @@ const BearerStrategy = require('passport-http-bearer').Strategy;
 var oauth2orize = require('oauth2orize');
 
 const predefine = require('./predefine');
-const tokenizer = require('../../utils/tokenizer');
+// const tokenizer = require('../../utils/tokenizer');
 
-const OauthClient = require('../../models/oauthClient');
-const User = require('../../models/user');
+const OauthClient = require(__appbase_dirname + '/models/oauthClient');
+const Token = require(__appbase_dirname + '/models/token');
+const User = require(__appbase_dirname + '/models/user');
 
 exports.setup = () => {
 
@@ -63,13 +64,13 @@ exports.setup = () => {
         passReqToCallback: true
     }, (req, accessToken, done) => {
         console.log('bearer strategy');
-        tokenizer.validate(accessToken, (err, token) => {
+        Token.validate(accessToken, (err, token) => {
             if (err) {
                 return done(err);
             }
-            User.findOne({
+            User.model.findOne({
                 '_id': token.userId
-            }, function (err, user) {
+            }, (err, user) => {
                 if (err) {
                     return done(err);
                 }

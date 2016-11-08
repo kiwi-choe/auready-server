@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt-nodejs');
 
@@ -11,17 +10,16 @@ const schema = mongoose.Schema({
     email: String,
     password: String
 });
-
-// generating a hash
-const generateHash = function(password) {
-    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-};
+const _model = mongoose.model('User', schema);
 // checking if password is valid
 schema.methods.validPassword = function(password) {
     return bcrypt.compareSync(password, this.password);
 };
 
-const _model = mongoose.model('User', schema);
+// generating a hash
+const generateHash = function(password) {
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+};
 // registerLocal a user
 const _registerLocal = (name, email, password, done) => {
     _model.findOne({'email': email},
@@ -43,7 +41,7 @@ const _registerLocal = (name, email, password, done) => {
 };
 // registerSocial a user if already loggedin or not
 const _registerSocial = (userinfo, done) => {
-    _model.findOne({'password': password},
+    _model.findOne({'password': userinfo.password},
         (err, user) => {
             if(err) {
                 return done(err);
@@ -64,7 +62,6 @@ const _registerSocial = (userinfo, done) => {
         });
 };
 
-// create the model for users and expose it to our app
 module.exports = {
     model: _model,
     registerLocal: _registerLocal,

@@ -5,12 +5,12 @@
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/api-server/api/friend/friend.spec.js" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/api-server/api/friend/index.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-server/api/local-account/local-account.controller.js" afterPath="$PROJECT_DIR$/api-server/api/local-account/local-account.controller.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-server/api/local-account/local-account.spec.js" afterPath="$PROJECT_DIR$/api-server/api/local-account/local-account.spec.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-server/api/local-account/localPassportStrategy.js" afterPath="$PROJECT_DIR$/api-server/api/local-account/localPassportStrategy.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-server/api/social-account/index.js" afterPath="$PROJECT_DIR$/api-server/api/social-account/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-server/api/user/user.spec.js" afterPath="$PROJECT_DIR$/api-server/api/user/user.spec.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-server/index.js" afterPath="$PROJECT_DIR$/api-server/index.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-server/api/user/index.js" afterPath="$PROJECT_DIR$/api-server/api/user/index.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/auth-server/auth.controller.js" afterPath="$PROJECT_DIR$/auth-server/auth.controller.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/auth-server/auth.spec.js" afterPath="$PROJECT_DIR$/auth-server/auth.spec.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/auth-server/util/passportStrategy.js" afterPath="$PROJECT_DIR$/auth-server/util/passportStrategy.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/token.js" afterPath="$PROJECT_DIR$/models/token.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/user.js" afterPath="$PROJECT_DIR$/models/user.js" />
     </list>
     <ignored path="auready-server.iws" />
@@ -36,11 +36,41 @@
     <splitter split-orientation="horizontal" split-proportion="0.48072916">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/api-server/api/friend/index.js">
+          <file leaf-file-name="tokenizer.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/utils/tokenizer.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="60">
-                  <caret line="4" column="48" selection-start-line="4" selection-start-column="48" selection-end-line="4" selection-end-column="48" />
+                <state relative-caret-position="960">
+                  <caret line="64" column="0" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="utils.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/utils/utils.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="150">
+                  <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="exchangeToken.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/auth-server/util/exchangeToken.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="1455">
+                  <caret line="97" column="23" selection-start-line="97" selection-start-column="23" selection-end-line="97" selection-end-column="23" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="auth.spec.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/auth-server/auth.spec.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="237">
+                  <caret line="96" column="32" selection-start-line="96" selection-start-column="32" selection-end-line="96" selection-end-column="32" />
                   <folding />
                 </state>
               </provider>
@@ -59,38 +89,8 @@
           <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/api-server/api/social-account/index.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="270">
-                  <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="social-account.spec.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/api-server/api/social-account/social-account.spec.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="180">
-                  <caret line="12" column="42" selection-start-line="12" selection-start-column="29" selection-end-line="12" selection-end-column="42" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="local-account.spec.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/api-server/api/local-account/local-account.spec.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="428">
-                  <caret line="38" column="21" selection-start-line="38" selection-start-column="21" selection-end-line="38" selection-end-column="21" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="www.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/www.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="192">
-                  <caret line="35" column="10" selection-start-line="35" selection-start-column="10" selection-end-line="35" selection-end-column="10" />
+                <state relative-caret-position="0">
+                  <caret line="0" column="35" selection-start-line="0" selection-start-column="35" selection-end-line="0" selection-end-column="35" />
                   <folding />
                 </state>
               </provider>
@@ -106,45 +106,65 @@
               </provider>
             </entry>
           </file>
+          <file leaf-file-name="user.js" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/models/user.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="442">
+                  <caret line="64" column="18" selection-start-line="64" selection-start-column="18" selection-end-line="64" selection-end-column="18" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="user.spec.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/api-server/api/user/user.spec.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="270">
+                  <caret line="18" column="35" selection-start-line="18" selection-start-column="35" selection-end-line="18" selection-end-column="35" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="token.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/models/token.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="192">
+                  <caret line="72" column="24" selection-start-line="72" selection-start-column="24" selection-end-line="72" selection-end-column="24" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
         </leaf>
       </split-first>
       <split-second>
-        <leaf>
-          <file leaf-file-name="user.spec.js" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/api-server/api/user/user.spec.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="285">
-                  <caret line="19" column="15" selection-start-line="19" selection-start-column="15" selection-end-line="19" selection-end-column="15" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="localPassportStrategy.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/api-server/api/local-account/localPassportStrategy.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="240">
-                  <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/api-server/api/user/index.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="120">
-                  <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+                <state relative-caret-position="285">
+                  <caret line="19" column="35" selection-start-line="19" selection-start-column="35" selection-end-line="19" selection-end-column="35" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="user.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/models/user.js">
+          <file leaf-file-name="passportStrategy.js" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/auth-server/util/passportStrategy.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="596">
-                  <caret line="57" column="41" selection-start-line="57" selection-start-column="41" selection-end-line="57" selection-end-column="41" />
+                <state relative-caret-position="202">
+                  <caret line="69" column="13" selection-start-line="69" selection-start-column="13" selection-end-line="69" selection-end-column="13" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="auth.controller.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/auth-server/auth.controller.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="270">
+                  <caret line="18" column="19" selection-start-line="18" selection-start-column="19" selection-end-line="18" selection-end-column="19" />
                   <folding />
                 </state>
               </provider>
@@ -165,7 +185,6 @@
         <option value="$PROJECT_DIR$/bin/database.js" />
         <option value="$PROJECT_DIR$/utils/utils.js" />
         <option value="$PROJECT_DIR$/auth-server/authLocalAccount.js" />
-        <option value="$PROJECT_DIR$/models/token.js" />
         <option value="$PROJECT_DIR$/auth-server/exchangeToken.js" />
         <option value="$PROJECT_DIR$/api-server/api/localsignup/index.js" />
         <option value="$PROJECT_DIR$/.gitignore" />
@@ -180,8 +199,6 @@
         <option value="$PROJECT_DIR$/models/oauthClient.js" />
         <option value="$PROJECT_DIR$/auth-server/util/authLocalClient.js" />
         <option value="$PROJECT_DIR$/utils/tokenizer.js" />
-        <option value="$PROJECT_DIR$/auth-server/auth.controller.js" />
-        <option value="$PROJECT_DIR$/auth-server/util/passportStrategy.js" />
         <option value="$PROJECT_DIR$/auth-server/index.js" />
         <option value="$PROJECT_DIR$/api-server/api/social-account/social-account.controller" />
         <option value="$PROJECT_DIR$/bin/www.js" />
@@ -192,18 +209,21 @@
         <option value="$PROJECT_DIR$/api-server/api/user/user.controller.js" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/api-server/api/social-account/social-account.spec.js" />
-        <option value="$PROJECT_DIR$/auth-server/auth.spec.js" />
         <option value="$PROJECT_DIR$/auth-server/util/exchangeToken.js" />
         <option value="$PROJECT_DIR$/api-server/api/friend/index.js" />
         <option value="$PROJECT_DIR$/api-server/api/friend/friend.spec.js" />
         <option value="$PROJECT_DIR$/api-server/index.js" />
         <option value="$PROJECT_DIR$/api-server/api/local-account/local-account.spec.js" />
         <option value="$PROJECT_DIR$/api-server/api/local-account/local-account.controller.js" />
-        <option value="$PROJECT_DIR$/api-server/api/user/user.spec.js" />
-        <option value="$PROJECT_DIR$/api-server/api/local-account/localPassportStrategy.js" />
-        <option value="$PROJECT_DIR$/models/user.js" />
         <option value="$PROJECT_DIR$/api-server/api/social-account/index.js" />
         <option value="$PROJECT_DIR$/api-server/api/user/index.js" />
+        <option value="$PROJECT_DIR$/api-server/api/user/user.spec.js" />
+        <option value="$PROJECT_DIR$/models/token.js" />
+        <option value="$PROJECT_DIR$/models/user.js" />
+        <option value="$PROJECT_DIR$/auth-server/util/passportStrategy.js" />
+        <option value="$PROJECT_DIR$/auth-server/auth.spec.js" />
+        <option value="$PROJECT_DIR$/auth-server/auth.controller.js" />
+        <option value="$PROJECT_DIR$/api-server/api/local-account/localPassportStrategy.js" />
       </list>
     </option>
   </component>
@@ -251,7 +271,7 @@
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
   <component name="ProjectView">
-    <navigator currentView="ProjectPane" proportions="" version="1">
+    <navigator proportions="" version="1">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -264,13 +284,7 @@
       <manualOrder />
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes>
-      <pane id="Scratches" />
-      <pane id="Scope" />
-      <pane id="ProjectPane">
-        <subPane />
-      </pane>
-    </panes>
+    <panes />
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$/www.js" />
@@ -281,7 +295,7 @@
     <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="js-jscs-nodeInterpreter" value="/usr/local/bin/node" />
-    <property name="SearchEverywhereHistoryKey" value="social-&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/social-account/social-account.spec.js&#10;local-&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/local-account/local-account.spec.js&#10;user&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/models/user.js&#10;databa&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/bin/database.js&#10;auth.con&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/auth.controller.js&#10;localpass&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/local-account/localPassportStrategy.js&#10;excha&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/util/exchangeToken.js&#10;index&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/local-account/index.js&#10;auth&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/auth.spec.js&#10;auth.sp&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/auth.spec.js&#10;exchan&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/util/exchangeToken.js&#10;oauth2orize/password&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/node_modules/oauth2orize/lib/exchange/password.js&#10;server&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/server.js&#10;passport&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/util/passportStrategy.js&#10;authcon&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/auth.controller.js&#10;local&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/local-account/localPassportStrategy.js&#10;social&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/social-account/social-account.spec.js&#10;readme&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/README.md&#10;soci&#9;null&#9;null&#10;localstra&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/local-account/localPassportStrategy.js&#10;local-sp&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/local-account/local-account.spec.js&#10;so&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/social-account/social-account.spec.js&#10;user.sp&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/user/user.spec.js&#10;pack&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/package.json&#10;spec&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/local-account/local-account.spec.js&#10;localsp&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/local-account/local-account.spec.js&#10;www&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/bin/www.js&#10;pas&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/util/passportStrategy.js&#10;client_sec&#9;null&#9;null&#10;local.spe&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/local-account/local-account.spec.js&#10;aut&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/auth.controller.js&#10;client&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/util/authLocalClient.js&#10;oauth&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/models/oauthClient.js&#10;oau&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/models/oauthClient.js&#10;.spec&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/local-account/local-account.spec.js&#10;auth.&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/auth.spec.js&#10;token&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/models/token.js&#10;api&#9;null&#9;null&#10;local-account.con&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/local-account/local-account.controller.js&#10;local-accou&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/local-account/local-account.spec.js&#10;passpo&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/passportStrategy.js&#10;api-server/index&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/index.js&#10;pa&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/package.json" />
+    <property name="SearchEverywhereHistoryKey" value="auth&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/auth.spec.js&#10;token.js&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/models/token.js&#10;auths&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/auth.spec.js&#10;tokenizer&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/utils/tokenizer.js&#10;users&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/user/user.spec.js&#10;user&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/user/user.spec.js&#10;social-&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/social-account/social-account.spec.js&#10;local-&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/local-account/local-account.spec.js&#10;databa&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/bin/database.js&#10;auth.con&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/auth.controller.js&#10;localpass&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/local-account/localPassportStrategy.js&#10;excha&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/util/exchangeToken.js&#10;index&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/local-account/index.js&#10;auth.sp&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/auth.spec.js&#10;exchan&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/util/exchangeToken.js&#10;oauth2orize/password&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/node_modules/oauth2orize/lib/exchange/password.js&#10;server&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/server.js&#10;passport&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/util/passportStrategy.js&#10;authcon&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/auth.controller.js&#10;local&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/local-account/localPassportStrategy.js&#10;social&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/social-account/social-account.spec.js&#10;readme&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/README.md&#10;soci&#9;null&#9;null&#10;localstra&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/local-account/localPassportStrategy.js&#10;local-sp&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/local-account/local-account.spec.js&#10;so&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/social-account/social-account.spec.js&#10;user.sp&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/user/user.spec.js&#10;pack&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/package.json&#10;spec&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/local-account/local-account.spec.js&#10;localsp&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/local-account/local-account.spec.js&#10;www&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/bin/www.js&#10;pas&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/util/passportStrategy.js&#10;client_sec&#9;null&#9;null&#10;local.spe&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/local-account/local-account.spec.js&#10;aut&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/auth.controller.js&#10;client&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/util/authLocalClient.js&#10;oauth&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/models/oauthClient.js&#10;oau&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/models/oauthClient.js&#10;.spec&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/local-account/local-account.spec.js&#10;auth.&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/auth.spec.js&#10;token&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/models/token.js&#10;api&#9;null&#9;null&#10;local-account.con&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/local-account/local-account.controller.js&#10;local-accou&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/api/local-account/local-account.spec.js&#10;passpo&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/auth-server/passportStrategy.js&#10;api-server/index&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/api-server/index.js&#10;pa&#9;FILE&#9;file:///home/kiwi/NodeProject/auready-server/package.json" />
     <property name="HbShouldOpenHtmlAsHb" value="" />
     <property name="restartRequiresConfirmation" value="false" />
     <property name="javascript.nodejs.core.library.configured.version" value="6.6.0" />
@@ -301,8 +315,8 @@
       <recent name="$PROJECT_DIR$/test/api-server" />
     </key>
   </component>
-  <component name="RunManager" selected="Mocha.POST /social-account/login/:socialapp.:socialapp = google, return 200 code, body contains the JSON-data ID token claims.">
-    <configuration default="false" name="POST /.POST / (Add a friend) should return 200 code and add notification message" type="mocha-javascript-test-runner" factoryName="Mocha" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Mocha.GET /user/:search.GET /user/:search - should return 200 code">
+    <configuration default="false" name="DELETE /auth/token.should return 401(Unauthorized) code without Authorization header" type="mocha-javascript-test-runner" factoryName="Mocha" temporary="true" nameIsGenerated="true">
       <node-interpreter>project</node-interpreter>
       <node-options />
       <working-directory>$PROJECT_DIR$</working-directory>
@@ -311,14 +325,14 @@
       <ui>bdd</ui>
       <extra-mocha-options />
       <test-kind>TEST</test-kind>
-      <test-file>$PROJECT_DIR$/api-server/api/friend/friend.spec.js</test-file>
+      <test-file>$PROJECT_DIR$/auth-server/auth.spec.js</test-file>
       <test-names>
-        <name value="POST /" />
-        <name value="POST / (Add a friend) should return 200 code and add notification message" />
+        <name value="DELETE /auth/token" />
+        <name value="should return 401(Unauthorized) code without Authorization header" />
       </test-names>
       <method />
     </configuration>
-    <configuration default="false" name="POST /local-account/signup.should return 201 status code" type="mocha-javascript-test-runner" factoryName="Mocha" temporary="true" nameIsGenerated="true">
+    <configuration default="false" name="DELETE /auth/token.should return 403(Unauthorized) code with the wrong access token" type="mocha-javascript-test-runner" factoryName="Mocha" temporary="true" nameIsGenerated="true">
       <node-interpreter>project</node-interpreter>
       <node-options />
       <working-directory>$PROJECT_DIR$</working-directory>
@@ -327,14 +341,14 @@
       <ui>bdd</ui>
       <extra-mocha-options />
       <test-kind>TEST</test-kind>
-      <test-file>$PROJECT_DIR$/api-server/api/local-account/local-account.spec.js</test-file>
+      <test-file>$PROJECT_DIR$/auth-server/auth.spec.js</test-file>
       <test-names>
-        <name value="POST /local-account/signup" />
-        <name value="should return 201 status code" />
+        <name value="DELETE /auth/token" />
+        <name value="should return 403(Unauthorized) code with the wrong access token" />
       </test-names>
       <method />
     </configuration>
-    <configuration default="false" name="POST /local-account/signup.should return 400 status code" type="mocha-javascript-test-runner" factoryName="Mocha" temporary="true" nameIsGenerated="true">
+    <configuration default="false" name="DELETE /auth/token.should return 204 code with no body has accessToken" type="mocha-javascript-test-runner" factoryName="Mocha" temporary="true" nameIsGenerated="true">
       <node-interpreter>project</node-interpreter>
       <node-options />
       <working-directory>$PROJECT_DIR$</working-directory>
@@ -343,14 +357,14 @@
       <ui>bdd</ui>
       <extra-mocha-options />
       <test-kind>TEST</test-kind>
-      <test-file>$PROJECT_DIR$/api-server/api/local-account/local-account.spec.js</test-file>
+      <test-file>$PROJECT_DIR$/auth-server/auth.spec.js</test-file>
       <test-names>
-        <name value="POST /local-account/signup" />
-        <name value="should return 400 status code" />
+        <name value="DELETE /auth/token" />
+        <name value="should return 204 code with no body has accessToken" />
       </test-names>
       <method />
     </configuration>
-    <configuration default="false" name="POST /local-account/signup.should return 400 status code with msg:registered user" type="mocha-javascript-test-runner" factoryName="Mocha" temporary="true" nameIsGenerated="true">
+    <configuration default="false" name="DELETE /auth/token.should return 200 code" type="mocha-javascript-test-runner" factoryName="Mocha" temporary="true" nameIsGenerated="true">
       <node-interpreter>project</node-interpreter>
       <node-options />
       <working-directory>$PROJECT_DIR$</working-directory>
@@ -359,14 +373,14 @@
       <ui>bdd</ui>
       <extra-mocha-options />
       <test-kind>TEST</test-kind>
-      <test-file>$PROJECT_DIR$/api-server/api/local-account/local-account.spec.js</test-file>
+      <test-file>$PROJECT_DIR$/auth-server/auth.spec.js</test-file>
       <test-names>
-        <name value="POST /local-account/signup" />
-        <name value="should return 400 status code with msg:registered user" />
+        <name value="DELETE /auth/token" />
+        <name value="should return 200 code" />
       </test-names>
       <method />
     </configuration>
-    <configuration default="false" name="POST /social-account/login/:socialapp.:socialapp = google, return 200 code, body contains the JSON-data ID token claims." type="mocha-javascript-test-runner" factoryName="Mocha" temporary="true" nameIsGenerated="true">
+    <configuration default="false" name="GET /user/:search.GET /user/:search - should return 200 code" type="mocha-javascript-test-runner" factoryName="Mocha" temporary="true" nameIsGenerated="true">
       <node-interpreter>project</node-interpreter>
       <node-options />
       <working-directory>$PROJECT_DIR$</working-directory>
@@ -375,10 +389,10 @@
       <ui>bdd</ui>
       <extra-mocha-options />
       <test-kind>TEST</test-kind>
-      <test-file>$PROJECT_DIR$/api-server/api/social-account/social-account.spec.js</test-file>
+      <test-file>$PROJECT_DIR$/api-server/api/user/user.spec.js</test-file>
       <test-names>
-        <name value="POST /social-account/login/:socialapp" />
-        <name value=":socialapp = google, return 200 code, body contains the JSON-data ID token claims." />
+        <name value="GET /user/:search" />
+        <name value="GET /user/:search - should return 200 code" />
       </test-names>
       <method />
     </configuration>
@@ -502,19 +516,19 @@
       <method />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Mocha.POST /.POST / (Add a friend) should return 200 code and add notification message" />
-      <item index="1" class="java.lang.String" itemvalue="Mocha.POST /local-account/signup.should return 201 status code" />
-      <item index="2" class="java.lang.String" itemvalue="Mocha.POST /local-account/signup.should return 400 status code" />
-      <item index="3" class="java.lang.String" itemvalue="Mocha.POST /local-account/signup.should return 400 status code with msg:registered user" />
-      <item index="4" class="java.lang.String" itemvalue="Mocha.POST /social-account/login/:socialapp.:socialapp = google, return 200 code, body contains the JSON-data ID token claims." />
+      <item index="0" class="java.lang.String" itemvalue="Mocha.DELETE /auth/token.should return 401(Unauthorized) code without Authorization header" />
+      <item index="1" class="java.lang.String" itemvalue="Mocha.DELETE /auth/token.should return 403(Unauthorized) code with the wrong access token" />
+      <item index="2" class="java.lang.String" itemvalue="Mocha.DELETE /auth/token.should return 204 code with no body has accessToken" />
+      <item index="3" class="java.lang.String" itemvalue="Mocha.DELETE /auth/token.should return 200 code" />
+      <item index="4" class="java.lang.String" itemvalue="Mocha.GET /user/:search.GET /user/:search - should return 200 code" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Mocha.POST /social-account/login/:socialapp.:socialapp = google, return 200 code, body contains the JSON-data ID token claims." />
-        <item index="1" class="java.lang.String" itemvalue="Mocha.POST /local-account/signup.should return 400 status code with msg:registered user" />
-        <item index="2" class="java.lang.String" itemvalue="Mocha.POST /local-account/signup.should return 400 status code" />
-        <item index="3" class="java.lang.String" itemvalue="Mocha.POST /local-account/signup.should return 201 status code" />
-        <item index="4" class="java.lang.String" itemvalue="Mocha.POST /.POST / (Add a friend) should return 200 code and add notification message" />
+        <item index="0" class="java.lang.String" itemvalue="Mocha.GET /user/:search.GET /user/:search - should return 200 code" />
+        <item index="1" class="java.lang.String" itemvalue="Mocha.DELETE /auth/token.should return 200 code" />
+        <item index="2" class="java.lang.String" itemvalue="Mocha.DELETE /auth/token.should return 204 code with no body has accessToken" />
+        <item index="3" class="java.lang.String" itemvalue="Mocha.DELETE /auth/token.should return 403(Unauthorized) code with the wrong access token" />
+        <item index="4" class="java.lang.String" itemvalue="Mocha.DELETE /auth/token.should return 401(Unauthorized) code without Authorization header" />
       </list>
     </recent_temporary>
   </component>
@@ -581,7 +595,10 @@
       <workItem from="1477967802968" duration="9997000" />
       <workItem from="1477996398462" duration="1725000" />
       <workItem from="1478496464752" duration="1825000" />
-      <workItem from="1478568242908" duration="10756000" />
+      <workItem from="1478568242908" duration="10952000" />
+      <workItem from="1478588191234" duration="5870000" />
+      <workItem from="1478594095734" duration="4759000" />
+      <workItem from="1478602387627" duration="3410000" />
     </task>
     <task id="LOCAL-00001" summary="Search friends by string of  'name'">
       <created>1478571038407</created>
@@ -590,59 +607,66 @@
       <option name="project" value="LOCAL" />
       <updated>1478571038407</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Extract module - register User - in user.js file">
+      <created>1478580459458</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1478580459458</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="POST__local-account_signup_should_return_201_status_code - 2016.11.08 at 13h 13m 59s.xml">
-      <configuration name="POST /local-account/signup.should return 201 status code" configurationId="mocha-javascript-test-runner" />
+    <history-entry file="DELETE__auth_token_should_return_200_code - 2016.11.08 at 20h 47m 58s.xml">
+      <configuration name="DELETE /auth/token.should return 200 code" configurationId="mocha-javascript-test-runner" />
     </history-entry>
-    <history-entry file="POST__local-account_signup_should_return_201_status_code - 2016.11.08 at 13h 14m 40s.xml">
-      <configuration name="POST /local-account/signup.should return 201 status code" configurationId="mocha-javascript-test-runner" />
+    <history-entry file="DELETE__auth_token_should_return_200_code_and_return_access_token - 2016.11.08 at 20h 28m 27s.xml">
+      <configuration name="DELETE /auth/token.should return 200 code and return access token" configurationId="mocha-javascript-test-runner" />
     </history-entry>
-    <history-entry file="POST__local-account_signup_should_return_201_status_code - 2016.11.08 at 13h 15m 56s.xml">
-      <configuration name="POST /local-account/signup.should return 201 status code" configurationId="mocha-javascript-test-runner" />
+    <history-entry file="DELETE__auth_token_should_return_200_code_and_return_access_token - 2016.11.08 at 20h 28m 57s.xml">
+      <configuration name="DELETE /auth/token.should return 200 code and return access token" configurationId="mocha-javascript-test-runner" />
     </history-entry>
-    <history-entry file="POST__local-account_signup_should_return_400_status_code - 2016.11.08 at 13h 17m 14s.xml">
-      <configuration name="POST /local-account/signup.should return 400 status code" configurationId="mocha-javascript-test-runner" />
+    <history-entry file="DELETE__auth_token_should_return_200_code_and_return_access_token - 2016.11.08 at 20h 28m 58s.xml">
+      <configuration name="DELETE /auth/token.should return 200 code and return access token" configurationId="mocha-javascript-test-runner" />
     </history-entry>
-    <history-entry file="POST__local-account_signup_should_return_400_status_code_with_msg_registered_user - 2016.11.08 at 13h 18m 49s.xml">
-      <configuration name="POST /local-account/signup.should return 400 status code with msg:registered user" configurationId="mocha-javascript-test-runner" />
+    <history-entry file="DELETE__auth_token_should_return_204_code_with_no_body_has_accessToken - 2016.11.08 at 20h 32m 11s.xml">
+      <configuration name="DELETE /auth/token.should return 204 code with no body has accessToken" configurationId="mocha-javascript-test-runner" />
     </history-entry>
-    <history-entry file="POST__local-account_signup_should_return_400_status_code_with_msg_registered_user - 2016.11.08 at 13h 19m 26s.xml">
-      <configuration name="POST /local-account/signup.should return 400 status code with msg:registered user" configurationId="mocha-javascript-test-runner" />
+    <history-entry file="DELETE__auth_token_should_return_204_code_with_no_body_has_accessToken - 2016.11.08 at 20h 47m 30s.xml">
+      <configuration name="DELETE /auth/token.should return 204 code with no body has accessToken" configurationId="mocha-javascript-test-runner" />
     </history-entry>
-    <history-entry file="POST__local-account_signup_should_return_400_status_code_with_msg_registered_user - 2016.11.08 at 13h 22m 19s.xml">
-      <configuration name="POST /local-account/signup.should return 400 status code with msg:registered user" configurationId="mocha-javascript-test-runner" />
+    <history-entry file="DELETE__auth_token_should_return_401(Unauthorized)_code_without_Authorization_header - 2016.11.08 at 20h 30m 00s.xml">
+      <configuration name="DELETE /auth/token.should return 401(Unauthorized) code without Authorization header" configurationId="mocha-javascript-test-runner" />
     </history-entry>
-    <history-entry file="POST__local-account_signup_should_return_400_status_code_with_msg_registered_user - 2016.11.08 at 13h 24m 58s.xml">
-      <configuration name="POST /local-account/signup.should return 400 status code with msg:registered user" configurationId="mocha-javascript-test-runner" />
+    <history-entry file="DELETE__auth_token_should_return_403(Unauthorized)_code_with_the_wrong_access_token - 2016.11.08 at 20h 30m 05s.xml">
+      <configuration name="DELETE /auth/token.should return 403(Unauthorized) code with the wrong access token" configurationId="mocha-javascript-test-runner" />
     </history-entry>
-    <history-entry file="POST__local-account_signup_should_return_400_status_code_with_msg_registered_user - 2016.11.08 at 13h 25m 31s.xml">
-      <configuration name="POST /local-account/signup.should return 400 status code with msg:registered user" configurationId="mocha-javascript-test-runner" />
+    <history-entry file="DELETE__auth_token_should_return_403(Unauthorized)_code_with_the_wrong_access_token - 2016.11.08 at 20h 31m 35s.xml">
+      <configuration name="DELETE /auth/token.should return 403(Unauthorized) code with the wrong access token" configurationId="mocha-javascript-test-runner" />
     </history-entry>
-    <history-entry file="POST__social-account_login__socialapp__socialapp_=_google,_return_200_code,_body_contains_the_JSON-data_ID_token_claims_ - 2016.11.08 at 13h 43m 55s.xml">
-      <configuration name="POST /social-account/login/:socialapp.:socialapp = google, return 200 code, body contains the JSON-data ID token claims." configurationId="mocha-javascript-test-runner" />
+    <history-entry file="GET__user__search_GET__user__search_-_should_return_200_code - 2016.11.08 at 20h 49m 16s.xml">
+      <configuration name="GET /user/:search.GET /user/:search - should return 200 code" configurationId="mocha-javascript-test-runner" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="237053000" />
+    <option name="totallyTimeSpent" value="251288000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="24" width="1920" height="1001" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29645094" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29635417" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32998884" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32829374" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32937366" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31209505" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32829374" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34341252" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39956802" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -656,20 +680,20 @@
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32998884" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="REST Client" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32998884" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32329988" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32829374" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31209505" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.1336117" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29635417" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32887402" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32829374" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39956802" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout-to-restore>
   </component>
   <component name="UnknownFeatures">
@@ -706,51 +730,16 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Search friends by string of  'name'" />
-    <option name="LAST_COMMIT_MESSAGE" value="Search friends by string of  'name'" />
+    <MESSAGE value="Extract module - register User - in user.js file" />
+    <option name="LAST_COMMIT_MESSAGE" value="Extract module - register User - in user.js file" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="2" />
+      <option name="time" value="3" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/node_modules/express/lib/router/route.js" />
-    <entry file="file://$PROJECT_DIR$/node_modules/express/lib/application.js" />
-    <entry file="file://$PROJECT_DIR$/out/bin/database.js.map">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-      <provider editor-type-id="sourcemapFileViewerProvider">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/out/bin/database.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/out/bin/www.js.map">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="38" selection-start-line="0" selection-start-column="38" selection-end-line="0" selection-end-column="38" />
-        </state>
-      </provider>
-      <provider editor-type-id="sourcemapFileViewerProvider">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/passport-local/lib/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/passport/lib/http/request.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="435">
@@ -763,13 +752,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="311">
           <caret line="296" column="23" selection-start-line="296" selection-start-column="23" selection-end-line="296" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/utils.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -794,13 +776,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/token.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/auth-server/util/predefine.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
@@ -820,13 +795,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="192">
           <caret line="302" column="4" selection-start-line="302" selection-start-column="4" selection-end-line="302" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/auth-server/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="9" selection-start-line="0" selection-start-column="9" selection-end-line="0" selection-end-column="9" />
         </state>
       </provider>
     </entry>
@@ -859,13 +827,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/utils/tokenizer.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="81">
-          <caret line="52" column="19" selection-start-line="52" selection-start-column="19" selection-end-line="52" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/oauth2orize/lib/server.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="309">
@@ -880,31 +841,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/auth-server/util/passportStrategy.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="25" column="16" selection-start-line="25" selection-start-column="16" selection-end-line="25" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/auth-server/server.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="98">
-          <caret line="15" column="19" selection-start-line="15" selection-start-column="19" selection-end-line="15" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="15" selection-start-line="0" selection-start-column="15" selection-end-line="0" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/oauth2orize/lib/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="501">
-          <caret line="71" column="47" selection-start-line="71" selection-start-column="47" selection-end-line="71" selection-end-column="47" />
         </state>
       </provider>
     </entry>
@@ -915,34 +855,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/auth-server/auth.spec.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-743">
-          <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/api-server/api/local-account/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
           <caret line="9" column="35" selection-start-line="9" selection-start-column="35" selection-end-line="9" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/auth-server/auth.controller.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="26" column="33" selection-start-line="26" selection-start-column="33" selection-end-line="26" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/auth-server/util/exchangeToken.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="541">
-          <caret line="92" column="15" selection-start-line="92" selection-start-column="15" selection-end-line="92" selection-end-column="15" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -950,7 +866,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="192">
           <caret line="160" column="5" selection-start-line="160" selection-start-column="5" selection-end-line="160" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -958,7 +873,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
           <caret line="10" column="2" selection-start-line="10" selection-start-column="2" selection-end-line="10" selection-end-column="2" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -966,6 +880,121 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
           <caret line="10" column="1" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/express/lib/router/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="457" column="0" selection-start-line="457" selection-start-column="0" selection-end-line="457" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/www.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="525">
+          <caret line="35" column="10" selection-start-line="35" selection-start-column="10" selection-end-line="35" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api-server/api/local-account/local-account.controller.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="27" column="42" selection-start-line="27" selection-start-column="42" selection-end-line="27" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api-server/api/friend/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="13" column="7" selection-start-line="13" selection-start-column="7" selection-end-line="13" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api-server/api/social-account/social-account.spec.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="42" selection-start-line="12" selection-start-column="29" selection-end-line="12" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/oauth2orize/lib/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="9" selection-start-line="14" selection-start-column="9" selection-end-line="14" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/mongoose/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="30" selection-start-line="6" selection-start-column="30" selection-end-line="6" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/bcrypt-nodejs/bCrypt.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api-server/api/local-account/local-account.spec.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="795">
+          <caret line="53" column="32" selection-start-line="53" selection-start-column="32" selection-end-line="53" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/auth-server/server.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-128">
+          <caret line="6" column="6" selection-start-line="6" selection-start-column="6" selection-end-line="6" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/auth-server/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" column="23" selection-start-line="16" selection-start-column="23" selection-end-line="16" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/mongoose/lib/utils.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="202">
+          <caret line="624" column="0" selection-start-line="624" selection-start-column="0" selection-end-line="624" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/mongoose/lib/document.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="202">
+          <caret line="850" column="0" selection-start-line="850" selection-start-column="0" selection-end-line="850" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/tokenizer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="960">
+          <caret line="64" column="0" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/utils.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/auth-server/util/exchangeToken.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1455">
+          <caret line="97" column="23" selection-start-line="97" selection-start-column="23" selection-end-line="97" selection-end-column="23" />
           <folding />
         </state>
       </provider>
@@ -978,70 +1007,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/express/lib/router/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="457" column="0" selection-start-line="457" selection-start-column="0" selection-end-line="457" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/www.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="35" column="10" selection-start-line="35" selection-start-column="10" selection-end-line="35" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api-server/api/local-account/local-account.spec.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="428">
-          <caret line="38" column="21" selection-start-line="38" selection-start-column="21" selection-end-line="38" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api-server/api/local-account/local-account.controller.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="27" column="42" selection-start-line="27" selection-start-column="42" selection-end-line="27" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api-server/api/local-account/localPassportStrategy.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api-server/api/social-account/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api-server/api/social-account/social-account.spec.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="42" selection-start-line="12" selection-start-column="29" selection-end-line="12" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/user.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="596">
-          <caret line="57" column="41" selection-start-line="57" selection-start-column="41" selection-end-line="57" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/api-server/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
@@ -1050,26 +1015,92 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/api-server/api/friend/index.js">
+    <entry file="file://$PROJECT_DIR$/node_modules/mongoose/lib/model.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="48" selection-start-line="4" selection-start-column="48" selection-end-line="4" selection-end-column="48" />
+        <state relative-caret-position="182">
+          <caret line="545" column="18" selection-start-line="545" selection-start-column="12" selection-end-line="545" selection-end-column="18" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/token.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="72" column="24" selection-start-line="72" selection-start-column="24" selection-end-line="72" selection-end-column="24" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/api-server/api/user/index.js">
+    <entry file="file://$PROJECT_DIR$/auth-server/auth.spec.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+        <state relative-caret-position="237">
+          <caret line="96" column="32" selection-start-line="96" selection-start-column="32" selection-end-line="96" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/auth-server/auth.controller.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="19" selection-start-line="18" selection-start-column="19" selection-end-line="18" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api-server/api/social-account/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="35" selection-start-line="0" selection-start-column="35" selection-end-line="0" selection-end-column="35" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/api-server/api/user/user.spec.js">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="35" selection-start-line="18" selection-start-column="35" selection-end-line="18" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/user.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="64" column="18" selection-start-line="64" selection-start-column="18" selection-end-line="64" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api-server/api/local-account/localPassportStrategy.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="40" selection-start-line="11" selection-start-column="40" selection-end-line="11" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1485">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api-server/api/user/index.js">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
-          <caret line="19" column="15" selection-start-line="19" selection-start-column="15" selection-end-line="19" selection-end-column="15" />
+          <caret line="19" column="35" selection-start-line="19" selection-start-column="35" selection-end-line="19" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/auth-server/util/passportStrategy.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="202">
+          <caret line="69" column="13" selection-start-line="69" selection-start-column="13" selection-end-line="69" selection-end-column="13" />
           <folding />
         </state>
       </provider>

@@ -14,8 +14,9 @@ router.get('/:search',
     oauth2Server.error(),
     (req, res) => {
         var regexValue = req.params.search;
+        console.log(regexValue);
         // Search using 'search'
-        User.find({'name': new RegExp(regexValue)}, (err, users) => {
+        User.model.find({'name': new RegExp(regexValue)}, (err, users) => {
             if(err) res.sendStatus(400);
             if(users.length === 0) {
                 console.log('no users');
