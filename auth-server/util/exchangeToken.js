@@ -43,7 +43,7 @@ module.exports = (server) => {
             if (isLocalAccount) {
                 if (!user.validPassword(password)) {
                     return done(new oauth2orize.TokenError(
-                        'resource owner credential is not correct',
+                        'invalid password of Local',
                         'invalid_grant'
                     ));
                 }

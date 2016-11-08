@@ -9,5 +9,6 @@ exports.initialize = (app) => {
     // enter into router, when start the path, ex.'/social-account/*'
     app.use('/local-account', localAccountRouter);
     app.use('/social-account', socialAccountRouter);
-    // app.use('/users', userRouter);
+
+    app.use('/user', userRouter);
 };
