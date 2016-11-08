@@ -16,25 +16,7 @@ exports.setup = () => {
         }
 
         // Validate email and password
-        User.findOne({'email': email},
-            (err, user) => {
-                if (err) {
-                    return done(err);
-                }
-                if (user) {
-                    console.log('WARNING! an user with email exists');
-                    return done(null, false, {reason: 'registered email'});
-                }
-
-                let newUser = new User();
-                newUser.name = req.body.name;
-                newUser.email = email;
-                newUser.password = newUser.generateHash(password);
-                newUser.save((err) => {
-                    if (err) throw err;
-                    return done(null, newUser);
-                });
-            });
+        User.registerLocal(req.body.name, email, password, done);
     }));
 
     passport.use('local-login', new LocalStrategy({

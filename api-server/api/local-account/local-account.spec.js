@@ -4,8 +4,8 @@ const request = require('supertest');
 
 const server = require('../../../www');
 
-const test_name = 'nameofkiwi2';
-const test_email = 'kiwi2@gmail.com';
+const test_name = 'nameofkiwi3';
+const test_email = 'kiwi3@gmail.com';
 const test_password = '123';
 
 describe('POST /local-account/signup', () => {
@@ -23,10 +23,21 @@ describe('POST /local-account/signup', () => {
             });
     });
 
-    it('should return 400 status code', (done) => {
+    it('should return 403 status code with msg:Missing credentials', (done) => {
+        request(server)
+            .post('/local-account/signup')
+            .expect(403)
+            .end((err, res) => {
+                if (err) throw err;
+                done();
+            });
+    });
+
+    it('should return 400 status code with msg:registered user', (done) => {
         request(server)
             .post('/local-account/signup')
             .expect(400)
+            .send({name: test_name, email: test_email, password: test_password})
             .end((err, res) => {
                 if (err) throw err;
                 done();

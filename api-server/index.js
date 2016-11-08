@@ -2,6 +2,7 @@ const passport = require('passport');
 const localAccountRouter = require('./api/local-account');
 const socialAccountRouter = require('./api/social-account');
 const userRouter = require('./api/user');
+const friendRouter = require('./api/friend');
 
 exports.initialize = (app) => {
 
@@ -11,4 +12,6 @@ exports.initialize = (app) => {
     app.use('/social-account', socialAccountRouter);
 
     app.use('/user', userRouter);
+
+    // app.use('/friend', friendRouter);
 };

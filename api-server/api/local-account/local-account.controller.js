@@ -9,11 +9,11 @@ exports.signup = (req, res, next) => {
         if (err) res.sendStatus(401);
         if (!user) {
             console.log(info);
-            res.sendStatus(400);
+            return res.sendStatus(400);
         }
         // 201 code: registered a new user; signup success
         console.log(user);
-        res.status(201).json(user);
+        return res.status(201).json(user);
     })(req, res, next);
 };
 
@@ -22,9 +22,9 @@ exports.login = (req, res, next) => {
         if (err) res.sendStatus(401);
         if (!user) {
             console.log(info);
-            res.sendStatus(400);
+            return res.sendStatus(400);
         }
 
-        res.status(200).json(user);
+        return res.status(200).json(user);
     })(req, res, next);
 };
