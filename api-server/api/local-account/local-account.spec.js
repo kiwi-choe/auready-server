@@ -1,14 +1,24 @@
+process.env.dbURI = 'test';
+
 const assert = require('assert');
 const should = require('should');
 const request = require('supertest');
-
 const server = require('../../../www');
+
+const User = require('../../../models/user.controller');
 
 const test_name = 'nameofkiwi3';
 const test_email = 'kiwi3@gmail.com';
 const test_password = '123';
 
 describe('POST /local-account/signup', () => {
+
+    afterEach(done => {
+        // delete all the users
+        User.deleteAll(err => {
+            done();
+        });
+    });
 
     it('should return 201 status code', (done) => {
         request(server)
@@ -23,14 +33,32 @@ describe('POST /local-account/signup', () => {
             });
     });
 
-    it('should return 403 status code with msg:Missing credentials', (done) => {
+    it('should return 400 status code with msg:Missing credentials', (done) => {
         request(server)
             .post('/local-account/signup')
-            .expect(403)
+            .expect(400)
             .end((err, res) => {
                 if (err) throw err;
                 done();
             });
+    });
+});
+
+describe('POST /local-account/signup - already registered user test', () => {
+    let currentUser;
+    before(done => {
+        // add some test data
+        User.createLocal(test_name, test_email, test_password, (err, user, info) => {
+            currentUser = user;
+            console.log(currentUser);
+            done();
+        });
+    });
+    after(done => {
+        // delete all the users
+        User.deleteAll(err => {
+            done();
+        });
     });
 
     it('should return 400 status code with msg:registered user', (done) => {
@@ -46,6 +74,22 @@ describe('POST /local-account/signup', () => {
 });
 
 describe('POST /local-account/login', () => {
+    let currentUser;
+    before(done => {
+        // add some test data
+        User.createLocal(test_name, test_email, test_password, (err, user, info) => {
+            currentUser = user;
+            console.log(currentUser);
+            done();
+        });
+    });
+    after(done => {
+        // delete all the users
+        User.deleteAll(err => {
+            done();
+        });
+    });
+
     it('should return 200 status code', (done) => {
         request(server)
             .post('/local-account/login')

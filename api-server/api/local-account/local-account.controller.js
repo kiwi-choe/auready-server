@@ -6,7 +6,9 @@ exports.signup = (req, res, next) => {
     // Set Local signup strategy by passport.authenticate method
     passport.authenticate('local-signup', (err, user, info) => {
         console.log('success to LocalSignup strategy');
-        if (err) res.sendStatus(401);
+        if (err) {
+            return res.sendStatus(401);
+        }
         if (!user) {
             console.log(info);
             return res.sendStatus(400);
@@ -19,7 +21,9 @@ exports.signup = (req, res, next) => {
 
 exports.login = (req, res, next) => {
     passport.authenticate('local-login', (err, user, info) => {
-        if (err) res.sendStatus(401);
+        if (err) {
+            return res.sendStatus(401);
+        }
         if (!user) {
             console.log(info);
             return res.sendStatus(400);
