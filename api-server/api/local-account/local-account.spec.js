@@ -1,14 +1,33 @@
 const assert = require('assert');
 const should = require('should');
 const request = require('supertest');
-
 const server = require('../../../www');
+
+const mongoose = require('mongoose');
+// tell Mongoose to use a different DB - create on the fly
+mongoose.connect('mongodb://localhost:27017/aureaydb_test');
+const User = require('../../../models/user.controller');
 
 const test_name = 'nameofkiwi3';
 const test_email = 'kiwi3@gmail.com';
 const test_password = '123';
 
 describe('POST /local-account/signup', () => {
+
+    let currentUser;
+    beforeEach(done => {
+        // add some test data
+        User.createLocal(test_name, test_email, test_password, (err, user, info) => {
+            currentUser = user;
+            done();
+        });
+    });
+    afterEach(done => {
+        // delete all the users
+        User.deleteAll(err => {
+            done();
+        });
+    });
 
     it('should return 201 status code', (done) => {
         request(server)
