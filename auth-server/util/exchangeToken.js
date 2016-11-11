@@ -1,9 +1,9 @@
 const oauth2orize = require('oauth2orize');
-const tokenizer = require(__appbase_dirname + '/utils/tokenizer');
 const predefine = require('./predefine');
 
 const User = require(__appbase_dirname + '/models/user');
 const Token = require(__appbase_dirname + '/models/token');
+const TokenController = require(__appbase_dirname + '/models/token.controller');
 
 module.exports = (server) => {
     if (!server) {
@@ -72,7 +72,7 @@ module.exports = (server) => {
                         }
                     );
                 } else {
-                    tokenizer.create(client.clientId, user.id, predefine.oauth2.type.password,
+                    TokenController.create(client.clientId, user.id, predefine.oauth2.type.password,
                         (err, newToken) => {
                             if (err) {
                                 return done(new oauth2orize.TokenError(
@@ -112,7 +112,7 @@ module.exports = (server) => {
                 ));
             }
 
-            tokenizer.refresh(token, (err, updatedToken) => {
+            TokenController.update(token, (err, updatedToken) => {
                 if (err) {
                     return done(new oauth2orize.TokenError(
                         'Error occurs during refreshing token',

@@ -7,7 +7,7 @@ exports.initialize = (app) => {
     // Start oauth2 server
     authServer.initialize();
 
-    // Add signup client info
+    // Add LocalAccount client info
     require('./util/authLocalClient')();
 
     // Set PassportStrategy

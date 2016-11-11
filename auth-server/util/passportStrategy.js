@@ -1,14 +1,13 @@
 const passport = require('passport');
 const BasicStrategy = require('passport-http').BasicStrategy;
 const BearerStrategy = require('passport-http-bearer').Strategy;
-var oauth2orize = require('oauth2orize');
+const oauth2orize = require('oauth2orize');
 
 const predefine = require('./predefine');
-// const tokenizer = require('../../utils/tokenizer');
 
 const OauthClient = require(__appbase_dirname + '/models/oauthClient');
-const Token = require(__appbase_dirname + '/models/token');
 const User = require(__appbase_dirname + '/models/user');
+const TokenController = require(__appbase_dirname + '/models/token.controller');
 
 exports.setup = () => {
 
@@ -64,7 +63,7 @@ exports.setup = () => {
         passReqToCallback: true
     }, (req, accessToken, done) => {
         console.log('bearer strategy');
-        Token.validate(accessToken, (err, token) => {
+        TokenController.validate(accessToken, (err, token) => {
             if (err) {
                 return done(err);
             }
