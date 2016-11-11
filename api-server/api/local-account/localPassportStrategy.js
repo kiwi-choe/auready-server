@@ -1,8 +1,8 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
-const UserModel = require(__appbase_dirname + '/models/user');
-const User = require(__appbase_dirname + '/models/user.controller');
+const User = require(__appbase_dirname + '/models/user');
+const UserController = require(__appbase_dirname + '/models/user.controller');
 
 exports.setup = () => {
 
@@ -17,7 +17,7 @@ exports.setup = () => {
         }
 
         // Validate email and password
-        User.createLocal(req.body.name, email, password, done);
+        UserController.createLocal(req.body.name, email, password, done);
     }));
 
     passport.use('local-login', new LocalStrategy({
@@ -29,7 +29,7 @@ exports.setup = () => {
             email = email.toLowerCase();
         }
         // Validate email and password
-        UserModel.findOne({'email': email}, (err, user) => {
+        User.findOne({'email': email}, (err, user) => {
             console.log(user);
             if (err) {
                 return done(err);
