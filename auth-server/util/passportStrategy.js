@@ -68,7 +68,7 @@ exports.setup = () => {
             if (err) {
                 return done(err);
             }
-            User.model.findOne({
+            User.findOne({
                 '_id': token.userId
             }, (err, user) => {
                 if (err) {

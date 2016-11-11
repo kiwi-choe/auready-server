@@ -8,15 +8,11 @@
   <component name="ChangeListManager">
     <list default="true" id="ef065afe-73c9-4586-81e8-a92f957a6564" name="Default" comment="Use a test db created on the fly , not a real db">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-server/api/local-account/local-account.controller.js" afterPath="$PROJECT_DIR$/api-server/api/local-account/local-account.controller.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-server/api/local-account/local-account.spec.js" afterPath="$PROJECT_DIR$/api-server/api/local-account/local-account.spec.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-server/api/local-account/localPassportStrategy.js" afterPath="$PROJECT_DIR$/api-server/api/local-account/localPassportStrategy.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-server/api/social-account/index.js" afterPath="$PROJECT_DIR$/api-server/api/social-account/index.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-server/api/user/index.js" afterPath="$PROJECT_DIR$/api-server/api/user/index.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/auth-server/util/passportStrategy.js" afterPath="$PROJECT_DIR$/auth-server/util/passportStrategy.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/database.js" afterPath="$PROJECT_DIR$/bin/database.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/token.js" afterPath="$PROJECT_DIR$/models/token.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/user.js" afterPath="$PROJECT_DIR$/models/user.js" />
     </list>
     <ignored path="auready-server.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -44,31 +40,18 @@
           <file leaf-file-name="local-account.spec.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/api-server/api/local-account/local-account.spec.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="510">
-                  <caret line="92" column="36" selection-start-line="92" selection-start-column="36" selection-end-line="92" selection-end-column="36" />
-                  <folding>
-                    <element signature="e#380#1280#0" expanded="false" />
-                    <element signature="e#1360#2123#0" expanded="false" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="local-account.controller.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/api-server/api/local-account/local-account.controller.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="380">
-                  <caret line="26" column="20" selection-start-line="26" selection-start-column="20" selection-end-line="26" selection-end-column="20" />
+                <state relative-caret-position="180">
+                  <caret line="59" column="19" selection-start-line="59" selection-start-column="19" selection-end-line="59" selection-end-column="19" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="database.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/bin/database.js">
+          <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/api-server/api/social-account/index.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="210">
-                  <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+                <state relative-caret-position="348">
+                  <caret line="34" column="22" selection-start-line="34" selection-start-column="22" selection-end-line="34" selection-end-column="22" />
                   <folding />
                 </state>
               </provider>
@@ -88,21 +71,31 @@
       </split-first>
       <split-second>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="user.controller.js" pinned="false" current-in-tab="true">
+          <file leaf-file-name="user.controller.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/models/user.controller.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="225">
-                  <caret line="15" column="22" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="22" />
+                <state relative-caret-position="737">
+                  <caret line="68" column="4" selection-start-line="68" selection-start-column="4" selection-end-line="68" selection-end-column="4" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="localPassportStrategy.js" pinned="false" current-in-tab="false">
+          <file leaf-file-name="localPassportStrategy.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/api-server/api/local-account/localPassportStrategy.js">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="495">
                   <caret line="33" column="22" selection-start-line="33" selection-start-column="22" selection-end-line="33" selection-end-column="22" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="local-account.controller.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/api-server/api/local-account/local-account.controller.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="270">
+                  <caret line="18" column="19" selection-start-line="18" selection-start-column="19" selection-end-line="18" selection-end-column="19" />
                   <folding />
                 </state>
               </provider>
@@ -155,15 +148,15 @@
         <option value="$PROJECT_DIR$/models/user.js" />
         <option value="$PROJECT_DIR$/models/controller/user.controller.js" />
         <option value="$PROJECT_DIR$/models/token.js" />
-        <option value="$PROJECT_DIR$/api-server/api/social-account/index.js" />
         <option value="$PROJECT_DIR$/api-server/api/user/index.js" />
         <option value="$PROJECT_DIR$/auth-server/util/passportStrategy.js" />
         <option value="$PROJECT_DIR$/www.js" />
-        <option value="$PROJECT_DIR$/bin/database.js" />
         <option value="$PROJECT_DIR$/models/user.controller.js" />
         <option value="$PROJECT_DIR$/api-server/api/local-account/local-account.controller.js" />
         <option value="$PROJECT_DIR$/api-server/api/local-account/localPassportStrategy.js" />
         <option value="$PROJECT_DIR$/api-server/api/local-account/local-account.spec.js" />
+        <option value="$PROJECT_DIR$/bin/database.js" />
+        <option value="$PROJECT_DIR$/api-server/api/social-account/index.js" />
       </list>
     </option>
   </component>
@@ -196,10 +189,9 @@
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="759" />
-    <option name="y" value="52" />
-    <option name="width" value="1133" />
-    <option name="height" value="972" />
+    <option name="y" value="24" />
+    <option name="width" value="1920" />
+    <option name="height" value="1001" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -545,7 +537,8 @@
       <workItem from="1478742688644" duration="4990000" />
       <workItem from="1478747702864" duration="4820000" />
       <workItem from="1478760353418" duration="746000" />
-      <workItem from="1478763376932" duration="6427000" />
+      <workItem from="1478763376932" duration="8420000" />
+      <workItem from="1478854891937" duration="725000" />
     </task>
     <task id="LOCAL-00001" summary="Search friends by string of  'name'">
       <created>1478571038407</created>
@@ -582,7 +575,21 @@
       <option name="project" value="LOCAL" />
       <updated>1478746081634</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Use a test db created on the fly , not a real db AND separate Model user to Controller(CRUD) user">
+      <created>1478769905623</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1478769905623</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Modify model user and then">
+      <created>1478855420079</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1478855420079</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -618,18 +625,17 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="273888000" />
+    <option name="totallyTimeSpent" value="276606000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="759" y="52" width="1133" height="972" extended-state="4" />
+    <frame x="0" y="24" width="1920" height="1001" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19791667" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32998884" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3277592" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32721382" sideWeight="0.50308913" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3277592" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3174946" sideWeight="0.49691087" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34336677" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -641,6 +647,7 @@
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="REST Client" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32998884" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3277592" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -702,7 +709,9 @@
     <MESSAGE value="Modify Get user/:search function after modifying model user" />
     <MESSAGE value="Modify all the functions in auth.controller after modifying model token" />
     <MESSAGE value="Use a test db created on the fly , not a real db" />
-    <option name="LAST_COMMIT_MESSAGE" value="Use a test db created on the fly , not a real db" />
+    <MESSAGE value="Use a test db created on the fly , not a real db AND separate Model user to Controller(CRUD) user" />
+    <MESSAGE value="Modify model user and then" />
+    <option name="LAST_COMMIT_MESSAGE" value="Modify model user and then" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -944,20 +953,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/api-server/api/social-account/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="353">
-          <caret line="28" column="30" selection-start-line="28" selection-start-column="30" selection-end-line="28" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api-server/api/user/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="19" selection-start-line="20" selection-start-column="19" selection-end-line="20" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/api-server/api/user/user.spec.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
@@ -1012,7 +1007,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
           <caret line="19" column="30" selection-start-line="19" selection-start-column="30" selection-end-line="19" selection-end-column="30" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1028,34 +1022,22 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="291">
           <caret line="72" column="2" selection-start-line="72" selection-start-column="2" selection-end-line="72" selection-end-column="2" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bin/database.js">
+    <entry file="file://$PROJECT_DIR$/models/user.controller.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+        <state relative-caret-position="737">
+          <caret line="68" column="4" selection-start-line="68" selection-start-column="4" selection-end-line="68" selection-end-column="4" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/api-server/api/local-account/local-account.controller.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="380">
-          <caret line="26" column="20" selection-start-line="26" selection-start-column="20" selection-end-line="26" selection-end-column="20" />
+        <state relative-caret-position="270">
+          <caret line="18" column="19" selection-start-line="18" selection-start-column="19" selection-end-line="18" selection-end-column="19" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api-server/api/local-account/local-account.spec.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="92" column="36" selection-start-line="92" selection-start-column="36" selection-end-line="92" selection-end-column="36" />
-          <folding>
-            <element signature="e#380#1280#0" expanded="false" />
-            <element signature="e#1360#2123#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1067,10 +1049,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/user.controller.js">
+    <entry file="file://$PROJECT_DIR$/api-server/api/social-account/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="22" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="22" />
+        <state relative-caret-position="348">
+          <caret line="34" column="22" selection-start-line="34" selection-start-column="22" selection-end-line="34" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api-server/api/user/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="24" column="31" selection-start-line="24" selection-start-column="31" selection-end-line="24" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/database.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="18" selection-start-line="8" selection-start-column="18" selection-end-line="8" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api-server/api/local-account/local-account.spec.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="59" column="19" selection-start-line="59" selection-start-column="19" selection-end-line="59" selection-end-column="19" />
           <folding />
         </state>
       </provider>
