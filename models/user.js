@@ -8,7 +8,16 @@ const bcrypt = require('bcrypt-nodejs');
 const schema = mongoose.Schema({
     name: String,
     email: String,
-    password: String
+    password: String,
+    friendCount: Number
+});
+
+schema.pre('save', next => {
+    if(!this.isNew) {
+        return next();
+    }
+    this.friendCount = 0;
+    next();
 });
 
 // checking if password is valid
