@@ -46,7 +46,7 @@ describe('POST /auth/token', () => {
 
     before(done => {
         // register user
-        User.createLocal(test_name, test_email, test_password, (err, user, info) => {
+        User.create(test_name, test_email, test_password, true, (err, user, info) => {
             done();
         });
     });
@@ -114,7 +114,7 @@ describe('DELETE /auth/token', () => {
     let accessToken;
     beforeEach(done => {
         // Register user first
-        User.createLocal(test_name, test_email, test_password, (err, user, info) => {
+        User.create(test_name, test_email, test_password, true, (err, user, info) => {
             // Add Token
             Token.create(clientId, user.id, predefine.oauth2.type.password, (err, newToken) => {
                 accessToken = newToken.accessToken;

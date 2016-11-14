@@ -17,7 +17,17 @@ exports.setup = () => {
         }
 
         // Validate email and password
-        UserController.createLocal(req.body.name, email, password, done);
+        User.findOne({'email': email},
+            (err, user) => {
+                if(err) {
+                    return done(err);
+                }
+                if(user) {
+                    console.log('WARNING! an user with email exists');
+                    return done(null, false, {reason: 'registered user'});
+                }
+                UserController.create(req.body.name, email, password, true, done);
+            });
     }));
 
     passport.use('local-login', new LocalStrategy({

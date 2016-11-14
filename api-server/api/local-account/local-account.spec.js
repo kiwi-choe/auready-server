@@ -48,7 +48,7 @@ describe('POST /local-account/signup - already registered user test', () => {
     let currentUser;
     before(done => {
         // add some test data
-        User.createLocal(test_name, test_email, test_password, (err, user, info) => {
+        User.create(test_name, test_email, test_password, true, (err, user, info) => {
             currentUser = user;
             console.log(currentUser);
             done();
@@ -77,7 +77,7 @@ describe('POST /local-account/login', () => {
     let currentUser;
     before(done => {
         // add some test data
-        User.createLocal(test_name, test_email, test_password, (err, user, info) => {
+        User.create(test_name, test_email, test_password, true, (err, user, info) => {
             currentUser = user;
             console.log(currentUser);
             done();

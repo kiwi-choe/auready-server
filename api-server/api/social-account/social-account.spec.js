@@ -11,7 +11,7 @@ describe('POST /social-account/login/:socialapp', () => {
         request(server)
             .post('/social-account/login/google')
             .send({id_token: temp_id_token})
-            .expect(200)
+            .expect(201)
             .end((err, res) => {
                 if (err) throw err;
                 done();
