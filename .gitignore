@@ -49,3 +49,5 @@ jspm_packages
 
 # Out directory
 out
+
+.idea
