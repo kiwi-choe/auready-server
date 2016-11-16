@@ -25,29 +25,9 @@ const _create = (user1, user2, actionUserId, done) => {
             if (err) {
                 return done(err);
             }
-            console.log(newRelationShip);
             return done(err, newRelationShip);
         });
     });
-    // Relationship.find({userOneId: user1, userTwoId: user2},
-    //     (err, relationships) => {
-    //         if (err) {
-    //             return done(err);
-    //         }
-    //         // exists a relationship already, res 400 code
-    //         if (relationships.length !== 0) {
-    //             console.log('WARNING! this relationship already exists');
-    //             return done(null, false, {reason: 'exist relationship'});
-    //         }
-    //         // create new relationship
-    //         let newRelationShip = new Relationship({user1, user2, actionUserId});
-    //         newRelationShip.save(err => {
-    //             if (err) {
-    //                 return done(err);
-    //             }
-    //             return done(err, newRelationShip);
-    //         });
-    //     });
 };
 
 /*
