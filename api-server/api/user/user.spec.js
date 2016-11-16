@@ -36,7 +36,6 @@ describe('GET /user/:search', () => {
         });
     });
 
-
     it('GET /user/:search - should return 200 code', done => {
         request
             .get('/user/' + search)
