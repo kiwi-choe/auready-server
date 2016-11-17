@@ -1,5 +1,12 @@
 const Relationship = require(__appbase_dirname + '/models/relationship');
 
+// enum values of status
+const _status = {
+    PENDING: 0,
+    ACCEPTED: 1,
+    DECLINED: 2
+};
+
 // Avoid duplication
 const _create = (fromUserId, toUserId, done) => {
     // Check to avoid duplicate
@@ -19,7 +26,7 @@ const _create = (fromUserId, toUserId, done) => {
         let newRelationShip = new Relationship();
         newRelationShip.fromUserId = fromUserId;
         newRelationShip.toUserId = toUserId;
-        newRelationShip.status = 0;
+        newRelationShip.status = _status.PENDING;
         newRelationShip.save(err => {
             if (err) {
                 return done(err);
@@ -33,7 +40,6 @@ const _create = (fromUserId, toUserId, done) => {
  * Show friends
  * To set '1' into 'status' means they are relationship.
  * */
-const ACCEPTED = 1;
 // const _readAccepted = (userId, done) => {
 //     Relationship.find().or([{userOneId: userId}, {userTwoId: userId}]).where({status: ACCEPTED}).exec((err, relationships) => {
 //         if (err) {
@@ -57,5 +63,6 @@ const _deleteAll = done => {
 
 module.exports = {
     create: _create,
-    deleteAll: _deleteAll
+    deleteAll: _deleteAll,
+    statusValues: _status
 }
