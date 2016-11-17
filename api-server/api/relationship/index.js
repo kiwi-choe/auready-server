@@ -29,7 +29,22 @@ router.post('/:userId',
 router.get('/:userId',
     passport.authenticate('bearer', {session: false}), oauth2Server.error(),
     (req, res) => {
-        // Relationship.findOne({''})
+        Relationship.findOne().or([
+            {fromUserId: req.user.id, toUserId: req.params.userId},
+            {fromUserId: req.params.userId, toUserId: req.user.id}
+        ]).exec((err, relationship) => {
+            if (err) {
+                return res.sendStatus(400);
+            }
+            if (!relationship) {
+                return res.sendStatus(404); // 404: Not found.
+            }
+            // There is a relationship within two users
+            return res.status(200).json({
+                'fromUserId': relationship.fromUserId,
+                'status': relationship.status
+            });
+        })
     });
 
 module.exports = router;

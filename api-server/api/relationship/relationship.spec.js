@@ -53,7 +53,7 @@ describe('POST /relationship/', () => {
     });
 });
 
-describe('GET /relationship/', () => {
+describe('Check the relationship - GET /relationship/:userId', () => {
 
     // conditions
     // 1. 2 users at least
@@ -61,7 +61,10 @@ describe('GET /relationship/', () => {
     let accessToken;
     let loggedInUser;
     let otherUser;
-    before(done => {
+
+    let fromUserId;
+    let status;
+    beforeEach(done => {
         // Create logged in user and other user
         User.createMany((err, users) => {
             if (users.length === 2) {
@@ -74,16 +77,28 @@ describe('GET /relationship/', () => {
             });
         });
     });
-    after(done => {
+    afterEach(done => {
         // delete all the users
         User.deleteAll(err => {
             Token.deleteAll(err => {
-                done();
+                RelationshipController.deleteAll(err => {
+                    done();
+                });
             });
         });
     });
 
-    it('Check the relationship - GET /relationship/:userId', done => {
+    it('has a relationship with :userId', done => {
+
+        // Create the relationship within two users
+        RelationshipController.create(otherUser.id, loggedInUser.id, (err, newRelationship, info) => {
+
+            fromUserId = newRelationship.fromUserId;
+            assert.equal(fromUserId, otherUser.id, 'Success to create the new relationship');
+            status = newRelationship.status;
+            assert.equal(status, 0);
+        });
+
         request
             .get('/relationship/' + otherUser.id)
             .set({Authorization: 'Bearer' + ' ' + accessToken})
@@ -91,6 +106,22 @@ describe('GET /relationship/', () => {
             .end((err, res) => {
                 if (err) throw err;
                 // can check what relationship with 'otherUser.id' using 'actionUserId' and 'status'
+                res.status.should.equal(200);
+                res.body.should.have.property('fromUserId').equal(fromUserId);
+                res.body.should.have.property('status').equal(status);
+                done();
+            });
+    });
+
+    it('no relationship', done => {
+        request
+            .get('/relationship/' + otherUser.id)
+            .set({Authorization: 'Bearer' + ' ' + accessToken})
+            .expect(404)
+            .end((err, res) => {
+                if (err) throw err;
+                // can check what relationship with 'otherUser.id' using 'actionUserId' and 'status'
+                res.status.should.equal(404);
                 done();
             });
     });
@@ -115,7 +146,7 @@ describe('Duplicate testing', () => {
         RelationshipController.create(userA, userB, (err, relationship, info) => {
             // Check if can create {userOneId: b, userTwoId: a, -, -}
             RelationshipController.create(userB, userA, (err, relationship, info) => {
-                if(relationship) {
+                if (relationship) {
                     assert.fail('relationship have to be false');
                 }
                 assert.ok(info);
@@ -126,8 +157,8 @@ describe('Duplicate testing', () => {
 });
 
 /*
-* DB TEST: Check pre save method
-* */
+ * DB TEST: Check pre save method
+ * */
 describe('Pre save schema method testing', () => {
 
     after(done => {

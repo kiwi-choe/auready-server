@@ -22,7 +22,6 @@ schema.pre('save', next => {
     //     return next();
     // }
     this.status = PENDING;
-    console.log('status: ' + this.status);
     next();
 });
 
