@@ -1,11 +1,11 @@
 const Relationship = require(__appbase_dirname + '/models/relationship');
 
 // Avoid duplication
-const _create = (user1, user2, actionUserId, done) => {
+const _create = (fromUserId, toUserId, done) => {
     // Check to avoid duplicate
     Relationship.find().or([
-        {userOneId: user1, userTwoId: user2},
-        {userOneId: user2, userTwoId: user1}
+        {fromUserId: fromUserId, toUserId: toUserId},
+        {fromUserId: toUserId, toUserId: fromUserId}
     ]).exec((err, relationship) => {
         if (err) {
             return done(err);
@@ -16,11 +16,10 @@ const _create = (user1, user2, actionUserId, done) => {
             return done(null, false, {reason: 'exist relationship'});
         }
         // create new relationship
-        let newRelationShip = new Relationship({
-            userOneId: user1,
-            userTwoId: user2,
-            actionUserId: actionUserId
-        });
+        let newRelationShip = new Relationship();
+        newRelationShip.fromUserId = fromUserId;
+        newRelationShip.toUserId = toUserId;
+        newRelationShip.status = 0;
         newRelationShip.save(err => {
             if (err) {
                 return done(err);
@@ -35,17 +34,17 @@ const _create = (user1, user2, actionUserId, done) => {
  * To set '1' into 'status' means they are relationship.
  * */
 const ACCEPTED = 1;
-const _readAccepted = (userId, done) => {
-    Relationship.find().or([{userOneId: userId}, {userTwoId: userId}]).where({status: ACCEPTED}).exec((err, relationships) => {
-        if (err) {
-            return done(err);
-        }
-        if (!relationships) {
-            return done(null, false);
-        }
-        return done(null, relationships);
-    });
-};
+// const _readAccepted = (userId, done) => {
+//     Relationship.find().or([{userOneId: userId}, {userTwoId: userId}]).where({status: ACCEPTED}).exec((err, relationships) => {
+//         if (err) {
+//             return done(err);
+//         }
+//         if (!relationships) {
+//             return done(null, false);
+//         }
+//         return done(null, relationships);
+//     });
+// };
 
 const _deleteAll = done => {
     Relationship.remove({}, err => {

@@ -5,6 +5,7 @@ const utils = require(__appbase_dirname + '/utils/utils');
 const _create = (clientID, userID, grantType, done) => {
     let newToken = new Token();
     newToken.accessToken = utils.uid(256);
+    newToken.createdTime = Date.now();
     if (grantType.token_refreshable) {
         newToken.refreshToken = utils.uid(256);
     }
