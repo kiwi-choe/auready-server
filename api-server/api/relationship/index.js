@@ -4,14 +4,16 @@ const router = express.Router();
 const passport = require('passport');
 const oauth2Server = require(__appbase_dirname + '/auth-server/server');
 
-const RelationshipController = require(__appbase_dirname + '/models/relationship.controller');
+const RelationshipDBController = require(__appbase_dirname + '/models/relationship.controller');
 const Relationship = require(__appbase_dirname + '/models/relationship');
+
+const controller = require('./relationship.controller');
 
 // Friend Request - Create a relationship with who has body.userId
 router.post('/:userId',
     passport.authenticate('bearer', {session: false}), oauth2Server.error(),
     (req, res) => {
-        RelationshipController.create(req.user.id, req.params.userId, (err, relationship, info) => {
+        RelationshipDBController.create(req.user.id, req.params.userId, (err, relationship, info) => {
             if (err) {
                 return res.sendStatus(400);
             }
@@ -45,6 +47,49 @@ router.get('/:userId',
                 'status': relationship.status
             });
         })
+    });
+
+// Get friends, status: ACCEPTED
+router.get('/status/:status',
+    passport.authenticate('bearer', {session: false}), oauth2Server.error(),
+    (req, res) => {
+
+        let loggedInUserId = req.user.id;
+        RelationshipDBController.readAccepted(loggedInUserId, (err, relationships, info) => {
+            if (err) {
+                return res.sendStatus(400);
+            }
+            console.log(relationships);
+            if (!relationships) {
+                console.log(info);
+                return res.sendStatus(404); // Not found.
+            }
+            // loop
+            let friends = relationships.map((item) => {
+                if (loggedInUserId !== item.fromUserId) {
+                    return item.fromUserId;
+                } else {
+                    return item.toUserId;
+                }
+            });
+            console.log('friends:' + friends);
+            return res.status(200).json({
+                friends: friends
+            });
+        });
+
+        // console.log(req.params.status);
+        // switch (req.params.status) {
+        //     case RelationshipDBController.statusValues.ACCEPTED:
+        //         controller.getFriends(req.user.id, res);
+        //         break;
+        //     case RelationshipDBController.statusValues.DECLINED:
+        //         break;
+        //     case RelationshipDBController.PENDING:
+        //         break;
+        //     default:
+        //         break;
+        // }
     });
 
 module.exports = router;
