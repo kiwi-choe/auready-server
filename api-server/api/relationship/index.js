@@ -54,42 +54,19 @@ router.get('/status/:status',
     passport.authenticate('bearer', {session: false}), oauth2Server.error(),
     (req, res) => {
 
-        let loggedInUserId = req.user.id;
-        RelationshipDBController.readAccepted(loggedInUserId, (err, relationships, info) => {
-            if (err) {
-                return res.sendStatus(400);
-            }
-            console.log(relationships);
-            if (!relationships) {
-                console.log(info);
-                return res.sendStatus(404); // Not found.
-            }
-            // loop
-            let friends = relationships.map((item) => {
-                if (loggedInUserId !== item.fromUserId) {
-                    return item.fromUserId;
-                } else {
-                    return item.toUserId;
-                }
-            });
-            console.log('friends:' + friends);
-            return res.status(200).json({
-                friends: friends
-            });
-        });
+        const status = req.params.status;
+        if (status == RelationshipDBController.statusValues.ACCEPTED) {
+            controller.getFriends(req.user.id, res);
+        }
+        else if (status == RelationshipDBController.statusValues.DECLINED) {
 
-        // console.log(req.params.status);
-        // switch (req.params.status) {
-        //     case RelationshipDBController.statusValues.ACCEPTED:
-        //         controller.getFriends(req.user.id, res);
-        //         break;
-        //     case RelationshipDBController.statusValues.DECLINED:
-        //         break;
-        //     case RelationshipDBController.PENDING:
-        //         break;
-        //     default:
-        //         break;
-        // }
+        }
+        else if (status == RelationshipDBController.statusValues.PENDING) {
+
+        }
+        else {
+
+        }
     });
 
 module.exports = router;
