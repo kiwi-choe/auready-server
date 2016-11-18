@@ -27,13 +27,13 @@ router.post('/:userId',
         });
     });
 
-// Check what relationship with ':userId'
-router.get('/:userId',
+// Check what relationship with ':id'
+router.get('/user/:id',
     passport.authenticate('bearer', {session: false}), oauth2Server.error(),
     (req, res) => {
         Relationship.findOne().or([
-            {fromUserId: req.user.id, toUserId: req.params.userId},
-            {fromUserId: req.params.userId, toUserId: req.user.id}
+            {fromUserId: req.user.id, toUserId: req.params.id},
+            {fromUserId: req.params.id, toUserId: req.user.id}
         ]).exec((err, relationship) => {
             if (err) {
                 return res.sendStatus(400);
@@ -69,4 +69,6 @@ router.get('/status/:status',
         }
     });
 
+// Accept the friend request
+router.put('/:toUserId/:status')
 module.exports = router;

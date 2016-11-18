@@ -53,7 +53,7 @@ describe('POST /relationship/', () => {
     });
 });
 
-describe('Check the relationship - GET /relationship/:userId', () => {
+describe('Check the relationship - GET /relationship/user/:id', () => {
 
     // conditions
     // 1. 2 users at least
@@ -88,7 +88,7 @@ describe('Check the relationship - GET /relationship/:userId', () => {
         });
     });
 
-    it('has a relationship with :userId', done => {
+    it('has a relationship with :id of user', done => {
 
         // Create the relationship within two users
         RelationshipController.create(otherUser.id, loggedInUser.id, (err, newRelationship, info) => {
@@ -100,7 +100,7 @@ describe('Check the relationship - GET /relationship/:userId', () => {
         });
 
         request
-            .get('/relationship/' + otherUser.id)
+            .get('/relationship/user/' + otherUser.id)
             .set({Authorization: 'Bearer' + ' ' + accessToken})
             .expect(200)
             .end((err, res) => {
@@ -115,7 +115,7 @@ describe('Check the relationship - GET /relationship/:userId', () => {
 
     it('no relationship', done => {
         request
-            .get('/relationship/' + otherUser.id)
+            .get('/relationship/user/' + otherUser.id)
             .set({Authorization: 'Bearer' + ' ' + accessToken})
             .expect(404)
             .end((err, res) => {
