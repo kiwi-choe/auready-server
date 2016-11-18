@@ -46,4 +46,15 @@ describe('GET /user/:search', () => {
                 done();
             });
     });
+
+    it('GET /user/:search - should return 204 code', done => {
+        request
+            .get('/user/' + 'nousers')
+            .set({Authorization: 'Bearer' + ' ' + accessToken})
+            .expect(204)
+            .end((err, res) => {
+                if(err) throw err;
+                done();
+            });
+    });
 });

@@ -18,10 +18,10 @@ router.get('/:search',
             if(err) res.sendStatus(400);
             if(users.length === 0) {
                 console.log('no users');
-                res.sendStatus(204);
+                return res.sendStatus(204);
             }
             console.log(users);
-            res.status(200).json(users);
+            return res.status(200).json(users);
         });
     });
 
