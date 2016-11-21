@@ -3,8 +3,7 @@ const Relationship = require(__appbase_dirname + '/models/relationship');
 // enum values of status
 const _status = {
     PENDING: 0,
-    ACCEPTED: 1,
-    DECLINED: 2
+    ACCEPTED: 1
 };
 
 // Avoid duplication
@@ -55,12 +54,40 @@ const _readAcceptedStatus = (userId, done) => {
     });
 };
 
+/*
+ * Get pending requests
+ * {status: 0}, {toUserId: id of the logged in user}
+ * */
+const _readPendingStatus = (toUserId, done) => {
+    Relationship.find({toUserId: toUserId, status: _status.PENDING}, (err, relationships) => {
+        if (err) {
+            return done(err);
+        }
+        if (relationships.length === 0) {
+            return done(null, false, {reason: 'no pending relationship'});
+        }
+        return done(null, relationships);
+    });
+};
+
 const _update = (query, options, done) => {
     Relationship.update(query, options, (err, result) => {
         if (err) {
             return done(err);
         }
         return done(err, result);
+    });
+};
+
+const _delete = (query, done) => {
+    Relationship.remove(query, (err, removedCount) => {
+        if (err) {
+            return done(err);
+        }
+        if (removedCount.result.n === 0) {
+            return done(null, false);
+        }
+        return done(null, true);
     });
 };
 
@@ -77,6 +104,8 @@ module.exports = {
     create: _create,
     deleteAll: _deleteAll,
     readAccepted: _readAcceptedStatus,
+    readPending: _readPendingStatus,
     update: _update,
+    delete: _delete,
     statusValues: _status
 }

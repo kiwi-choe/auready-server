@@ -127,7 +127,7 @@ describe('Check the relationship - GET /relationship/user/:id', () => {
     });
 });
 
-describe('Show friends', () => {
+describe('Read relationships with status', () => {
     let loggedInUser;
     let otherUser;
     let accessToken;
@@ -167,7 +167,7 @@ describe('Show friends', () => {
     });
 
     // status: 1 means friend relationship within two users
-    it('GET /relationship/status/:status - returns 200', done => {
+    it('Show friends - GET /relationship/status/:ACCEPTED returns 200', done => {
         // Update status to ACCEPTED
         const query = {
             $or: [
@@ -183,7 +183,7 @@ describe('Show friends', () => {
                 assert.ok('Success to update status ACCEPTED');
             } else {
                 assert.ok('Fail to update status ACCEPTED');
-           }
+            }
         });
 
         request
@@ -199,7 +199,7 @@ describe('Show friends', () => {
     });
 
     // status: 0 means pending status
-    it('GET /relationship/status/:status - returns 404', done => {
+    it('Show friends - GET /relationship/status/:ACCEPTED returns 404', done => {
         request
             .get('/relationship/status/' + RelationshipController.statusValues.ACCEPTED)
             .set({Authorization: 'Bearer' + ' ' + accessToken})
@@ -210,8 +210,202 @@ describe('Show friends', () => {
                 done();
             });
     });
+
+    it('Read Pending requests - GET /relationship/status/:PENDING returns 200', done => {
+        request
+            .get('/relationship/status/' + RelationshipController.statusValues.PENDING)
+            .set({Authorization: 'Bearer' + ' ' + accessToken})
+            .expect(200)
+            .end((err, res) => {
+                if (err) throw err;
+                res.status.should.equal(200);
+                res.body.should.have.property('fromUsers');
+                done();
+            });
+    });
+
+    it('Read Pending requests - GET /relationship/status/:PENDING returns 404', done => {
+
+        RelationshipController.deleteAll(err => {
+        });
+
+        request
+            .get('/relationship/status/' + RelationshipController.statusValues.PENDING)
+            .set({Authorization: 'Bearer' + ' ' + accessToken})
+            .expect(404)
+            .end((err, res) => {
+                if (err) throw err;
+                res.status.should.equal(404);
+                done();
+            });
+    });
+
+    it('Wrong status value - GET /relationship/status/:anynumbers returns 400', done => {
+        request
+            .get('/relationship/status/' + 4)
+            .set({Authorization: 'Bearer' + ' ' + accessToken})
+            .expect(400)
+            .end((err, res) => {
+                if (err) throw err;
+                res.status.should.equal(400);
+                done();
+            });
+    })
 });
 
+describe('Response to the friend request', () => {
+    let loggedInUser;
+    let otherUser;
+    let accessToken;
+    let fromUserId;
+    let status;
+    before(done => {
+        // Create two users
+        // Create over 1 token
+        // Create over 1 relationship - {'a', 'b', PENDING}
+        User.createMany((err, users) => {
+            if (users.length === 2) {
+                loggedInUser = users[0];
+                otherUser = users[1];
+            }
+            Token.create(clientId, loggedInUser.id, predefine.oauth2.type.password, (err, newToken) => {
+                accessToken = newToken.accessToken;
+
+                RelationshipController.create(otherUser.id, loggedInUser.id, (err, newRelationship, info) => {
+                    fromUserId = newRelationship.fromUserId;
+                    status = newRelationship.status;
+
+                    done();
+                });
+
+            });
+        });
+    });
+    afterEach(done => {
+        // delete all the users
+        User.deleteAll(err => {
+            Token.deleteAll(err => {
+                RelationshipController.deleteAll(err => {
+                    done();
+                });
+            });
+        });
+    });
+
+    it('Accept - PUT /relationship/fromUser/:id/accepted', done => {
+        request
+            .put('/relationship/fromUser/' + otherUser.id + '/accepted')
+            .set({Authorization: 'Bearer' + ' ' + accessToken})
+            .expect(200)
+            .end((err, res) => {
+                if (err) throw err;
+                res.status.should.equal(200);
+                done();
+            });
+    });
+
+    it('Declined - DELETE /relationship/fromUser/:id/declined', done => {
+        request
+            .delete('/relationship/fromUser/' + otherUser.id + '/declined')
+            .set({Authorization: 'Bearer' + ' ' + accessToken})
+            .expect(200)
+            .end((err, res) => {
+                if (err) throw err;
+                res.status.should.equal(200);
+                done();
+            });
+    });
+
+    it('Declined - DELETE /relationship/fromUser/:id/declined with id which is not exists return 400', done => {
+        request
+            .delete('/relationship/fromUser/' + 'wrongId' + '/declined')
+            .set({Authorization: 'Bearer' + ' ' + accessToken})
+            .expect(400)
+            .end((err, res) => {
+                if (err) throw err;
+                res.status.should.equal(400);
+                done();
+            });
+    });
+});
+
+describe('Remove a friend', () => {
+    let loggedInUser;
+    let friend;
+    let accessToken;
+    let fromUserId;
+    let status;
+    before(done => {
+        // Create two users
+        // Create over 1 token
+        // Create over 1 relationship - {'a', 'b', ACCEPTED} means friend relationship
+        User.createMany((err, users) => {
+            if (users.length === 2) {
+                loggedInUser = users[0];
+                friend = users[1];
+            }
+            Token.create(clientId, loggedInUser.id, predefine.oauth2.type.password, (err, newToken) => {
+                accessToken = newToken.accessToken;
+
+                RelationshipController.create(loggedInUser.id, friend.id, (err, newRelationship, info) => {
+                    // Set status to ACCEPTED and save again
+                    newRelationship.status = RelationshipController.statusValues.ACCEPTED;
+                    newRelationship.save(err => {
+                        done();
+                    });
+                });
+            });
+        });
+    });
+    afterEach(done => {
+        // delete all the users
+        User.deleteAll(err => {
+            Token.deleteAll(err => {
+                RelationshipController.deleteAll(err => {
+                    done();
+                });
+            });
+        });
+    });
+
+    it('DELETE /relationship/friend/:id', done => {
+        // Check if the friend relationship exists in db
+        const query = {
+            $or: [
+                {fromUserId: loggedInUser.id, toUserId: friend.id},
+                {fromUserId: friend.id, toUserId: loggedInUser.id}
+            ],
+            status: RelationshipController.statusValues.ACCEPTED
+        };
+        Relationship.find(query, (err, relationships) => {
+            if(relationships.length !== 0) console.log(relationships);
+            else {
+                console.log('no relationships');
+            }
+        });
+
+        request
+            .delete('/relationship/friend/' + friend.id)
+            .set({Authorization: 'Bearer' + ' ' + accessToken})
+            .expect(200)
+            .end((err, res) => {
+                if (err) throw err;
+                res.status.should.equal(200);
+                done();
+            });
+    });
+    it('DELETE /relationship/friend/:id with worngid returns 400', done => {
+        request
+            .delete('/relationship/friend/' + 'wrongId')
+            .set({Authorization: 'Bearer' + ' ' + accessToken})
+            .expect(400)
+            .end((err, res) => {
+                if (err) throw err;
+                res.status.should.equal(400);
+                done();
+            });
+    });
+});
 /*
  * DB TEST: Relationship model controller test
  * ; Test find().or([...]) method
@@ -264,9 +458,9 @@ describe('Pre save schema method testing', () => {
 });
 
 /*
-* DB TEST: Read test
-* */
-describe('Read relationship doc test', () => {
+ * DB TEST: Read and Update test
+ * */
+describe('Read and Update relationship doc test', () => {
 
     let loggedInUser;
     let otherUser;
@@ -310,7 +504,7 @@ describe('Read relationship doc test', () => {
             {fromUserId: loggedInUser.id, toUserId: otherUser.id},
             {fromUserId: otherUser.id, toUserId: loggedInUser.id},
         ]).exec((err, relationship) => {
-            if(relationship) {
+            if (relationship) {
                 console.log(relationship);
                 assert.ok(relationship, 'READ SUCCESS');
             }
@@ -319,7 +513,7 @@ describe('Read relationship doc test', () => {
         });
     });
 
-    it('Read a doc by ids and status', done => {
+    it('Update a doc by ids and status', done => {
         // Update status to ACCEPTED
         const query = {
             $or: [
@@ -331,14 +525,14 @@ describe('Read relationship doc test', () => {
             status: RelationshipController.statusValues.ACCEPTED,
         };
         Relationship.update(query, options, (err, result) => {
-            if(!result.n) {
+            if (!result.n) {
                 assert.fail('fail to update');
             } else {
                 Relationship.find().or([
                     {fromUserId: loggedInUser.id},
                     {toUserId: loggedInUser.id},
                 ]).where('status').equals(RelationshipController.statusValues.ACCEPTED).exec((err, relationships) => {
-                    if(relationships.length === 0) {
+                    if (relationships.length === 0) {
                         assert.fail('cannot find relationships with status ACCEPTED');
                     } else {
                         assert.ok('found relationships with status ACCEPTED')
