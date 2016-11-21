@@ -3,6 +3,7 @@ const localAccountRouter = require('./api/local-account');
 const socialAccountRouter = require('./api/social-account');
 const userRouter = require('./api/user');
 const relationshipRouter = require('./api/relationship');
+const taskheadRouter = require('./api/taskhead');
 
 exports.initialize = (app) => {
 
@@ -14,4 +15,5 @@ exports.initialize = (app) => {
     app.use('/user', userRouter);
 
     app.use('/relationship', relationshipRouter);
+    app.use('/taskhead', taskheadRouter);
 };
