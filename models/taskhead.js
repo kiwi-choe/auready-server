@@ -15,4 +15,4 @@ const schema = mongoose.Schema({
 //     next();
 // });
 
-module.exports = mongoose.model('TaskHead', schema);
+module.exports = mongoose.model('TaskHeadController', schema);

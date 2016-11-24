@@ -9,6 +9,10 @@ const controller = require('./taskhead.controller');
 // Create a taskHead
 router.post('/',
     passport.authenticate('bearer', {session: false}), oauth2Server.error(),
-    controller.createTaskHead);
+    controller.create);
+
+router.put('/',
+    passport.authenticate('bearer', {session: false}), oauth2Server.error(),
+    controller.edit);
 
 module.exports = router;
