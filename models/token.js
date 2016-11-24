@@ -9,12 +9,12 @@ const schema = mongoose.Schema({
     createdTime: Number
 });
 
-schema.pre('save', (next) => {
-    if (!this.isNew) {
-        return next();
-    }
-    this.createdTime = Date.now();
-    next();
-});
+// schema.pre('save', (next) => {
+//     if (!this.isNew) {
+//         return next();
+//     }
+//     this.createdTime = Date.now();
+//     next();
+// });
 
 module.exports = mongoose.model('AccessToken', schema);
