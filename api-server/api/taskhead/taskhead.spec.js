@@ -195,7 +195,7 @@ describe('[taskhead DB test]: There is a taskhead in DB for UPDATE, DELETE test'
     });
 
     it('DELETE a taskhead', done => {
-        TaskHeadController.delete(taskHead.id, (err, isRemoved) => {
+        TaskHeadCon.delete(taskHead.id, (err, isRemoved) => {
             assert.ifError(err);
             console.log('\n' + isRemoved);
             done();

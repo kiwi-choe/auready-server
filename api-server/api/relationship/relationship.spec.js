@@ -127,6 +127,7 @@ describe('Check the relationship - GET /relationship/user/:id', () => {
     });
 });
 
+// TODO Succeeds only when the test cases one by one.
 describe('Read relationships with status', () => {
     let loggedInUser;
     let otherUser;

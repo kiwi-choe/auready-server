@@ -1,9 +1,13 @@
 const passport = require('passport');
+
 const localAccountRouter = require('./api/local-account');
 const socialAccountRouter = require('./api/social-account');
 const userRouter = require('./api/user');
 const relationshipRouter = require('./api/relationship');
 const taskheadRouter = require('./api/taskhead');
+const taskRouter = require('./api/task');
+
+const oauth2Server = require(__appbase_dirname + '/auth-server/server');
 
 exports.initialize = (app) => {
 
@@ -12,8 +16,17 @@ exports.initialize = (app) => {
     app.use('/local-account', localAccountRouter);
     app.use('/social-account', socialAccountRouter);
 
-    app.use('/user', userRouter);
-
-    app.use('/relationship', relationshipRouter);
-    app.use('/taskhead', taskheadRouter);
+    // request resources with accessToken of auready-server
+    app.use('/user',
+        passport.authenticate('bearer', {session: false}), oauth2Server.error(),
+        userRouter);
+    app.use('/relationship',
+        passport.authenticate('bearer', {session: false}), oauth2Server.error(),
+        relationshipRouter);
+    app.use('/taskhead',
+        passport.authenticate('bearer', {session: false}), oauth2Server.error(),
+        taskheadRouter);
+    app.use('/task',
+        passport.authenticate('bearer', {session: false}), oauth2Server.error(),
+        taskRouter);
 };

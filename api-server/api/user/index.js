@@ -1,16 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const passport = require('passport');
-const oauth2Server = require(__appbase_dirname + '/auth-server/server');
-
 const User = require(__appbase_dirname + '/models/user');
 
 // GET users by string(name)
-router.get('/:search',
-    passport.authenticate('bearer', {session: false}),
-    oauth2Server.error(),
-    (req, res) => {
+router.get('/:search', (req, res) => {
         let regexValue = req.params.search;
         console.log(regexValue);
         // Search using 'search'
