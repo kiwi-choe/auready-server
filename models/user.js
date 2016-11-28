@@ -12,13 +12,13 @@ const schema = mongoose.Schema({
     friendCount: Number
 });
 
-schema.pre('save', next => {
-    if(!this.isNew) {
-        return next();
-    }
-    this.friendCount = 0;
-    next();
-});
+// schema.pre('save', next => {
+//     if(!this.isNew) {
+//         return next();
+//     }
+//     this.friendCount = 0;
+//     next();
+// });
 
 // checking if password is valid
 schema.methods.validPassword = function(password) {

@@ -18,13 +18,23 @@ const _create = (taskHeadInfo, done) => {
 
 const _delete = (id, done) => {
     TaskHead.remove({_id: id}, (err, removedCount) => {
-        if(err) {
+        if (err) {
             return done(err);
         }
-        if(removedCount.result.n === 0) {
+        if (removedCount.result.n === 0) {
             return done(null, false);
         }
         return done(null, true);
+    });
+};
+
+const _update = (query, options, done) => {
+    TaskHead.update(query, options, (err, result) => {
+        if(err) {
+            return done(err);
+        }
+        return done(err, result);
+
     });
 };
 
@@ -40,5 +50,6 @@ const _deleteAll = done => {
 module.exports = {
     create: _create,
     delete: _delete,
+    update: _update,
     deleteAll: _deleteAll
 }

@@ -15,4 +15,8 @@ router.delete('/:id',
     passport.authenticate('bearer', {session: false}), oauth2Server.error(),
     controller.delete);
 
+router.put('/',
+    passport.authenticate('bearer', {session: false}), oauth2Server.error(),
+    controller.edit);
+
 module.exports = router;

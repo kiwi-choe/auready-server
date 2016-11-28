@@ -14,7 +14,8 @@ const name = 'nameofkiwi3';
 const email = 'kiwi3@gmail.com';
 const password = '123';
 
-const TaskHead = require('../../../models/taskhead.controller');
+const TaskHeadController = require('../../../models/taskhead.controller');
+const TaskHead = require('../../../models/taskhead');
 const test_title = 'titleOfTaskHead';
 const test_members = ['member1', 'member2', 'member3'];
 const test_order = 0;
@@ -66,12 +67,12 @@ describe('There is a taskHead in DB for UPDATE, DELETE test', () => {
     };
     let taskHead;
     beforeEach(done => {
-        // Register user first
+        // Create user first
         User.create(name, email, password, true, (err, user, info) => {
             // Add Token
             Token.create(clientId, user.id, predefine.oauth2.type.password, (err, newToken) => {
                 accessToken = newToken.accessToken;
-                TaskHead.create(taskHeadInfo, (err, newTaskHead) => {
+                TaskHeadController.create(taskHeadInfo, (err, newTaskHead) => {
                     taskHead = newTaskHead;
                     done();
                 });
@@ -82,7 +83,7 @@ describe('There is a taskHead in DB for UPDATE, DELETE test', () => {
         // delete all the users
         User.deleteAll(err => {
             Token.deleteAll(err => {
-                TaskHead.deleteAll(err => {
+                TaskHeadController.deleteAll(err => {
                     done();
                 });
             });
@@ -111,6 +112,27 @@ describe('There is a taskHead in DB for UPDATE, DELETE test', () => {
                 done();
             });
     });
+
+
+    it('PUT /taskhead/', done => {
+        const updatingTaskHead = {
+            _id: taskHead.id,
+            title: 'changeTitle',
+            members: ['changeMember1', 'changeMember2'],
+            order: 5
+        };
+        request
+            .put('/taskhead/')
+            .set({Authorization: 'Bearer' + ' ' + accessToken})
+            .send({taskHead: updatingTaskHead})
+            .expect(200)
+            .end((err, res) => {
+                if (err) throw err;
+                res.status.should.equal(200);
+                // res.body.should.have.property('taskHead');
+                done();
+            });
+    });
 });
 
 /*
@@ -118,24 +140,22 @@ describe('There is a taskHead in DB for UPDATE, DELETE test', () => {
 * */
 describe('[taskhead DB test]', () => {
     after(done => {
-        TaskHead.deleteAll(err => {
+        TaskHeadController.deleteAll(err => {
             done();
         });
     });
 
     it('Create a taskhead', done => {
+
         const taskHeadInfo = {
             title: test_title,
             members: test_members,
             order: test_order
         };
-        TaskHead.create(taskHeadInfo, (err, taskhead) => {
-
-            assert.ifError(err);
-            if (!taskhead) {
-                assert.notEqual(taskhead.title, test_title, 'created');
+        TaskHeadController.create(taskHeadInfo, (err, newTaskHead) => {
+            if (newTaskHead) {
+                taskHead = newTaskHead;
             }
-            assert.equal(taskhead.title, test_title, 'created');
             done();
         });
     });
@@ -156,7 +176,7 @@ describe('[taskhead DB test]: There is a taskhead in DB for UPDATE, DELETE test'
             // Add Token
             Token.create(clientId, user.id, predefine.oauth2.type.password, (err, newToken) => {
                 accessToken = newToken.accessToken;
-                TaskHead.create(taskHeadInfo, (err, newTaskHead) => {
+                TaskHeadController.create(taskHeadInfo, (err, newTaskHead) => {
                     taskHead = newTaskHead;
                     done();
                 });
@@ -167,7 +187,7 @@ describe('[taskhead DB test]: There is a taskhead in DB for UPDATE, DELETE test'
         // delete all the users
         User.deleteAll(err => {
             Token.deleteAll(err => {
-                TaskHead.deleteAll(err => {
+                TaskHeadController.deleteAll(err => {
                     done();
                 });
             });
@@ -175,11 +195,32 @@ describe('[taskhead DB test]: There is a taskhead in DB for UPDATE, DELETE test'
     });
 
     it('DELETE a taskhead', done => {
-        TaskHead.delete(taskHead.id, (err, isRemoved) => {
+        TaskHeadController.delete(taskHead.id, (err, isRemoved) => {
             assert.ifError(err);
             console.log('\n' + isRemoved);
             done();
         });
     });
-});
 
+    it('Update taskhead', done => {
+        const updatingTaskHead = {
+            title: 'changeTitle',
+            members: ['changeMember1', 'changeMember2'],
+            order: 5
+        };
+        TaskHeadController.update({_id: newTaskHead.id}, updatingTaskHead, (err,result) => {
+            if(err) {
+                assert.ifError(err);
+            }
+            if(!result.n) {
+                assert.fail();
+            }
+            // Find updated taskhead
+            TaskHead.findOne({_id: newTaskHead.id}, (err, taskhead) => {
+                assert.equal(taskhead.title, updatingTaskHead.title);
+
+                done();
+            });
+        });
+    });
+});

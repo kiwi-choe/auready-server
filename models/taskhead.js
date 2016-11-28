@@ -7,12 +7,12 @@ const schema = mongoose.Schema({
     createdTime: Number    // == modifiedTime
 });
 
-schema.pre('save', (next) => {
-    if (!this.isNew) {
-        return next();
-    }
-    this.createdTime = Date.now();
-    next();
-});
+// schema.pre('save', (next) => {
+//     if (!this.isNew) {
+//         return next();
+//     }
+//     this.createdTime = Date.now();
+//     next();
+// });
 
-module.exports = mongoose.model('TaskHead', schema);
+module.exports = mongoose.model('TaskHeadController', schema);

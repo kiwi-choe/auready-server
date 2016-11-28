@@ -23,3 +23,19 @@ exports.delete = (req, res) => {
     });
 };
 
+exports.edit = (req, res) => {
+
+    const updatingTaskHead = req.body.taskHead;
+    const query = {_id: updatingTaskHead._id};
+    const options = updatingTaskHead;
+    TaskHeadDBController.update(query, options, (err, result) => {
+        if(err) {
+            return res.sendStatus(400);
+        }
+        if(!result.n) {
+            return res.sendStatus(400);
+        } else {
+            return res.status(200).send(updatingTaskHead);
+        }
+    });
+};
