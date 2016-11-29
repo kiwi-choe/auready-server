@@ -7,10 +7,7 @@ const schema = mongoose.Schema({
     createdTime: Number,    // == modifiedTime
     description: String,
     detailNote: String,
-    completed: [{
-        member: String,
-        completed: Number
-    }]
+    completed: [String]     // member name
 });
 
 schema.pre('save', (next) => {
