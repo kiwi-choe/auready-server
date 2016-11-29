@@ -170,7 +170,7 @@ describe('[taskhead DB test]: There is a taskhead in DB for UPDATE, DELETE test'
         order: test_order
     };
     let taskHead;
-    before(done => {
+    beforeEach(done => {
         // Register user first
         User.create(name, email, password, true, (err, user, info) => {
             // Add Token
@@ -183,7 +183,7 @@ describe('[taskhead DB test]: There is a taskhead in DB for UPDATE, DELETE test'
             });
         });
     });
-    after(done => {
+    afterEach(done => {
         // delete all the users
         User.deleteAll(err => {
             Token.deleteAll(err => {
@@ -195,7 +195,7 @@ describe('[taskhead DB test]: There is a taskhead in DB for UPDATE, DELETE test'
     });
 
     it('DELETE a taskhead', done => {
-        TaskHeadCon.delete(taskHead.id, (err, isRemoved) => {
+        TaskHeadController.delete(taskHead.id, (err, isRemoved) => {
             assert.ifError(err);
             console.log('\n' + isRemoved);
             done();
@@ -208,7 +208,7 @@ describe('[taskhead DB test]: There is a taskhead in DB for UPDATE, DELETE test'
             members: ['changeMember1', 'changeMember2'],
             order: 5
         };
-        TaskHeadController.update({_id: newTaskHead.id}, updatingTaskHead, (err,result) => {
+        TaskHeadController.update({_id: taskHead.id}, updatingTaskHead, (err,result) => {
             if(err) {
                 assert.ifError(err);
             }
@@ -216,9 +216,8 @@ describe('[taskhead DB test]: There is a taskhead in DB for UPDATE, DELETE test'
                 assert.fail();
             }
             // Find updated taskhead
-            TaskHead.findOne({_id: newTaskHead.id}, (err, taskhead) => {
-                assert.equal(taskhead.title, updatingTaskHead.title);
-
+            TaskHead.findOne({_id: taskHead.id}, (err, updatedTaskHead) => {
+                assert.equal(updatedTaskHead.title, updatingTaskHead.title);
                 done();
             });
         });

@@ -23,7 +23,7 @@ exports.delete = (req, res) => {
     });
 };
 
-exports.edit = (req, res) => {
+exports.update = (req, res) => {
 
     const updatingTaskHead = req.body.taskHead;
     const query = {_id: updatingTaskHead._id};

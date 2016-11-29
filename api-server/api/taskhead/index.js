@@ -7,7 +7,7 @@ router.post('/', controller.create);
 
 router.delete('/:id', controller.delete);
 
-// Edit all(title, order, members)
-router.put('/', controller.edit);
+// Update all(title, order, members)
+router.put('/', controller.update);
 
 module.exports = router;
