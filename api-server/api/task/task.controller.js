@@ -1,11 +1,19 @@
 const TaskDBController = require(__appbase_dirname + '/models/task.controller');
+const TaskHeadDBController = require(__appbase_dirname + '/models/taskhead.controller');
+const TaskHead = require(__appbase_dirname + '/models/taskhead');
 
 exports.create = (req, res) => {
-    TaskDBController.create(req.body.taskInfo, (err, newTask) => {
+
+    TaskHeadDBController.createTask(req.body.taskHeadId, req.body.taskInfo, (err, updatedTaskHead) => {
         if(err) {
             return res.sendStatus(400);
         }
-        return res.sendStatus(201);
+        if(updatedTaskHead) {
+            console.log(updatedTaskHead);
+            console.log(updatedTaskHead.tasks[0].completed);
+            return res.sendStatus(201);
+        }
+        return res.sendStatus(400);
     });
 };
 
@@ -33,17 +41,15 @@ exports.delete = (req, res) => {
 
 exports.update = (req, res) => {
 
-    const updatingTask = req.body.task;
-    const query = {_id: updatingTask._id};
-    const options = updatingTask;
-    TaskDBController.update(query, options, (err, result) => {
+    TaskHeadDBController.updateTask(req.body.task, (err, updatedTaskHead) => {
         if(err) {
             return res.sendStatus(400);
         }
-        if(!result.n) {
-            return res.sendStatus(400);
-        } else {
-            return res.status(200).send(updatingTask);
+        if(updatedTaskHead) {
+            console.log(updatedTaskHead);
+            console.log(updatedTaskHead.tasks[0].completed);
+            return res.sendStatus(200);
         }
+        return res.sendStatus(400);
     });
 };

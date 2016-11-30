@@ -17,24 +17,36 @@ const password = '123';
 const TaskController = require('../../../models/task.controller');
 const Task = require('../../../models/task');
 const taskObj = {
-    taskHeadId: 'taskheadid',
-    members: ['member1', 'member2', 'member3'],
-    order: 0,
+    order: 1,
     createdTime: 12345,
     description: 'description',
     detailNote: 'detailnote',
     completed: ['member1', 'member2']
 };
+const TaskHeadController = require('../../../models/taskhead.controller');
+const TaskHead = require('../../../models/taskhead');
+const test_title = 'titleOfTaskHead';
+const test_members = ['member1', 'member2', 'member3'];
+const test_order = 0;
 
 describe('Task', () => {
     let accessToken;
+    const taskHeadInfo = {
+        title: test_title,
+        members: test_members,
+        order: test_order
+    };
+    let taskHead;
     before(done => {
         // Register user first
         User.create(name, email, password, true, (err, user, info) => {
             // Add Token
             Token.create(clientId, user.id, predefine.oauth2.type.password, (err, newToken) => {
                 accessToken = newToken.accessToken;
-                done();
+                TaskHeadController.create(taskHeadInfo, (err, newTaskHead) => {
+                    taskHead = newTaskHead;
+                    done();
+                });
             });
         });
     });
@@ -42,7 +54,7 @@ describe('Task', () => {
         // delete all the users
         User.deleteAll(err => {
             Token.deleteAll(err => {
-                TaskController.deleteAll(err => {
+                TaskHeadController.deleteAll(err => {
                     done();
                 });
             });
@@ -59,7 +71,7 @@ describe('Task', () => {
                 .send({taskInfo: newTask})
                 .expect(400)
                 .end((err, res) => {
-                    if(err) throw err;
+                    if (err) throw err;
                     done();
                 });
         });
@@ -67,10 +79,10 @@ describe('Task', () => {
             request
                 .post('/task')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .send({taskInfo: taskObj})
+                .send({taskHeadId: taskHead.id, taskInfo: taskObj})
                 .expect(201)
                 .end((err, res) => {
-                    if(err) throw err;
+                    if (err) throw err;
                     done();
                 });
         });
@@ -79,8 +91,9 @@ describe('Task', () => {
     describe('DELETE or PUT /task', () => {
         let task;
         beforeEach(done => {
-            TaskController.create(taskObj, (err, newTask) => {
-                task = newTask;
+            TaskHeadController.createTask(taskHead.id, taskObj, (err, updatedTaskHead) => {
+                task = updatedTaskHead.tasks[0];
+                console.log(task);
                 done();
             });
         });
@@ -109,13 +122,13 @@ describe('Task', () => {
             let updatingTask = task;
             updatingTask.description = 'changedDescription';
             request
-                .put('/task/' + task.id)
+                .put('/task/')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .send({task: updatingTask})
                 .expect(200)
                 .end((err, res) => {
-                    if(err) throw err;
-                    res.body.description.should.be.equal(updatingTask.description);
+                    if (err) throw err;
+                    // res.body.description.should.be.equal(updatingTask.description);
                     done();
                 });
         });
@@ -196,6 +209,51 @@ describe('Task DB', () => {
                     (updatedTask.description).should.be.equal(updatingTask.description);
                     done();
                 });
+            });
+        });
+    });
+
+    describe('GET task by id', () => {
+        let task;
+        const taskHeadInfo = {
+            title: test_title,
+            members: test_members,
+            order: test_order
+        };
+        let taskHeadInfo2 = taskHeadInfo;
+        before(done => {
+            TaskHeadController.create(taskHeadInfo, (err, newTaskHead) => {
+                taskHeadInfo2.title = 'changedTitle!!!';
+                TaskHeadController.create(taskHeadInfo2, (err, newTaskHead2) => {
+                    console.log('newTaskHead=====================');
+                    console.log(newTaskHead);
+                    console.log('newTaskHead 2=====================');
+                    console.log(newTaskHead2);
+
+                    TaskHeadController.createTask(newTaskHead.id, taskObj, (err, updatedTaskHead) => {
+
+                        task = updatedTaskHead.tasks[0];
+                        console.log(updatedTaskHead);
+                        done();
+                    });
+                });
+            });
+        });
+        after(done => {
+            TaskHeadController.deleteAll(err => {
+                done();
+            });
+        });
+        it('One task should be find', done => {
+            // TaskHead.findOne({'tasks._id': task.id}, (err, taskHead) => {
+            //     console.log('\n===========================');
+            //     console.log(taskHead);
+            //     done();
+            // });
+            TaskHeadController.updateTask(task, (err, taskHead) => {
+                console.log('\n===========================');
+                console.log(taskHead);
+                done();
             });
         });
     });
