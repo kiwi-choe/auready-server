@@ -23,7 +23,5 @@ when userA visits userB,
 check the relationship with userB using (fromUserId, status)
 - (A, 0) Friend request*Pending => Show [CANCEL] button
 - (A, 1) Accepted by A => A and B are friends
-- (A, 2) Declined by A => this relationship should be removed from DB?
 - (B, 0) Received the friend request => Show [Accept][Decline] buttons
 - (B, 1) Accepted by B => they are friends
-- (B, 2) Declined by B => this relationship should be removed from DB?
