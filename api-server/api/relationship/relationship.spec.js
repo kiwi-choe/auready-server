@@ -14,7 +14,7 @@ const User = require('../../../models/user.controller');
 const RelationshipController = require('../../../models/relationship.controller.js');
 const Relationship = require('../../../models/relationship');
 
-describe('POST /relationship/', () => {
+describe('POST /relationship/:userId', () => {
 
     let accessToken;
     let loggedinuser;
@@ -41,7 +41,7 @@ describe('POST /relationship/', () => {
         });
     });
 
-    it('POST /:userId (Add a relationship) should return 201 code', done => {
+    it('friendRequest (Add a relationship) should return 201 code', done => {
         request
             .post('/relationship/' + otheruser.id)
             .set({Authorization: 'Bearer' + ' ' + accessToken})
@@ -53,7 +53,7 @@ describe('POST /relationship/', () => {
     });
 });
 
-describe('Check the relationship - GET /relationship/user/:id', () => {
+describe('Check the relationship - GET /relationship/user/:userId', () => {
 
     // conditions
     // 1. 2 users at least
@@ -100,7 +100,7 @@ describe('Check the relationship - GET /relationship/user/:id', () => {
         });
 
         request
-            .get('/relationship/user/' + otherUser.id)
+            .get('/relationship/' + otherUser.id)
             .set({Authorization: 'Bearer' + ' ' + accessToken})
             .expect(200)
             .end((err, res) => {
@@ -115,7 +115,7 @@ describe('Check the relationship - GET /relationship/user/:id', () => {
 
     it('no relationship', done => {
         request
-            .get('/relationship/user/' + otherUser.id)
+            .get('/relationship/' + otherUser.id)
             .set({Authorization: 'Bearer' + ' ' + accessToken})
             .expect(404)
             .end((err, res) => {
@@ -187,6 +187,9 @@ describe('Read relationships with status', () => {
             }
         });
 
+        // var friends;
+        // get user info by id
+        // and set the response body, 'friends'
         request
             .get('/relationship/status/' + RelationshipController.statusValues.ACCEPTED)
             .set({Authorization: 'Bearer' + ' ' + accessToken})

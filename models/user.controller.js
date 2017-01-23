@@ -29,7 +29,7 @@ const _createMany = (done) => {
 
     let userArr = [loggedinuser, otheruser];
     User.insertMany(userArr, (err, users) => {
-        if(err) return done(err);
+        if (err) return done(err);
         return done(null, users);
     });
 };
@@ -50,9 +50,31 @@ const _readAll = done => {
     });
 };
 
+const _readById = (id, done) => {
+    User.findOne({_id: id}, (err, user) => {
+        if (err) throw err;
+        return done(null, user);
+    });
+};
+
+const _readByEmailOrName = (search, done) => {
+    User.find().or([
+        {'email': new RegExp(search)},
+        {'name': new RegExp(search)}
+    ]).exec((err, users) => {
+        if (err) return done(err);
+        if (users.length === 0) {
+            return done(null, false);
+        }
+        return done(null, users);
+    });
+};
+
 module.exports = {
     create: _create,
     createMany: _createMany,
     deleteAll: _deleteAll,
-    readAll: _readAll
+    readAll: _readAll,
+    readById: _readById,
+    readByEmailOrName: _readByEmailOrName
 }

@@ -9,7 +9,7 @@ const schema = mongoose.Schema({
     createdTime: Number
 });
 
-// schema.pre('save', (next) => {
+// taskHeadSchema.pre('save', (next) => {
 //     if (!this.isNew) {
 //         return next();
 //     }

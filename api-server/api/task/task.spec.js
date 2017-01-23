@@ -14,28 +14,35 @@ const name = 'nameofkiwi3';
 const email = 'kiwi3@gmail.com';
 const password = '123';
 
-const TaskController = require('../../../models/task.controller');
-const Task = require('../../../models/task');
-const taskObj = {
-    order: 1,
-    createdTime: 12345,
-    description: 'description',
-    detailNote: 'detailnote',
-    completed: ['member1', 'member2']
+const TaskHead = require('../../../models/task/taskhead.controller.js');
+const test_tasks = [
+    {order: 0, description: 'des', detailNote: 'detailnote', completed: false},
+    {order: 1, description: 'des1', detailNote: 'detailnote1', completed: false},
+    {order: 2, description: 'des2', detailNote: 'detailnote2', completed: false},
+    {order: 3, description: 'des3', detailNote: 'detailnote3', completed: false}
+];
+const test_members = [
+    {name: 'member1', email: 'email_member1', tasks: test_tasks}
+];
+const test_taskhead = {
+    title: 'titleOfTaskHead',
+    order: [
+        {member: 'member1', order: 0}
+    ],
+    members: test_members
 };
-const TaskHeadController = require('../../../models/taskhead.controller');
-const TaskHead = require('../../../models/taskhead');
-const test_title = 'titleOfTaskHead';
-const test_members = ['member1', 'member2', 'member3'];
-const test_order = 0;
+
+const TaskController = require('../../../models/task/task.controller.js');
+
+const taskObj = {
+    order: 555,
+    description: 'desNew',
+    detailNote: 'detailnoteNew',
+    completed: false
+};
 
 describe('Task', () => {
     let accessToken;
-    const taskHeadInfo = {
-        title: test_title,
-        members: test_members,
-        order: test_order
-    };
     let taskHead;
     before(done => {
         // Register user first
@@ -43,7 +50,7 @@ describe('Task', () => {
             // Add Token
             Token.create(clientId, user.id, predefine.oauth2.type.password, (err, newToken) => {
                 accessToken = newToken.accessToken;
-                TaskHeadController.create(taskHeadInfo, (err, newTaskHead) => {
+                TaskHead.create(test_taskhead, (err, newTaskHead) => {
                     taskHead = newTaskHead;
                     done();
                 });
@@ -54,7 +61,7 @@ describe('Task', () => {
         // delete all the users
         User.deleteAll(err => {
             Token.deleteAll(err => {
-                TaskHeadController.deleteAll(err => {
+                TaskHead.deleteAll(err => {
                     done();
                 });
             });
@@ -91,7 +98,7 @@ describe('Task', () => {
     describe('DELETE or PUT /task', () => {
         let task;
         beforeEach(done => {
-            TaskHeadController.createTask(taskHead.id, taskObj, (err, updatedTaskHead) => {
+            TaskHead.createTask(taskHead.id, taskObj, (err, updatedTaskHead) => {
                 task = updatedTaskHead.tasks[0];
                 console.log(task);
                 done();
@@ -137,13 +144,18 @@ describe('Task', () => {
 
 describe('Task DB', () => {
     let accessToken;
+    let taskHead;
     before(done => {
         // Register user first
         User.create(name, email, password, true, (err, user, info) => {
-            // Add Token
+            // Create a Token
             Token.create(clientId, user.id, predefine.oauth2.type.password, (err, newToken) => {
                 accessToken = newToken.accessToken;
-                done();
+                // Create a TaskHead
+                TaskHead.create(test_taskhead, (err, newTaskHead) => {
+                    taskHead = newTaskHead;
+                    done();
+                });
             });
         });
     });
@@ -151,18 +163,22 @@ describe('Task DB', () => {
         // delete all the users
         User.deleteAll(err => {
             Token.deleteAll(err => {
-                done();
-
+                TaskHead.deleteAll(err => {
+                    done();
+                });
             });
         });
     });
 
     describe('CREATE a task', () => {
         it('A task is created', done => {
-            TaskController.create(taskObj, (err, newTask) => {
+            TaskController.create(taskHead.id, taskHead.members[0].id, taskObj, (err, newTask) => {
                 assert.ifError(err);
                 if (newTask) {
-                    assert.equal(newTask.description, taskObj.description, 'success to create');
+                    console.log(newTask);
+                    // const lenOfTasks = taskHeadOfNewTask.members[0].tasks.length;
+                    // console.log('\n' + taskHeadOfNewTask.members[0].tasks[lenOfTasks-1].description);
+                    assert.equal(newTask.description, taskObj.description, 'not equal description');
                 } else {
                     assert.fail('fail to create a task');
                 }
@@ -174,23 +190,20 @@ describe('Task DB', () => {
     describe('EDIT tasks', () => {
         let task;
         beforeEach(done => {
-            TaskController.create(taskObj, (err, newTask) => {
+            TaskController.create(taskHead.id, taskHead.members[0].id, taskObj, (err, newTask) => {
                 task = newTask;
                 done();
             });
         });
         afterEach(done => {
-            TaskController.deleteAll(err => {
+            // Remove All tasks of taskhead
+            TaskController.deleteAll(taskHead.id, (err, isRemoved) => {
+                assert.ifError(err);
+                isRemoved.should.be.true('isRemoved should be true');
                 done();
             });
         });
 
-        it('DELETE all tasks', done => {
-            TaskController.deleteAll((err) => {
-                assert.ifError(err);
-                done();
-            });
-        });
         it('DELETE a task', done => {
             TaskController.delete(task.id, (err, isRemoved) => {
                 assert.ifError(err);
@@ -202,59 +215,58 @@ describe('Task DB', () => {
         it('UPDATE a task', done => {
             let updatingTask = taskObj;
             updatingTask.description = 'changedDescription';
-            TaskController.update({_id: task.id}, updatingTask, (err, result) => {
+            TaskController.update({'members.task._id': task.id}, updatingTask, (err, updatedTasks) => {
                 assert.ifError(err);
-                (result.n).should.be.equal(1);
-                Task.findOne({_id: task.id}, (err, updatedTask) => {
-                    (updatedTask.description).should.be.equal(updatingTask.description);
+                TaskController.get(task.id, (err, task) => {
+                    (task.description).should.be.equal(updatingTask.description);
                     done();
                 });
             });
         });
     });
 
-    describe('GET task by id', () => {
-        let task;
-        const taskHeadInfo = {
-            title: test_title,
-            members: test_members,
-            order: test_order
-        };
-        let taskHeadInfo2 = taskHeadInfo;
-        before(done => {
-            TaskHeadController.create(taskHeadInfo, (err, newTaskHead) => {
-                taskHeadInfo2.title = 'changedTitle!!!';
-                TaskHeadController.create(taskHeadInfo2, (err, newTaskHead2) => {
-                    console.log('newTaskHead=====================');
-                    console.log(newTaskHead);
-                    console.log('newTaskHead 2=====================');
-                    console.log(newTaskHead2);
-
-                    TaskHeadController.createTask(newTaskHead.id, taskObj, (err, updatedTaskHead) => {
-
-                        task = updatedTaskHead.tasks[0];
-                        console.log(updatedTaskHead);
-                        done();
-                    });
-                });
-            });
-        });
-        after(done => {
-            TaskHeadController.deleteAll(err => {
-                done();
-            });
-        });
-        it('One task should be find', done => {
-            // TaskHead.findOne({'tasks._id': task.id}, (err, taskHead) => {
-            //     console.log('\n===========================');
-            //     console.log(taskHead);
-            //     done();
-            // });
-            TaskHeadController.updateTask(task, (err, taskHead) => {
-                console.log('\n===========================');
-                console.log(taskHead);
-                done();
-            });
-        });
-    });
+    // describe('GET task by id', () => {
+    //     let task;
+    //     const taskHeadInfo = {
+    //         title: test_title,
+    //         members: test_members,
+    //         order: test_order
+    //     };
+    //     let taskHeadInfo2 = taskHeadInfo;
+    //     before(done => {
+    //         TaskHead.create(taskHeadInfo, (err, newTaskHead) => {
+    //             taskHeadInfo2.title = 'changedTitle!!!';
+    //             TaskHead.create(taskHeadInfo2, (err, newTaskHead2) => {
+    //                 console.log('newTaskHead=====================');
+    //                 console.log(newTaskHead);
+    //                 console.log('newTaskHead 2=====================');
+    //                 console.log(newTaskHead2);
+    //
+    //                 TaskHead.createTask(newTaskHead.id, taskObj, (err, updatedTaskHead) => {
+    //
+    //                     task = updatedTaskHead.tasks[0];
+    //                     console.log(updatedTaskHead);
+    //                     done();
+    //                 });
+    //             });
+    //         });
+    //     });
+    //     after(done => {
+    //         TaskHead.deleteAll(err => {
+    //             done();
+    //         });
+    //     });
+    //     it('One task should be find', done => {
+    //         // TaskHead.findOne({'tasks._id': task.id}, (err, taskHead) => {
+    //         //     console.log('\n===========================');
+    //         //     console.log(taskHead);
+    //         //     done();
+    //         // });
+    //         TaskHead.updateTask(task, (err, taskHead) => {
+    //             console.log('\n===========================');
+    //             console.log(taskHead);
+    //             done();
+    //         });
+    //     });
+    // });
 });

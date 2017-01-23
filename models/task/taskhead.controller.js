@@ -1,33 +1,21 @@
-const TaskHead = require(__appbase_dirname + '/models/taskhead');
+const TaskHead = require(__appbase_dirname + '/models/task/taskhead');
 
 const _create = (taskHeadInfo, done) => {
 
-    let newTaskHead = new TaskHead({
-        title: taskHeadInfo.title,
-        members: taskHeadInfo.members,
-        order: taskHeadInfo.order
-    });
-    newTaskHead.createdTime = Date.now();
+    let newTaskHead = new TaskHead(taskHeadInfo);
+    newTaskHead.modifiedTime = Date.now();
     newTaskHead.save(err => {
         if(err) {
             return done(err);
         }
-        return done(err, newTaskHead);
+        return done(null, newTaskHead);
     });
 };
 
-const _createTask = (id, taskInfo, done) => {
-
+const _readById = (id, done) => {
     TaskHead.findById(id, (err, taskHead) => {
-        taskHead.tasks.push(taskInfo);
-        taskHead.save((err, updatedTaskHead) => {
-            if(err) return done(err);
-
-            if(updatedTaskHead) {
-                return done(false, updatedTaskHead);
-            }
-            return done(false, null);
-        });
+        if(err) throw  err;
+        return done(null, taskHead);
     });
 };
 
@@ -80,7 +68,7 @@ const _deleteAll = done => {
 
 module.exports = {
     create: _create,
-    createTask: _createTask,
+    readById: _readById,
     delete: _delete,
     update: _update,
     updateTask: _updateTask,

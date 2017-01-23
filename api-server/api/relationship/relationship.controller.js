@@ -1,5 +1,6 @@
 const RelationshipDBController = require(__appbase_dirname + '/models/relationship.controller');
 const Relationship = require(__appbase_dirname + '/models/relationship');
+const UserController = require(__appbase_dirname + '/api-server/api/user/user.controller');
 
 exports.friendRequest = (req, res) => {
     RelationshipDBController.create(req.user.id, req.params.userId, (err, relationship, info) => {
@@ -19,8 +20,8 @@ exports.friendRequest = (req, res) => {
 exports.checkRelationship = (req, res) => {
 
     Relationship.findOne().or([
-        {fromUserId: req.user.id, toUserId: req.params.id},
-        {fromUserId: req.params.id, toUserId: req.user.id}
+        {fromUserId: req.user.id, toUserId: req.params.userId},
+        {fromUserId: req.params.userId, toUserId: req.user.id}
     ]).exec((err, relationship) => {
         if (err) {
             return res.sendStatus(400);
@@ -38,6 +39,12 @@ exports.checkRelationship = (req, res) => {
 
 exports.getFriends = (loggedInUserId, res) => {
 
+    let getUsers = (friendIds, done) => {
+        UserController.getUsersByIds(friendIds, (err, friends) => {
+            return done(err, friends);
+        });
+    };
+
     RelationshipDBController.readAccepted(loggedInUserId, (err, relationships, info) => {
         if (err) {
             return res.sendStatus(400);
@@ -47,16 +54,26 @@ exports.getFriends = (loggedInUserId, res) => {
             return res.sendStatus(404); // Not found.
         }
         // loop
-        let friends = relationships.map(item => {
+        let friendIds = relationships.map(item => {
             if (loggedInUserId !== item.fromUserId) {
                 return item.fromUserId;
             } else {
                 return item.toUserId;
             }
         });
-        return res.status(200).json({
-            friends: friends
+
+        // get user info by id
+        getUsers(friendIds, (err, foundFriends) => {
+            if (err) {
+                return res.sendStatus(404); // Not found - users by ids
+            }
+            console.log(foundFriends);
+            // and set the response body, 'friends' - id, name, email
+            return res.status(200).json({
+                friends: foundFriends
+            });
         });
+
     });
 };
 
@@ -134,10 +151,10 @@ exports.deleteFriend = (req, res) => {
     };
 
     RelationshipDBController.delete(query, (err, isRemoved) => {
-        if(err) {
+        if (err) {
             return res.sendStatus(400);
         }
-        if(!isRemoved) {
+        if (!isRemoved) {
             return res.sendStatus(400);
         } else {
             return res.sendStatus(200);

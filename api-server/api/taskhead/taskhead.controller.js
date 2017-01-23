@@ -1,4 +1,4 @@
-const TaskHeadDBController = require(__appbase_dirname + '/models/taskhead.controller');
+const TaskHeadDBController = require(__appbase_dirname + '/models/task/taskhead.controller');
 
 exports.create = (req, res) => {
 
@@ -26,7 +26,7 @@ exports.delete = (req, res) => {
 exports.update = (req, res) => {
 
     const updatingTaskHead = req.body.taskHead;
-    const query = {_id: updatingTaskHead._id};
+    const query = {_id: req.params.id};
     const options = updatingTaskHead;
     TaskHeadDBController.update(query, options, (err, result) => {
         if(err) {

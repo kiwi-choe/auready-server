@@ -7,12 +7,12 @@ const bcrypt = require('bcrypt-nodejs');
 * */
 const schema = mongoose.Schema({
     name: String,
-    email: String,
+    email: String, 
     password: String,
     friendCount: Number
 });
 
-// schema.pre('save', next => {
+// taskHeadSchema.pre('save', next => {
 //     if(!this.isNew) {
 //         return next();
 //     }

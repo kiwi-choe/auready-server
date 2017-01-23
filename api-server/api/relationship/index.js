@@ -8,8 +8,8 @@ const controller = require('./relationship.controller');
 // Friend Request - Create a relationship with who has body.userId
 router.post('/:userId', controller.friendRequest);
 
-// Check what relationship with ':id'
-router.get('/user/:id', controller.checkRelationship);
+// Check what relationship with ':userId'
+router.get('/:userId', controller.checkRelationship);
 
 // Get friends, status: ACCEPTED
 router.get('/status/:status', (req, res) => {

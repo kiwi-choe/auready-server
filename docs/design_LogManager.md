@@ -8,13 +8,13 @@ At this time, this data is the diff between serverDB and localDB. This is, LogMa
 On Client Side,  
 1) Record all the logs using Task, TaskHead of LocalDB in Log table.
 2) Before writing on Log table, optimize with filtering according to rules.
-3) When user request the sync with server, read Log table and then send.
+3) When user request the sync with server, read Log table(read one row at a time) and send them.
 4)
     1) If the response 200 from server, clear Log table
     2) 400, request again.
 
 On Server side,  
-1) Release Log data list from client and update the serverDB.
+1) Release Log data from client and update the serverDB.
 2) Send response 200 or 400 code
 
 # Filtering Rules
