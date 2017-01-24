@@ -242,7 +242,7 @@ describe('Task DB', () => {
     //                 console.log('newTaskHead 2=====================');
     //                 console.log(newTaskHead2);
     //
-    //                 TaskHead.createTask(newTaskHead.id, taskObj, (err, updatedTaskHead) => {
+    //                 TaskHead.createTask(newTaskHead.id, test_task, (err, updatedTaskHead) => {
     //
     //                     task = updatedTaskHead.tasks[0];
     //                     console.log(updatedTaskHead);
