@@ -61,45 +61,54 @@ describe('TaskHead model', () => {
 
 describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
 
-    let taskHead;
+    let existingTaskHead;
     beforeEach(done => {
-        TaskHead.create(test_taskhead, (err, newTaskHead) => {
-            taskHead = newTaskHead;
-            done();
-        });
-    });
-    afterEach(done => {
         TaskHead.deleteAll(err => {
-            done();
+            // Push test_members to create members
+            test_taskhead.members.length = 0;
+            test_taskhead.members.push(...test_members);
+            existingTaskHead = null;
+            TaskHead.create(test_taskhead, (err, newTaskHead) => {
+                existingTaskHead = newTaskHead;
+
+                done();
+            });
         });
     });
 
     it('DELETE a taskhead', done => {
-        TaskHead.delete(taskHead.id, (err, isRemoved) => {
+        TaskHead.delete(existingTaskHead.id, (err, isRemoved) => {
             assert.ifError(err);
             console.log('\n' + isRemoved);
             done();
         });
     });
 
-    it('Update taskhead - title', done => {
+    it('Update taskhead - title, add new members', done => {
         const updatingTaskHead = test_taskhead;
         updatingTaskHead.title = 'updatingTaskHead';
-        // updatingTaskHead.members = [
-        //     {name: 'member1', email: 'email_member1', tasks: test_tasks},
-        //     {name: 'member2', email: 'email_member2', tasks: test_tasks}
-        // ];
-        TaskHead.update({_id: taskHead.id}, updatingTaskHead, (err, result) => {
+
+        // new member: 'member2'
+        // the array does not include the existing members.
+        const newMembers = [
+            {name: 'member2', email: 'email_member2', tasks: []}
+        ];
+        updatingTaskHead.members.push(...newMembers);
+        console.log('\n-----------------before update ', existingTaskHead);
+        TaskHead.update({_id: existingTaskHead.id}, updatingTaskHead, (err, result) => {
             if (err) {
                 assert.ifError(err);
             }
             if (!result.n) {
                 assert.fail();
             }
-            // Find updated taskhead
-            TaskHead.readById(taskHead.id, (err, updatedTaskHead) => {
-                console.log('\n' + updatedTaskHead);
+            // Find updated taskhead, check taskhead and members
+            TaskHead.readById(existingTaskHead.id, (err, updatedTaskHead) => {
+                console.log('-----------------after update ');
+                console.log(updatedTaskHead);
                 assert.equal(updatedTaskHead.title, updatingTaskHead.title);
+                assert.equal(updatedTaskHead.members.length, updatingTaskHead.members.length);
+
                 done();
             });
         });

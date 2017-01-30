@@ -16,7 +16,7 @@ const memberSchema = mongoose.Schema({
 
 const taskHeadSchema = mongoose.Schema({
     title: String,
-    order: [{           // Map type
+    order: [{           // Hash type, but don't have ObjectId
         member: String, // key
         order: Number   // value
     }],

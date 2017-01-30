@@ -52,7 +52,7 @@ const _update = (query, options, done) => {
         if(err) {
             return done(err);
         }
-        return done(err, result);
+        return done(null, result);
 
     });
 };

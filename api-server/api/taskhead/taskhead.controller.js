@@ -35,7 +35,7 @@ exports.update = (req, res) => {
         if(!result.n) {
             return res.sendStatus(400);
         } else {
-            return res.status(200).send(updatingTaskHead);
+            return res.sendStatus(200);
         }
     });
 };

@@ -33,7 +33,7 @@ const test_taskhead = {
     members: test_members
 };
 
-describe('TaskHead', () => {
+describe('TaskHead - need the accessToken to access API resources ', () => {
 
     let accessToken;
     before(done => {
@@ -71,21 +71,24 @@ describe('TaskHead', () => {
         });
     });
 
-    describe('There is a taskHead in DB for UPDATE, DELETE test', () => {
+    describe('Update, Delete a taskhead', () => {
 
         let taskHead;
         beforeEach(done => {
-            TaskHeadController.create(test_taskhead, (err, newTaskHead) => {
-                taskHead = newTaskHead;
-                done();
-            });
-
-        });
-        after(done => {
             TaskHeadController.deleteAll(err => {
-                done();
+
+                TaskHeadController.create(test_taskhead, (err, newTaskHead) => {
+                    taskHead = newTaskHead;
+                    done();
+                });
+
             });
         });
+        // after(done => {
+        //     TaskHeadController.deleteAll(err => {
+        //         done();
+        //     });
+        // });
 
         it('DELETE /taskhead/:id returns 200', done => {
             request
@@ -114,6 +117,14 @@ describe('TaskHead', () => {
         it('PUT /taskhead/', done => {
             const updatingTaskHead = test_taskhead;
             updatingTaskHead.title = 'updating title';
+            // Push new members into members array
+            // new member: 'member2'
+            // the array does not include the existing members.
+            const newMembers = [
+                {name: 'member2', email: 'email_member2', tasks: []},
+                {name: 'member3', email: 'email_member3', tasks: []}
+            ];
+            updatingTaskHead.members.push(...newMembers);
             request
                 .put('/taskhead/' + taskHead.id)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
@@ -122,10 +133,10 @@ describe('TaskHead', () => {
                 .end((err, res) => {
                     if (err) throw err;
                     res.status.should.equal(200);
-                    // res.body.should.have.property('taskHead');
                     done();
                 });
         });
+
     });
 
 });
