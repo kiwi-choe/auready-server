@@ -2,7 +2,7 @@ process.env.dbURI = 'test';
 
 const assert = require('assert');
 const should = require('should');
-const server = require('../../../www');
+require('../../../www');
 
 const Task = require('../../../models/task/task.controller');
 const TaskHead = require('../../../models/task/taskhead.controller');
@@ -91,7 +91,7 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
         updatingTaskHead.title = 'updatingTaskHead';
 
         console.log('\n-----------------before update ', existingTaskHead);
-        TaskHead.update({_id: existingTaskHead.id},
+        TaskHeadModel.update({_id: existingTaskHead.id},
             updatingTaskHead, (err, result) => {
                 if (err) {
                     assert.ifError(err);
@@ -131,7 +131,7 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
                     return;
                 }
                 // push new member and update
-                TaskHead.update(
+                TaskHeadModel.update(
                     {_id: existingTaskHead.id},
                     {$push: {members: newMember}},
                     (err, result) => {
