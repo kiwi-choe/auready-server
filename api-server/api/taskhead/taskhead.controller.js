@@ -25,14 +25,12 @@ exports.delete = (req, res) => {
 
 exports.update = (req, res) => {
 
-    const updatingTaskHead = req.body.taskHead;
-    const query = {_id: req.params.id};
-    const options = updatingTaskHead;
-    TaskHeadDBController.update(query, options, (err, result) => {
+    TaskHeadDBController.updateDetails(req.params.id, req.body.details, (err, result) => {
         if(err) {
-            return res.sendStatus(400);
+            return res.sendStatus(401);
         }
-        if(!result.n) {
+        if(!result) {
+            console.log(result);
             return res.sendStatus(400);
         } else {
             return res.sendStatus(200);

@@ -5,7 +5,7 @@ const _create = (taskHeadInfo, done) => {
     let newTaskHead = new TaskHead(taskHeadInfo);
     newTaskHead.modifiedTime = Date.now();
     newTaskHead.save(err => {
-        if(err) {
+        if (err) {
             return done(err);
         }
         return done(null, newTaskHead);
@@ -14,7 +14,7 @@ const _create = (taskHeadInfo, done) => {
 
 const _readById = (id, done) => {
     TaskHead.findById(id, (err, taskHead) => {
-        if(err) throw  err;
+        if (err) throw  err;
         return done(null, taskHead);
     });
 };
@@ -24,9 +24,9 @@ const _updateTask = (task, done) => {
         // overwrite task
         taskHead.tasks[0] = task;
         taskHead.save((err, updatedTaskHead) => {
-            if(err) return done(err);
+            if (err) return done(err);
 
-            if(updatedTaskHead) {
+            if (updatedTaskHead) {
                 return done(false, updatedTaskHead);
             }
             return done(false, null);
@@ -46,13 +46,55 @@ const _delete = (id, done) => {
     });
 };
 
-const _update = (query, options, done) => {
+// Update details - current details are 'title', 'members'
+const _updateDetails = (taskHeadId, details, done) => {
 
-    TaskHead.update(query, options, (err, result) => {
-        if(err) {
-            return done(err);
-        }
-        return done(null, result);
+    console.log('taskheadId', taskHeadId);
+    console.log('details', details);
+
+    const title = details.title;
+    const members = details.members;
+
+    // Duplication check to add new members
+    let newMembers = [];
+    members.forEach((member, i) => {
+
+        // There is no member with newMember.name
+        TaskHead.find({
+            _id: taskHeadId,
+            'members.name': member.name
+        }, (err, taskhead) => {
+            if (!taskhead) {
+                return done(err);
+            }
+
+            if(taskhead.length === 0) {
+                // push new member
+                newMembers.push(member);
+            }
+
+            // Start to update
+            if (i === members.length - 1) {
+
+                console.log('newMembers ', newMembers);
+                // there is no new member to add
+                if (newMembers.length === 0) {
+                    return done(null, false);
+                }
+                // Update
+                TaskHead.update(
+                    {_id: taskHeadId},     // query
+                    {                       // options
+                        $push: {members: {$each: newMembers}},
+                        $set: {title: title}
+                    }, (err, result) => {
+                        if (err) {
+                            return done(err);
+                        }
+                        return done(null, result);
+                    });
+            }   // end of updating
+        }); // end of checking duplication
 
     });
 };
@@ -70,7 +112,7 @@ module.exports = {
     create: _create,
     readById: _readById,
     delete: _delete,
-    update: _update,
+    updateDetails: _updateDetails,
     updateTask: _updateTask,
     deleteAll: _deleteAll
 }

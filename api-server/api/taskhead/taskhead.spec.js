@@ -16,14 +16,14 @@ const password = '123';
 
 const TaskHeadController = require('../../../models/task/taskhead.controller.js');
 const TaskHead = require('../../../models/task/taskhead');
-const test_tasks = [
-    {order: 0, description: 'des', detailNote: 'detailnote', completed: false},
-    {order: 1, description: 'des1', detailNote: 'detailnote1', completed: false},
-    {order: 2, description: 'des2', detailNote: 'detailnote2', completed: false},
-    {order: 3, description: 'des3', detailNote: 'detailnote3', completed: false}
-];
+// const test_tasks = [
+//     {order: 0, description: 'des', detailNote: 'detailnote', completed: false},
+//     {order: 1, description: 'des1', detailNote: 'detailnote1', completed: false},
+//     {order: 2, description: 'des2', detailNote: 'detailnote2', completed: false},
+//     {order: 3, description: 'des3', detailNote: 'detailnote3', completed: false}
+// ];
 const test_members = [
-    {name: 'member1', email: 'email_member1', tasks: test_tasks}
+    {name: 'member1', email: 'email_member1', tasks: []}
 ];
 const test_taskhead = {
     title: 'titleOfTaskHead',
@@ -113,22 +113,30 @@ describe('TaskHead - need the accessToken to access API resources ', () => {
                 });
         });
 
+        it('PUT /taskhead/ returns 401 - with wrong taskhead id', done => {
+            const newMembers = [
+                {name: 'member2', email: 'email_member2', tasks: []}
+            ];
+            request
+                .put('/taskhead/' + 'wrongId')
+                .set({Authorization: 'Bearer' + ' ' + accessToken})
+                .send({details: {title: test_taskhead.title, members: newMembers}})
+                .expect(401)
+                .end((err, res) => {
+                    if (err) throw err;
+                    res.status.should.equal(401);
+                    done();
+                });
+        });
 
         it('PUT /taskhead/', done => {
-            const updatingTaskHead = test_taskhead;
-            updatingTaskHead.title = 'updating title';
-            // Push new members into members array
-            // new member: 'member2'
-            // the array does not include the existing members.
             const newMembers = [
-                {name: 'member2', email: 'email_member2', tasks: []},
-                {name: 'member3', email: 'email_member3', tasks: []}
+                {name: 'member2', email: 'email_member2', tasks: []}
             ];
-            updatingTaskHead.members.push(...newMembers);
             request
                 .put('/taskhead/' + taskHead.id)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .send({taskHead: updatingTaskHead})
+                .send({details: {title: test_taskhead.title, members: newMembers}})
                 .expect(200)
                 .end((err, res) => {
                     if (err) throw err;
@@ -137,6 +145,19 @@ describe('TaskHead - need the accessToken to access API resources ', () => {
                 });
         });
 
+        it('PUT /taskhead/ returns 401 - with existing members ', done => {
+            let existingMembers = taskHead.members;
+            request
+                .put('/taskhead/' + taskHead.id)
+                .set({Authorization: 'Bearer' + ' ' + accessToken})
+                .send({details: {title: test_taskhead.title, members: existingMembers}})
+                .expect(400)
+                .end((err, res) => {
+                    if (err) throw err;
+                    res.status.should.equal(400);
+                    done();
+                });
+        });
     });
 
 });
