@@ -5,9 +5,14 @@ const controller = require('./taskhead.controller');
 
 router.post('/', controller.create);
 
-router.delete('/:id', controller.delete);
+router.delete('/:id', controller.deleteOne);
 
-// Update all(title, order, members)
-router.put('/:id', controller.update);
+// Update details - title, members
+router.put('/:id', controller.updateDetails);
+
+// Delete tasks
+router.delete('/', controller.deleteMulti);
+
+// Read taskHeads of the user
 
 module.exports = router;

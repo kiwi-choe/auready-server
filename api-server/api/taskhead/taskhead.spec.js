@@ -14,7 +14,7 @@ const name = 'nameofkiwi3';
 const email = 'kiwi3@gmail.com';
 const password = '123';
 
-const TaskHeadController = require('../../../models/task/taskhead.controller.js');
+const TaskHeadDBController = require('../../../models/task/taskhead.controller.js');
 const TaskHead = require('../../../models/task/taskhead');
 // const test_tasks = [
 //     {order: 0, description: 'des', detailNote: 'detailnote', completed: false},
@@ -75,9 +75,9 @@ describe('TaskHead - need the accessToken to access API resources ', () => {
 
         let taskHead;
         beforeEach(done => {
-            TaskHeadController.deleteAll(err => {
+            TaskHeadDBController.deleteAll(err => {
 
-                TaskHeadController.create(test_taskhead, (err, newTaskHead) => {
+                TaskHeadDBController.create(test_taskhead, (err, newTaskHead) => {
                     taskHead = newTaskHead;
                     done();
                 });
@@ -85,7 +85,7 @@ describe('TaskHead - need the accessToken to access API resources ', () => {
             });
         });
         // after(done => {
-        //     TaskHeadController.deleteAll(err => {
+        //     TaskHeadDBController.deleteAll(err => {
         //         done();
         //     });
         // });
@@ -113,7 +113,7 @@ describe('TaskHead - need the accessToken to access API resources ', () => {
                 });
         });
 
-        it('PUT /taskhead/ returns 401 - with wrong taskhead id', done => {
+        it('PUT /taskhead/:id returns 401 - with wrong taskhead id', done => {
             const newMembers = [
                 {name: 'member2', email: 'email_member2', tasks: []}
             ];
@@ -129,7 +129,7 @@ describe('TaskHead - need the accessToken to access API resources ', () => {
                 });
         });
 
-        it('PUT /taskhead/', done => {
+        it('PUT /taskhead/:id', done => {
             const newMembers = [
                 {name: 'member2', email: 'email_member2', tasks: []}
             ];
@@ -145,7 +145,7 @@ describe('TaskHead - need the accessToken to access API resources ', () => {
                 });
         });
 
-        it('PUT /taskhead/ returns 401 - with existing members ', done => {
+        it('PUT /taskhead/:id returns 401 - with existing members ', done => {
             let existingMembers = taskHead.members;
             request
                 .put('/taskhead/' + taskHead.id)
@@ -158,6 +158,89 @@ describe('TaskHead - need the accessToken to access API resources ', () => {
                     done();
                 });
         });
+    });
+
+    describe('Delete taskHeads', () => {
+        //
+        // let taskHeads = [];
+        // taskHeads.length = 0;
+        // const members = [
+        //     {name: 'member0', email: 'email_member1', tasks: []},
+        //     {name: 'member1', email: 'email_member1', tasks: []},
+        // ];
+        // let taskHead0 = {
+        //     title: 'titleOfTaskHead0',
+        //     order: [{member: 'member0', order: 0}],
+        //     members: members
+        // };
+        // taskHeads.push(taskHead0);
+        // let taskHead1 = {
+        //     title: 'titleOfTaskHead1',
+        //     order: [{member: 'member0', order: 1}],
+        //     members: members
+        // };
+        // taskHeads.push(taskHead1);
+        // let taskHead2 = {
+        //     title: 'titleOfTaskHead2',
+        //     order: [{member: 'member0', order: 2}],
+        //     members: members
+        // };
+        // taskHeads.push(taskHead2);
+        //
+        //
+        // // client's taskHead model has - id, title, order
+        // let updatingTaskHeads = [];
+        // beforeEach(done => {
+        //
+        //     updatingTaskHeads.length = 0;
+        //     TaskHeadDBController.deleteAll(err => {
+        //
+        //         taskHeads.forEach((taskHead, i) => {
+        //             TaskHeadDBController.create(taskHead, (err, newTaskHead) => {
+        //
+        //                 let clientTaskHead = {
+        //                     id: newTaskHead.id,
+        //                     title: 'someTitle ' + i,
+        //                     order: i
+        //                 };
+        //
+        //                 console.log(clientTaskHead);
+        //                 updatingTaskHeads.push(clientTaskHead);
+        //                 if (taskHeads.length - 1 === i) {
+        //
+        //                     done();
+        //                 }
+        //             });
+        //         });
+        //     });
+        // });
+
+        let taskHeadIds = ['id1', 'id2', 'id3'];
+        it('DELETE /taskhead/ returns 200', done => {
+            request
+                .delete('/taskhead/')
+                .set({Authorization: 'Bearer' + ' ' + accessToken})
+                .expect(200)
+                .send({ids: taskHeadIds})
+                .end((err, res) => {
+                    if (err) throw err;
+                    res.status.should.equal(200);
+                    done();
+                });
+        });
+        // it('DELETE /taskhead/ returns 400', done => {
+        //     request
+        //         .delete('/taskhead/')
+        //         .set({Authorization: 'Bearer' + ' ' + accessToken})
+        //         .expect(400)
+        //         .end((err, res) => {
+        //             if (err) throw err;
+        //             res.status.should.equal(400);
+        //             done();
+        //         });
+        // });
+
+
     });
 
 });

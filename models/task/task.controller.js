@@ -1,25 +1,25 @@
 const TaskHead = require(__appbase_dirname + '/models/task/taskhead');
 
-const _create = (memberId, taskInfo, done) => {
-    // TaskHead.findOne({'members._id': memberId},
-    //     (err, taskheadOfMemberAt) => {
-    //         if (err) return done(err);
-    //         if (!taskheadOfMemberAt) {
-    //             return done(null, false);
-    //         }
-    //         taskheadOfMemberAt.members[0].tasks.push(taskInfo);
-    //         taskheadOfMemberAt.save((err, updatedTaskHeadOfMember) => {
-    //             if (err) return done(err);
-    //
-    //             const tasksByTaskHeadIdAndMemberId = updatedTaskHeadOfMember.members[0].tasks;
-    //             if (tasksByTaskHeadIdAndMemberId) {
-    //                 const createdTask =
-    //                     tasksByTaskHeadIdAndMemberId[tasksByTaskHeadIdAndMemberId.length - 1];
-    //                 return done(null, createdTask);
-    //             }
-    //             return done(null, false);
-    //         });
-    //     });
+const _create = (memberId, newTask, done) => {
+    TaskHead.findOne({'members._id': memberId},
+        (err, taskheadOfMemberAt) => {
+            if (err) return done(err);
+            if (!taskheadOfMemberAt) {
+                return done(null, false);
+            }
+            taskheadOfMemberAt.members[0].tasks.push(newTask);
+            taskheadOfMemberAt.save((err, updatedTaskHeadOfMember) => {
+                if (err) return done(err);
+
+                const tasksByMemberId = updatedTaskHeadOfMember.members[0].tasks;
+                if (tasksByMemberId) {
+                    const createdTask =
+                        tasksByMemberId[tasksByMemberId.length - 1];
+                    return done(null, createdTask);
+                }
+                return done(null, false);
+            });
+        });
 };
 
 const _delete = (id, done) => {

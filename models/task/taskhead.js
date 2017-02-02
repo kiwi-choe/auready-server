@@ -11,10 +11,10 @@ const memberSchema = mongoose.Schema({
 
 const taskHeadSchema = mongoose.Schema({
     title: String,
-    order: [{           // Hash type, but don't have ObjectId
-        member: String, // key
-        order: Number   // value
-    }],
+    // order: [{           // Hash type, but don't have ObjectId
+    //     member: String, // key
+    //     order: Number   // value
+    // }],
     modifiedTime: Number,    // == createdTime
     members: [memberSchema]
 });

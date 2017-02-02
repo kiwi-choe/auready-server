@@ -10,8 +10,8 @@ exports.create = (req, res) => {
     });
 };
 
-exports.delete = (req, res) => {
-    TaskHeadDBController.delete(req.params.id, (err, isRemoved) => {
+exports.deleteOne = (req, res) => {
+    TaskHeadDBController.deleteOne(req.params.id, (err, isRemoved) => {
         if(err) {
             return res.sendStatus(400);
         }
@@ -23,14 +23,27 @@ exports.delete = (req, res) => {
     });
 };
 
-exports.update = (req, res) => {
+exports.updateDetails = (req, res) => {
 
     TaskHeadDBController.updateDetails(req.params.id, req.body.details, (err, result) => {
         if(err) {
             return res.sendStatus(401);
         }
         if(!result) {
-            console.log(result);
+            return res.sendStatus(400);
+        } else {
+            return res.sendStatus(200);
+        }
+    });
+};
+
+exports.deleteMulti = (req, res) => {
+
+    TaskHeadDBController.deleteMulti(req.body.taskheadids, (err, isRemoved) => {
+        if(err) {
+            return res.sendStatus(401);
+        }
+        if(!isRemoved) {
             return res.sendStatus(400);
         } else {
             return res.sendStatus(200);

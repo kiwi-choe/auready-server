@@ -1,74 +1,100 @@
-// describe('Task model', () => {
-//     let accessToken;
-//     let taskHead;
-//     before(done => {
-//         // Create a TaskHead
-//         TaskHead.create(test_taskhead, (err, newTaskHead) => {
-//             taskHead = newTaskHead;
+process.env.dbURI = 'test';
+
+const assert = require('assert');
+const should = require('should');
+require('../../../www');
+
+const Task = require('../../../models/task/task.controller');
+const TaskHead = require('../../../models/task/taskhead.controller');
+const TaskHeadModel = require('../../../models/task/taskhead');
+
+const test_members = [
+    {name: 'member1', email: 'email_member1', tasks: []}
+];
+const test_taskhead = {
+    title: 'titleOfTaskHead',
+    order: [
+        {member: 'member1', order: 0}
+    ],
+    members: test_members
+};
+
+const test_tasks = [
+    {order: 0, description: 'des', detailNote: 'detailnote', completed: false},
+    {order: 1, description: 'des1', detailNote: 'detailnote1', completed: false},
+    {order: 2, description: 'des2', detailNote: 'detailnote2', completed: false},
+    {order: 3, description: 'des3', detailNote: 'detailnote3', completed: false}
+];
+
+describe('Task model', () => {
+    let taskHead;
+    before(done => {
+        // delete all the users
+        TaskHead.deleteAll(err => {
+
+            // Create a TaskHead
+            TaskHead.create(test_taskhead, (err, newTaskHead) => {
+                taskHead = newTaskHead;
+                done();
+            });
+        });
+    });
+
+    describe('CREATE a task', () => {
+        it('A task is created', done => {
+            let test_task = test_tasks[0];
+            Task.create(taskHead.members[0].id, test_task, (err, newTask) => {
+                assert.ifError(err);
+                if (newTask) {
+                    console.log(newTask);
+                    // const lenOfTasks = taskHeadOfNewTask.members[0].tasks.length;
+                    // console.log('\n' + taskHeadOfNewTask.members[0].tasks[lenOfTasks-1].description);
+                    assert.equal(newTask.description, test_task.description, 'not equal description');
+                } else {
+                    assert.fail('fail to create a task');
+                }
+                done();
+            });
+        });
+    });
+});
+// describe('EDIT tasks', () => {
+//     let task;
+//     beforeEach(done => {
+//         Task.create(taskHead.id, taskHead.members[0].id, test_task, (err, newTask) => {
+//             task = newTask;
 //             done();
 //         });
 //     });
-//     after(done => {
-//         // delete all the users
-//         TaskHead.deleteAll(err => {
+//     afterEach(done => {
+//         // Remove All tasks of taskhead
+//         Task.deleteAll(taskHead.id, (err, isRemoved) => {
+//             assert.ifError(err);
+//             isRemoved.should.be.true('isRemoved should be true');
 //             done();
 //         });
 //     });
 //
-//     describe('CREATE a task', () => {
-//         it('A task is created', done => {
-//             Task.create(taskHead.id, taskHead.members[0].id, test_task, (err, newTask) => {
-//                 assert.ifError(err);
-//                 if (newTask) {
-//                     console.log(newTask);
-//                     // const lenOfTasks = taskHeadOfNewTask.members[0].tasks.length;
-//                     // console.log('\n' + taskHeadOfNewTask.members[0].tasks[lenOfTasks-1].description);
-//                     assert.equal(newTask.description, test_task.description, 'not equal description');
-//                 } else {
-//                     assert.fail('fail to create a task');
-//                 }
+//     it('DELETE a task', done => {
+//         Task.delete(task.id, (err, isRemoved) => {
+//             assert.ifError(err);
+//             isRemoved.should.be.true('isRemoved should be true');
+//             done();
+//         });
+//     });
+//
+//     it('UPDATE a task', done => {
+//         let updatingTask = test_task;
+//         updatingTask.description = 'changedDescription';
+//         Task.update({'members.task._id': task.id}, updatingTask, (err, updatedTasks) => {
+//             assert.ifError(err);
+//             Task.get(task.id, (err, task) => {
+//                 (task.description).should.be.equal(updatingTask.description);
 //                 done();
 //             });
 //         });
 //     });
-//
-//     describe('EDIT tasks', () => {
-//         let task;
-//         beforeEach(done => {
-//             Task.create(taskHead.id, taskHead.members[0].id, test_task, (err, newTask) => {
-//                 task = newTask;
-//                 done();
-//             });
-//         });
-//         afterEach(done => {
-//             // Remove All tasks of taskhead
-//             Task.deleteAll(taskHead.id, (err, isRemoved) => {
-//                 assert.ifError(err);
-//                 isRemoved.should.be.true('isRemoved should be true');
-//                 done();
-//             });
-//         });
-//
-//         it('DELETE a task', done => {
-//             Task.delete(task.id, (err, isRemoved) => {
-//                 assert.ifError(err);
-//                 isRemoved.should.be.true('isRemoved should be true');
-//                 done();
-//             });
-//         });
-//
-//         it('UPDATE a task', done => {
-//             let updatingTask = test_task;
-//             updatingTask.description = 'changedDescription';
-//             Task.update({'members.task._id': task.id}, updatingTask, (err, updatedTasks) => {
-//                 assert.ifError(err);
-//                 Task.get(task.id, (err, task) => {
-//                     (task.description).should.be.equal(updatingTask.description);
-//                     done();
-//                 });
-//             });
-//         });
-//     });
+// });
 
 // describe('GET task by id', () => {
 //     let task;
@@ -113,5 +139,4 @@
 //             done();
 //         });
 //     });
-// });
 // });

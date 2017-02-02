@@ -9,7 +9,7 @@ On mobile networks, where latency is constantly high, this is a big drawback. So
  
 *[ ] LogManager
 *[ ] To refine the response to each request  
-*[ ] Which one of 'Task', 'TaskHead' are more accessible?  
+*[x] Which one of 'Task', 'TaskHead' are more accessible?  
 Client 구현하면서 어떤 데이터에 더 많은 접근을 하는 지에 따라 DB디자인을 수정할 예정.
 Task에 대한 접근이 더 많으면, 현재 구조인 TaskHead{Members{Tasks{}}}에서 
 Task를 빼는 식으로 수정해야한다. like below  

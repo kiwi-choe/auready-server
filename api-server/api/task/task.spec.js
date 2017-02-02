@@ -70,12 +70,10 @@ describe('Task', () => {
 
     describe('POST /task', () => {
         it('it should not POST a task without taskHeadId field and returns 400', done => {
-            let newTask = taskObj;
-            newTask.taskHeadId = undefined;
             request
                 .post('/task')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .send({taskInfo: newTask})
+                .send({task: taskObj})
                 .expect(400)
                 .end((err, res) => {
                     if (err) throw err;
@@ -86,10 +84,11 @@ describe('Task', () => {
             request
                 .post('/task')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .send({taskHeadId: taskHead.id, taskInfo: taskObj})
+                .send({memberid: taskHead.members[0].id, task: taskObj})
                 .expect(201)
                 .end((err, res) => {
                     if (err) throw err;
+                    res.status.should.equal(201);
                     done();
                 });
         });

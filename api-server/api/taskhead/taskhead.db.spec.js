@@ -8,12 +8,6 @@ const Task = require('../../../models/task/task.controller');
 const TaskHead = require('../../../models/task/taskhead.controller');
 const TaskHeadModel = require('../../../models/task/taskhead');
 
-const test_tasks = [
-    {order: 0, description: 'des', detailNote: 'detailnote', completed: false},
-    {order: 1, description: 'des1', detailNote: 'detailnote1', completed: false},
-    {order: 2, description: 'des2', detailNote: 'detailnote2', completed: false},
-    {order: 3, description: 'des3', detailNote: 'detailnote3', completed: false}
-];
 const test_members = [
     {name: 'member1', email: 'email_member1', tasks: []}
 ];
@@ -23,13 +17,6 @@ const test_taskhead = {
         {member: 'member1', order: 0}
     ],
     members: []
-};
-
-const test_task = {
-    order: 555,
-    description: 'desNew',
-    detailNote: 'detailnoteNew',
-    completed: false
 };
 
 describe('TaskHead model', () => {
@@ -79,7 +66,7 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
     });
 
     it('DELETE a taskhead', done => {
-        TaskHead.delete(existingTaskHead.id, (err, isRemoved) => {
+        TaskHead.deleteOne(existingTaskHead.id, (err, isRemoved) => {
             assert.ifError(err);
             console.log('\n' + isRemoved);
             done();
@@ -236,45 +223,6 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
 
         // Duplication check to add new members
         let newMembers = [];
-        // for(let i=0, member; member=paramMembers[i]; i++) {
-        //     console.log('member ', member);
-        //     console.log('i ', i);
-        //
-        //     // There is no member with newMember.name
-        //     TaskHeadModel.find({
-        //         // _id: existingTaskHead.id,
-        //         _id: 'wrongid',
-        //         'members.name': member.name
-        //     }, (err, found) => {
-        //         if (!found) {
-        //             console.log('taskhead id is wrong');
-        //             done();
-        //             return;
-        //         }
-        //
-        //         console.log('\nfound.length ', found.length);
-        //         if (found.length === 0) {
-        //             // push new member
-        //             console.log('\nnewMember- ', member);
-        //             newMembers.push(member);
-        //         } else {
-        //             console.log('paramMembers.length ', paramMembers.length);
-        //         }
-        //
-        //         if (i === paramMembers.length - 1) {
-        //
-        //             console.log('newMembers ', newMembers);
-        //             console.log('newMembers.length ', newMembers.length);
-        //             if (newMembers.length === 0) {
-        //                 done();
-        //             } else {
-        //                 // Update
-        //                 done();
-        //             }
-        //         }
-        //     });
-        // }
-
         paramMembers.forEach((member, i) => {
             console.log('member ', member);
             console.log('i ', i);
@@ -312,9 +260,47 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
                     }
                 }
             });
-
-
         });
 
     });
+
+
+});
+
+describe('There are taskheads in DB', () => {
+
+    const members = [
+        {name: 'member0', email: 'email_member1', tasks: []},
+        {name: 'member1', email: 'email_member1', tasks: []},
+    ];
+    const taskHeads = [
+        {title: 'titleOfTaskHead0', order: [{member: 'member0', order: 0}],members: members},
+        {title: 'titleOfTaskHead1', order: [{member: 'member0', order: 1}], members: members},
+        {title: 'titleOfTaskHead2', order: [{member: 'member0', order: 2}], members: members}
+    ];
+
+    let savedTaskHeads;
+    beforeEach(done => {
+        savedTaskHeads.length = 0;
+        TaskHead.deleteAll(err => {
+
+            // Create 3 taskHeads
+            taskHeads.forEach((taskHead, i) => {
+                TaskHead.create(taskHead, (err, newTaskHead) => {
+                    savedTaskHeads.push(newTaskHead);
+
+                    if (taskHeads.length - 1 === i) {
+                        done();
+                    }
+                });
+            });
+        });
+    });
+
+    it('Delete taskheads', done => {
+        // delete multi
+
+        // and delete tasks by memberId
+    });
+
 });
