@@ -158,88 +158,81 @@ describe('TaskHead - need the accessToken to access API resources ', () => {
                     done();
                 });
         });
-    });
 
-    describe('Delete taskHeads', () => {
-        //
-        // let taskHeads = [];
-        // taskHeads.length = 0;
-        // const members = [
-        //     {name: 'member0', email: 'email_member1', tasks: []},
-        //     {name: 'member1', email: 'email_member1', tasks: []},
-        // ];
-        // let taskHead0 = {
-        //     title: 'titleOfTaskHead0',
-        //     order: [{member: 'member0', order: 0}],
-        //     members: members
-        // };
-        // taskHeads.push(taskHead0);
-        // let taskHead1 = {
-        //     title: 'titleOfTaskHead1',
-        //     order: [{member: 'member0', order: 1}],
-        //     members: members
-        // };
-        // taskHeads.push(taskHead1);
-        // let taskHead2 = {
-        //     title: 'titleOfTaskHead2',
-        //     order: [{member: 'member0', order: 2}],
-        //     members: members
-        // };
-        // taskHeads.push(taskHead2);
-        //
-        //
-        // // client's taskHead model has - id, title, order
-        // let updatingTaskHeads = [];
-        // beforeEach(done => {
-        //
-        //     updatingTaskHeads.length = 0;
-        //     TaskHeadDBController.deleteAll(err => {
-        //
-        //         taskHeads.forEach((taskHead, i) => {
-        //             TaskHeadDBController.create(taskHead, (err, newTaskHead) => {
-        //
-        //                 let clientTaskHead = {
-        //                     id: newTaskHead.id,
-        //                     title: 'someTitle ' + i,
-        //                     order: i
-        //                 };
-        //
-        //                 console.log(clientTaskHead);
-        //                 updatingTaskHeads.push(clientTaskHead);
-        //                 if (taskHeads.length - 1 === i) {
-        //
-        //                     done();
-        //                 }
-        //             });
-        //         });
-        //     });
-        // });
-
-        let taskHeadIds = ['id1', 'id2', 'id3'];
-        it('DELETE /taskhead/ returns 200', done => {
+        it('PUT /taskhead/:id with memberid returns 200', done => {
             request
-                .delete('/taskhead/')
+                .put('/taskhead/' + taskHead.id + '/member')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
+                .send({memberid: taskHead.members[0].id})
                 .expect(200)
-                .send({ids: taskHeadIds})
                 .end((err, res) => {
                     if (err) throw err;
                     res.status.should.equal(200);
                     done();
                 });
         });
-        // it('DELETE /taskhead/ returns 400', done => {
-        //     request
-        //         .delete('/taskhead/')
-        //         .set({Authorization: 'Bearer' + ' ' + accessToken})
-        //         .expect(400)
-        //         .end((err, res) => {
-        //             if (err) throw err;
-        //             res.status.should.equal(400);
-        //             done();
-        //         });
-        // });
+    });
 
+    describe('Delete taskHeads', () => {
+
+        const members = [
+            {name: 'member0', email: 'email_member1', tasks: []},
+            {name: 'member1', email: 'email_member1', tasks: []},
+        ];
+        const taskHeads = [
+            {title: 'titleOfTaskHead0', order: [{member: 'member0', order: 0}], members: members},
+            {title: 'titleOfTaskHead1', order: [{member: 'member0', order: 1}], members: members},
+            {title: 'titleOfTaskHead2', order: [{member: 'member0', order: 2}], members: members}
+        ];
+
+        let savedTaskHeads = [];
+        beforeEach(done => {
+            savedTaskHeads.length = 0;
+            TaskHeadDBController.deleteAll(err => {
+
+                // Create 3 taskHeads
+                taskHeads.forEach((taskHead, i) => {
+                    TaskHeadDBController.create(taskHead, (err, newTaskHead) => {
+                        savedTaskHeads.push(newTaskHead);
+
+                        if (taskHeads.length - 1 === i) {
+                            done();
+                        }
+                    });
+                });
+            });
+        });
+
+        it('DELETE /taskhead/ returns 200', done => {
+
+            let deletingTaskHeadIds = [];
+            for (let i = 0; i < savedTaskHeads.length; i++) {
+                deletingTaskHeadIds.push(savedTaskHeads[i].id);
+            }
+
+            request
+                .delete('/taskhead/')
+                .set({Authorization: 'Bearer' + ' ' + accessToken})
+                .expect(200)
+                .send({ids: deletingTaskHeadIds})
+                .end((err, res) => {
+                    if (err) throw err;
+                    res.status.should.equal(200);
+                    done();
+                });
+        });
+
+        it('DELETE /taskhead/ - deletingTaskHeadIds is undefined - returns 400', done => {
+            request
+                .delete('/taskhead/')
+                .set({Authorization: 'Bearer' + ' ' + accessToken})
+                .expect(400)
+                .end((err, res) => {
+                    if (err) throw err;
+                    res.status.should.equal(400);
+                    done();
+                });
+        });
 
     });
 

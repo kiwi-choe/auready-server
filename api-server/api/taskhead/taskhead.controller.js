@@ -39,7 +39,12 @@ exports.updateDetails = (req, res) => {
 
 exports.deleteMulti = (req, res) => {
 
-    TaskHeadDBController.deleteMulti(req.body.taskheadids, (err, isRemoved) => {
+    let deletingTaskHeadIds = req.body.ids;
+    if(!deletingTaskHeadIds) {
+        return res.sendStatus(400);
+    }
+
+    TaskHeadDBController.deleteMulti(deletingTaskHeadIds, (err, isRemoved) => {
         if(err) {
             return res.sendStatus(401);
         }
@@ -48,5 +53,16 @@ exports.deleteMulti = (req, res) => {
         } else {
             return res.sendStatus(200);
         }
+    });
+};
+
+// Delete a member - it's updating taskhead
+exports.deleteMember = (req, res) => {
+
+    let taskheadId = req.params.id;
+    let memberId = req.body.memberid;
+    TaskHeadDBController.deleteMember(taskheadId, memberId, (err, result) => {
+
+        return res.sendStatus(400);
     });
 };

@@ -233,7 +233,7 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
                 _id: 'wrongid',
                 'members.name': member.name
             }, (err, found) => {
-                if(!found) {
+                if (!found) {
                     console.log('taskhead id is wrong');
                     done();
                     return;
@@ -274,12 +274,12 @@ describe('There are taskheads in DB', () => {
         {name: 'member1', email: 'email_member1', tasks: []},
     ];
     const taskHeads = [
-        {title: 'titleOfTaskHead0', order: [{member: 'member0', order: 0}],members: members},
+        {title: 'titleOfTaskHead0', order: [{member: 'member0', order: 0}], members: members},
         {title: 'titleOfTaskHead1', order: [{member: 'member0', order: 1}], members: members},
         {title: 'titleOfTaskHead2', order: [{member: 'member0', order: 2}], members: members}
     ];
 
-    let savedTaskHeads;
+    let savedTaskHeads = [];
     beforeEach(done => {
         savedTaskHeads.length = 0;
         TaskHead.deleteAll(err => {
@@ -298,9 +298,27 @@ describe('There are taskheads in DB', () => {
     });
 
     it('Delete taskheads', done => {
+        let deletingTaskHeadIds = [];
+        for (let i = 0; i < savedTaskHeads.length; i++) {
+            deletingTaskHeadIds.push(savedTaskHeads[i].id);
+        }
+        console.log(deletingTaskHeadIds);
         // delete multi
+        TaskHeadModel.remove({_id: {$in: deletingTaskHeadIds}}, (err, removed) => {
+            assert.equal(removed.result.n, 3);
+            if(removed.result.n !== 0) {
+                // Find to check if removed successfully
+                TaskHeadModel.find({_id: {$in: deletingTaskHeadIds}}, (err, taskheads) => {
+                    if(taskheads.length !== 0) {
+                        assert.fail('remove fail');
+                    } else {
+                        assert.ok('cannot find this ids');
+                    }
+                    done();
+                });
+            }
+        });
 
-        // and delete tasks by memberId
     });
 
 });

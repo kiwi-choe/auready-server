@@ -48,6 +48,16 @@ const _deleteOne = (id, done) => {
 
 const _deleteMulti = (ids, done) => {
 
+    TaskHead.remove({_id: {$in: ids}}, (err, removed) => {
+        if(err) {
+            console.log('err: ', err);
+            return done(err);
+        }
+        if(removed.result.n !== ids.length) {
+            return done(null, false);
+        }
+        return done(null, true);
+    });
 };
 
 // Update details - current details are 'title', 'members'
@@ -103,6 +113,11 @@ const _updateDetails = (taskHeadId, details, done) => {
     });
 };
 
+const _deleteMember = (taskHeadId, memberId, done) => {
+
+    return done(null, false);
+};
+
 const _deleteAll = done => {
     TaskHead.remove({}, err => {
         if (err) {
@@ -118,6 +133,7 @@ module.exports = {
     deleteOne: _deleteOne,
     deleteMulti: _deleteMulti,
     updateDetails: _updateDetails,
+    deleteMember: _deleteMember,
     updateTask: _updateTask,
     deleteAll: _deleteAll
 }

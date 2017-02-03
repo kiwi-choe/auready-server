@@ -13,6 +13,9 @@ router.put('/:id', controller.updateDetails);
 // Delete tasks
 router.delete('/', controller.deleteMulti);
 
+// Delete a member - [나가기] 기능
+router.put('/:id/member', controller.deleteMember);
+
 // Read taskHeads of the user
 
 module.exports = router;
