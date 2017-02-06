@@ -41,8 +41,8 @@ const _delete = (id, done) => {
 const _update = (query, options, done) => {
 
     TaskHead.findOne(query, (err, taskHead) => {
-        if(err) return done(err);
-        if(!taskHead) return done(null, false);
+        if (err) return done(err);
+        if (!taskHead) return done(null, false);
 
         // Modify a task of this taskhead
         taskHead.members[0].tasks[0] = options;
@@ -51,7 +51,7 @@ const _update = (query, options, done) => {
             if (err) return done(err);
             if (!updatedTaskHead) return done(null, false);
             const updatedTasks = updatedTaskHead.members[0].tasks;
-            if(updatedTasks) {
+            if (updatedTasks) {
                 return done(null, updatedTaskHead);
             }
             return done(null, false);
@@ -59,21 +59,27 @@ const _update = (query, options, done) => {
     });
 };
 
-const _get = (id, done) => {
+const _readById = (id, done) => {
     TaskHead.findOne({'members.task._id': id}, (err, taskHead) => {
-        if(err) return done(err);
-        if(!taskHead) return done(null, false);
-        if(taskHead.members[0]) {
-            if(taskHead.members[0].tasks[0]) {
+        if (err) return done(err);
+        if (!taskHead) return done(null, false);
+        if (taskHead.members[0]) {
+            if (taskHead.members[0].tasks[0]) {
 
             }
         }
         const taskByTaskId = taskHead.members[0].tasks[0];
-        if(!taskByTaskId) return done(null, false);
+        if (!taskByTaskId) return done(null, false);
     });
 };
 
+const _deleteMulti = (ids, done) => {
+    return done(null, false);
+};
+
+// Delete all tasks of the taskhead
 const _deleteAll = (id, done) => {
+
     TaskHead.findOne({_id: id}, (err, taskHead) => {
         if (err) return done(err);
         if (!taskHead) return done(null, false);
@@ -84,7 +90,6 @@ const _deleteAll = (id, done) => {
             // remove tasks of members[i]
             taskHead.members[i].tasks.length = 0;
         }
-        console.log('taskHead after removing all tasks' + taskHead);
         // Update this taskHead
         taskHead.save((err, updatedTaskHead) => {
             if (err) return done(err);
@@ -98,6 +103,7 @@ module.exports = {
     create: _create,
     delete: _delete,
     update: _update,
-    get: _get,
+    readById: _readById,
+    deleteMulti: _deleteMulti,
     deleteAll: _deleteAll
 }

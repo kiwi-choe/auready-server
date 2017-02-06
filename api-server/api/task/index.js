@@ -4,7 +4,11 @@ const router = express.Router();
 const controller = require('./task.controller');
 
 router.post('/', controller.create);
-router.delete('/', controller.deleteAll);
+
+// Delete tasks
+router.delete('/', controller.deleteMulti);
+
+// Delete a task
 router.delete('/:id', controller.delete);
 
 // Update all

@@ -23,10 +23,10 @@ exports.initialize = (app) => {
     app.use('/relationship',
         passport.authenticate('bearer', {session: false}), oauth2Server.error(),
         relationshipRouter);
-    app.use('/taskhead',
+    app.use('/taskheads',
         passport.authenticate('bearer', {session: false}), oauth2Server.error(),
         taskheadRouter);
-    app.use('/task',
+    app.use('/tasks',
         passport.authenticate('bearer', {session: false}), oauth2Server.error(),
         taskRouter);
 };

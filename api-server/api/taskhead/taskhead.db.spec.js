@@ -19,7 +19,7 @@ const test_taskhead = {
     members: []
 };
 
-describe('TaskHead model', () => {
+describe('TaskHeadDBController model', () => {
 
     after(done => {
         TaskHead.deleteAll(err => {

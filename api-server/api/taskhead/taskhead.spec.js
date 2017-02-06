@@ -15,13 +15,6 @@ const email = 'kiwi3@gmail.com';
 const password = '123';
 
 const TaskHeadDBController = require('../../../models/task/taskhead.controller.js');
-const TaskHead = require('../../../models/task/taskhead');
-// const test_tasks = [
-//     {order: 0, description: 'des', detailNote: 'detailnote', completed: false},
-//     {order: 1, description: 'des1', detailNote: 'detailnote1', completed: false},
-//     {order: 2, description: 'des2', detailNote: 'detailnote2', completed: false},
-//     {order: 3, description: 'des3', detailNote: 'detailnote3', completed: false}
-// ];
 const test_members = [
     {name: 'member1', email: 'email_member1', tasks: []}
 ];
@@ -33,7 +26,7 @@ const test_taskhead = {
     members: test_members
 };
 
-describe('TaskHead - need the accessToken to access API resources ', () => {
+describe('TaskHeadDBController - need the accessToken to access API resources ', () => {
 
     let accessToken;
     before(done => {
@@ -56,9 +49,9 @@ describe('TaskHead - need the accessToken to access API resources ', () => {
     });
     describe('Create a taskHead', () => {
 
-        it('POST /taskhead/', done => {
+        it('POST /taskheads/', done => {
             request
-                .post('/taskhead/')
+                .post('/taskheads/')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .send({
                     taskHeadInfo: test_taskhead
@@ -90,9 +83,9 @@ describe('TaskHead - need the accessToken to access API resources ', () => {
         //     });
         // });
 
-        it('DELETE /taskhead/:id returns 200', done => {
+        it('DELETE /taskheads/:id returns 200', done => {
             request
-                .delete('/taskhead/' + taskHead.id)
+                .delete('/taskheads/' + taskHead.id)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .expect(200)
                 .end((err, res) => {
@@ -101,9 +94,9 @@ describe('TaskHead - need the accessToken to access API resources ', () => {
                     done();
                 });
         });
-        it('DELETE /taskhead/wrongId returns 400', done => {
+        it('DELETE /taskheads/wrongId returns 400', done => {
             request
-                .delete('/taskhead/' + 'wrongId')
+                .delete('/taskheads/' + 'wrongId')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .expect(400)
                 .end((err, res) => {
@@ -113,12 +106,12 @@ describe('TaskHead - need the accessToken to access API resources ', () => {
                 });
         });
 
-        it('PUT /taskhead/:id returns 401 - with wrong taskhead id', done => {
+        it('PUT /taskheads/:id returns 401 - with wrong taskhead id', done => {
             const newMembers = [
                 {name: 'member2', email: 'email_member2', tasks: []}
             ];
             request
-                .put('/taskhead/' + 'wrongId')
+                .put('/taskheads/' + 'wrongId')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .send({details: {title: test_taskhead.title, members: newMembers}})
                 .expect(401)
@@ -129,12 +122,12 @@ describe('TaskHead - need the accessToken to access API resources ', () => {
                 });
         });
 
-        it('PUT /taskhead/:id', done => {
+        it('PUT /taskheads/:id', done => {
             const newMembers = [
                 {name: 'member2', email: 'email_member2', tasks: []}
             ];
             request
-                .put('/taskhead/' + taskHead.id)
+                .put('/taskheads/' + taskHead.id)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .send({details: {title: test_taskhead.title, members: newMembers}})
                 .expect(200)
@@ -145,10 +138,10 @@ describe('TaskHead - need the accessToken to access API resources ', () => {
                 });
         });
 
-        it('PUT /taskhead/:id returns 401 - with existing members ', done => {
+        it('PUT /taskheads/:id returns 401 - with existing members ', done => {
             let existingMembers = taskHead.members;
             request
-                .put('/taskhead/' + taskHead.id)
+                .put('/taskheads/' + taskHead.id)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .send({details: {title: test_taskhead.title, members: existingMembers}})
                 .expect(400)
@@ -159,9 +152,9 @@ describe('TaskHead - need the accessToken to access API resources ', () => {
                 });
         });
 
-        it('PUT /taskhead/:taskheadid/member/:memberid returns 200', done => {
+        it('PUT /taskheads/:taskheadid/member/:memberid returns 200', done => {
             request
-                .put('/taskhead/' + taskHead.id + '/member/' + taskHead.members[0].id)
+                .put('/taskheads/' + taskHead.id + '/member/' + taskHead.members[0].id)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .expect(200)
                 .end((err, res) => {
@@ -171,10 +164,10 @@ describe('TaskHead - need the accessToken to access API resources ', () => {
                 });
         });
 
-        it('PUT /taskhead/:taskheadid/member/:memberid  - without memberId returns 400', done => {
+        it('PUT /taskheads/:taskheadid/member/:memberid  - without memberId returns 400', done => {
             let wrongMemberId = 'sdf';
             request
-                .put('/taskhead/' + taskHead.id + '/member/' + wrongMemberId)
+                .put('/taskheads/' + taskHead.id + '/member/' + wrongMemberId)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .expect(400)
                 .end((err, res) => {
@@ -215,7 +208,7 @@ describe('TaskHead - need the accessToken to access API resources ', () => {
             });
         });
 
-        it('DELETE /taskhead/ returns 200', done => {
+        it('DELETE /taskheads/ returns 200', done => {
 
             let deletingTaskHeadIds = [];
             for (let i = 0; i < savedTaskHeads.length; i++) {
@@ -223,7 +216,7 @@ describe('TaskHead - need the accessToken to access API resources ', () => {
             }
 
             request
-                .delete('/taskhead/')
+                .delete('/taskheads/')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .expect(200)
                 .send({ids: deletingTaskHeadIds})
@@ -236,7 +229,7 @@ describe('TaskHead - need the accessToken to access API resources ', () => {
 
         it('DELETE /taskhead/ - deletingTaskHeadIds is undefined - returns 400', done => {
             request
-                .delete('/taskhead/')
+                .delete('/taskheads/')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .expect(400)
                 .end((err, res) => {
@@ -282,13 +275,13 @@ describe('TaskHead - need the accessToken to access API resources ', () => {
             });
         });
 
-        it('GET /taskhead/:name - there is no taskheads of the member - returns 400', done => {
+        it('GET /taskheads/:name - there is no taskheads of the member - returns 400', done => {
             // Delete All taskheads, no taskheads of 'member2'
             TaskHeadDBController.deleteAll(err => {
             });
 
             request
-                .get('/taskhead/' + membersB[1].name)
+                .get('/taskheads/' + membersB[1].name)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .expect(400)
                 .end((err, res) => {
@@ -298,9 +291,9 @@ describe('TaskHead - need the accessToken to access API resources ', () => {
                 });
         });
 
-        it('GET /taskhead/:name - member0 - returns 200', done => {
+        it('GET /taskheads/:name - member0 - returns 200', done => {
             request
-                .get('/taskhead/' + membersA[0].name)
+                .get('/taskheads/' + membersA[0].name)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .expect(200)
                 .end((err, res) => {

@@ -16,12 +16,20 @@ exports.create = (req, res) => {
     });
 };
 
-exports.deleteAll = (req, res) => {
-    TaskDBController.deleteAll(err => {
-        if(err) {
-            return res.sendStatus(400);
+exports.deleteMulti = (req, res) => {
+
+    let deletingTaskIds = req.body.ids;
+
+    TaskDBController.deleteMulti(deletingTaskIds, (err, isRemoved) => {
+        if (err) {
+            return res.sendStatus(401);
         }
-        return res.sendStatus(200);
+        if (!isRemoved) {
+            console.log('enter into here');
+            return res.sendStatus(400);
+        } else {
+            return res.sendStatus(200);
+        }
     });
 };
 
