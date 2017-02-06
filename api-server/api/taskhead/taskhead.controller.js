@@ -59,10 +59,17 @@ exports.deleteMulti = (req, res) => {
 // Delete a member - it's updating taskhead
 exports.deleteMember = (req, res) => {
 
-    let taskheadId = req.params.id;
-    let memberId = req.body.memberid;
+    let taskheadId = req.params.taskheadid;
+    let memberId = req.params.memberid;
     TaskHeadDBController.deleteMember(taskheadId, memberId, (err, result) => {
 
-        return res.sendStatus(400);
+        if(err) {
+            return res.sendStatus(401);
+        }
+        if(!result) {
+            return res.sendStatus(400);
+        } else {
+            return res.sendStatus(200);
+        }
     });
 };

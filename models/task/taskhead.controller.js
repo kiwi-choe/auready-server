@@ -115,7 +115,26 @@ const _updateDetails = (taskHeadId, details, done) => {
 
 const _deleteMember = (taskHeadId, memberId, done) => {
 
-    return done(null, false);
+    function findMember(member) {
+        return member._id.equals(memberId);
+    }
+    // find a taskhead including this member's id
+    TaskHead.findOne({'members._id': memberId}, (err, taskhead) => {
+        console.log(taskhead);
+
+        // delete the member from member array
+        let deletingIndex = taskhead.members.findIndex(findMember);
+        taskhead.members.splice(deletingIndex, 1);
+
+        taskhead.save((err, updatedTaskHead) => {
+            if (err) return done(err);
+
+            if (updatedTaskHead) {
+                return done(false, updatedTaskHead);
+            }
+            return done(false, null);
+        });
+    });
 };
 
 const _deleteAll = done => {

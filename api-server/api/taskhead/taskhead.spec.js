@@ -159,11 +159,10 @@ describe('TaskHead - need the accessToken to access API resources ', () => {
                 });
         });
 
-        it('PUT /taskhead/:id with memberid returns 200', done => {
+        it('PUT /taskhead/:id/member/:id returns 200', done => {
             request
-                .put('/taskhead/' + taskHead.id + '/member')
+                .put('/taskhead/' + taskHead.id + '/member/' + taskHead.members[0].id)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .send({memberid: taskHead.members[0].id})
                 .expect(200)
                 .end((err, res) => {
                     if (err) throw err;

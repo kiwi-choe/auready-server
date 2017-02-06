@@ -264,7 +264,56 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
 
     });
 
+});
 
+describe('Update a taskhead - delete a member', () => {
+
+    let existingTaskHead;
+    const existingMembers = [
+        {name: 'member1', email: 'email_member1', tasks: []},
+        {name: 'member2', email: 'email_member2', tasks: []}
+    ];
+    beforeEach(done => {
+        TaskHead.deleteAll(err => {
+            // Push test_members to create members
+            test_taskhead.members.length = 0;
+            test_taskhead.members.push(...existingMembers);
+            existingTaskHead = null;
+            TaskHead.create(test_taskhead, (err, newTaskHead) => {
+                existingTaskHead = newTaskHead;
+                done();
+            });
+        });
+    });
+
+    it('member id of the index 0', done => {
+
+        let deletingMemberId = existingTaskHead.members[1]._id;
+        console.log('deletingMemberId - ', deletingMemberId);
+        
+        function findMember(member) {
+            return member._id.equals(deletingMemberId);
+        }
+        // find a taskhead including this member's id
+        TaskHeadModel.findOne({'members._id': deletingMemberId}, (err, taskhead) => {
+            console.log(taskhead);
+
+            // delete the member from member array
+            let deletingIndex = taskhead.members.findIndex(findMember);
+            let deletedMember = taskhead.members.splice(deletingIndex, 1);
+            console.log('\ndeletedMember - ', deletedMember);
+
+            taskhead.save((err, updatedTaskHead) => {
+                assert.equal(updatedTaskHead.id, existingTaskHead.id);
+                assert.equal(updatedTaskHead.members.length, 1);
+                assert.equal(updatedTaskHead.members[0].name, existingTaskHead.members[0].name);
+                
+                console.log('\nupdatedTaskHead - ', updatedTaskHead);
+                done();
+
+            });
+        });
+    });
 });
 
 describe('There are taskheads in DB', () => {
@@ -306,10 +355,10 @@ describe('There are taskheads in DB', () => {
         // delete multi
         TaskHeadModel.remove({_id: {$in: deletingTaskHeadIds}}, (err, removed) => {
             assert.equal(removed.result.n, 3);
-            if(removed.result.n !== 0) {
+            if (removed.result.n !== 0) {
                 // Find to check if removed successfully
                 TaskHeadModel.find({_id: {$in: deletingTaskHeadIds}}, (err, taskheads) => {
-                    if(taskheads.length !== 0) {
+                    if (taskheads.length !== 0) {
                         assert.fail('remove fail');
                     } else {
                         assert.ok('cannot find this ids');
