@@ -296,6 +296,10 @@ describe('Update a taskhead - delete a member', () => {
         }
         // find a taskhead including this member's id
         TaskHeadModel.findOne({'members._id': deletingMemberId}, (err, taskhead) => {
+            if(!taskhead) {
+                assert.fail('fail to find the taskhead');
+                done();
+            }
             console.log(taskhead);
 
             // delete the member from member array
@@ -307,7 +311,7 @@ describe('Update a taskhead - delete a member', () => {
                 assert.equal(updatedTaskHead.id, existingTaskHead.id);
                 assert.equal(updatedTaskHead.members.length, 1);
                 assert.equal(updatedTaskHead.members[0].name, existingTaskHead.members[0].name);
-                
+
                 console.log('\nupdatedTaskHead - ', updatedTaskHead);
                 done();
 

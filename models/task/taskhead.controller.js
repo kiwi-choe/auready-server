@@ -120,6 +120,10 @@ const _deleteMember = (taskHeadId, memberId, done) => {
     }
     // find a taskhead including this member's id
     TaskHead.findOne({'members._id': memberId}, (err, taskhead) => {
+        if(!taskhead) {
+            console.log('couldn\'t find the taskhead');
+            return done(false, null);
+        }
         console.log(taskhead);
 
         // delete the member from member array

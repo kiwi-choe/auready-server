@@ -159,7 +159,7 @@ describe('TaskHead - need the accessToken to access API resources ', () => {
                 });
         });
 
-        it('PUT /taskhead/:id/member/:id returns 200', done => {
+        it('PUT /taskhead/:taskheadid/member/:memberid returns 200', done => {
             request
                 .put('/taskhead/' + taskHead.id + '/member/' + taskHead.members[0].id)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
@@ -167,6 +167,19 @@ describe('TaskHead - need the accessToken to access API resources ', () => {
                 .end((err, res) => {
                     if (err) throw err;
                     res.status.should.equal(200);
+                    done();
+                });
+        });
+
+        it('PUT /taskhead/:taskheadid/member/:memberid  - without memberId returns 400', done => {
+            let wrongMemberId = 'sdf';
+            request
+                .put('/taskhead/' + taskHead.id + '/member/' + wrongMemberId)
+                .set({Authorization: 'Bearer' + ' ' + accessToken})
+                .expect(400)
+                .end((err, res) => {
+                    if (err) throw err;
+                    res.status.should.equal(400);
                     done();
                 });
         });
