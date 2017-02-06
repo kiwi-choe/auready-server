@@ -57,7 +57,7 @@ describe('There is a taskhead in DB ', () => {
         });
     });
 
-    describe('DELETE tasks within a member ', () => {
+    describe('Update a taskhead - delete tasks within a member ', () => {
 
         let savedTasks = [];
         beforeEach(done => {
@@ -82,13 +82,13 @@ describe('There is a taskhead in DB ', () => {
             });
         });
 
-        it('Delete tasks - cannot find a taskhead doc, with wrong task\'s id', done => {
+        it('cannot find a taskhead doc, with wrong task\'s id', done => {
             let deletingTaskIds = [];
             deletingTaskIds.push('wrong id');
 
             // find tasks including this task ids
             TaskHeadModel.findOne({'members.tasks._id': {$in: deletingTaskIds}}, (err, taskhead) => {
-                if(!taskhead) {
+                if (!taskhead) {
                     assert.ok('cannot find a taskhead doc with wrong id');
                 } else {
                     assert.fail('fail this test');
@@ -99,19 +99,39 @@ describe('There is a taskhead in DB ', () => {
 
         });
 
-        it('Delete tasks - cannot find a taskhead doc, with wrong task\'s id', done => {
+        it('task indexes are 0, 2', done => {
             let deletingTaskIds = [];
-            deletingTaskIds.push('wrong id');
+            deletingTaskIds.push(savedTasks[0].id);
+            deletingTaskIds.push(savedTasks[2].id);
 
             // find tasks including this task ids
             TaskHeadModel.findOne({'members.tasks._id': {$in: deletingTaskIds}}, (err, taskhead) => {
-                if(!taskhead) {
-                    assert.ok('cannot find a taskhead doc with wrong id');
-                } else {
-                    assert.fail('fail this test');
+                if (err) {
+                    assert.fail(err);
                 }
+                if (!taskhead) {
+                    assert.fail('cannot find a taskhead doc');
+                    done();
+                }
+                // found taskhead's member is only one coz task's id is unique - taskhead.member.length: 1
+                // delete tasks from task array
+                const taskArr = taskhead.members[0].tasks;
+                deletingTaskIds.forEach((deletingTaskId, i) => {
+                    let deletingIndex = taskArr.findIndex((task) => {
+                        return task._id.equals(deletingTaskId);
+                    });
+                    let deletedTask = taskArr.splice(deletingIndex, 1);
+                    console.log('\ndeletedTask - ', deletedTask);
 
-                done();
+                    if(deletingTaskIds.length-1 === i) {
+                        // Update taskhead
+                        taskhead.save((err, updatedTaskHead) => {
+                            assert.equal(updatedTaskHead.members[0].tasks.length, 1);
+                            console.log('\nupdatedTaskHead.member[0].tasks - ', updatedTaskHead.members[0].tasks);
+                            done();
+                        });
+                    }
+                });
             });
 
         });

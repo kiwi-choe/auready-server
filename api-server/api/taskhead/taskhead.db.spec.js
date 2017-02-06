@@ -291,7 +291,7 @@ describe('Update a taskhead - delete a member', () => {
         let deletingMemberId = existingTaskHead.members[1]._id;
         console.log('deletingMemberId - ', deletingMemberId);
         
-        function findMember(member) {
+        function findMembers(member) {
             return member._id.equals(deletingMemberId);
         }
         // find a taskhead including this member's id
@@ -303,7 +303,7 @@ describe('Update a taskhead - delete a member', () => {
             console.log(taskhead);
 
             // delete the member from member array
-            let deletingIndex = taskhead.members.findIndex(findMember);
+            let deletingIndex = taskhead.members.findIndex(findMembers);
             let deletedMember = taskhead.members.splice(deletingIndex, 1);
             console.log('\ndeletedMember - ', deletedMember);
 

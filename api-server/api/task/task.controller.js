@@ -19,13 +19,15 @@ exports.create = (req, res) => {
 exports.deleteMulti = (req, res) => {
 
     let deletingTaskIds = req.body.ids;
+    if(!deletingTaskIds) {
+        return res.sendStatus(400);
+    }
 
     TaskDBController.deleteMulti(deletingTaskIds, (err, isRemoved) => {
         if (err) {
             return res.sendStatus(401);
         }
         if (!isRemoved) {
-            console.log('enter into here');
             return res.sendStatus(400);
         } else {
             return res.sendStatus(200);

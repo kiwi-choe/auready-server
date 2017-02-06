@@ -74,7 +74,42 @@ const _readById = (id, done) => {
 };
 
 const _deleteMulti = (ids, done) => {
-    return done(null, false);
+
+    // find tasks including this task ids
+    TaskHead.findOne({'members.tasks._id': {$in: ids}}, (err, taskhead) => {
+        if (err) {
+            return done(err);
+        }
+        if (!taskhead) {
+            console.log('couldn\'t find the taskhead');
+            return done(null, false);
+        }
+
+        // found taskhead's member is only one coz task's id is unique - taskhead.member.length: 1
+        // delete tasks from task array
+        const taskArr = taskhead.members[0].tasks;
+        ids.forEach((deletingTaskId, i) => {
+            let deletingIndex = taskArr.findIndex((task) => {
+                return task._id.equals(deletingTaskId);
+            });
+            let deletedTask = taskArr.splice(deletingIndex, 1);
+            console.log('\ndeletedTask - ', deletedTask);
+
+            if (ids.length - 1 === i) {
+                // Update taskhead
+                taskhead.save((err, updatedTaskHead) => {
+                    if (err) {
+                        return done(err);
+                    }
+                    if (updatedTaskHead) {
+                        console.log('\nupdatedTaskHead.member[0].tasks - ', updatedTaskHead.members[0].tasks);
+                        return done(null, updatedTaskHead);
+                    }
+                    return done(null, false);
+                });
+            }
+        });
+    });
 };
 
 // Delete all tasks of the taskhead

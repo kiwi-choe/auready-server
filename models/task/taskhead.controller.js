@@ -130,7 +130,7 @@ const _updateDetails = (taskHeadId, details, done) => {
 
 const _deleteMember = (taskHeadId, memberId, done) => {
 
-    function findMember(member) {
+    function findMembers(member) {
         return member._id.equals(memberId);
     }
     // find a taskhead including this member's id
@@ -142,7 +142,7 @@ const _deleteMember = (taskHeadId, memberId, done) => {
         console.log(taskhead);
 
         // delete the member from member array
-        let deletingIndex = taskhead.members.findIndex(findMember);
+        let deletingIndex = taskhead.members.findIndex(findMembers);
         taskhead.members.splice(deletingIndex, 1);
 
         taskhead.save((err, updatedTaskHead) => {
