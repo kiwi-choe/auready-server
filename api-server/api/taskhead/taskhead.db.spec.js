@@ -375,3 +375,67 @@ describe('There are taskheads in DB', () => {
     });
 
 });
+
+describe('Get taskheads', () => {
+
+    const membersA = [
+        {name: 'member0', email: 'email_member0', tasks: []},
+        {name: 'member1', email: 'email_member1', tasks: []},
+    ];
+    const membersB = [
+        {name: 'member1', email: 'email_member1', tasks: []},
+        {name: 'member2', email: 'email_member2', tasks: []},
+    ];
+
+    const taskHeads = [
+        {title: 'titleOfTaskHead0', order: [{member: 'member0', order: 0}], members: membersA},
+        {title: 'titleOfTaskHead1', order: [{member: 'member0', order: 1}], members: membersB},
+        {title: 'titleOfTaskHead2', order: [{member: 'member0', order: 2}], members: membersB}
+    ];
+
+    let savedTaskHeads = [];
+    beforeEach(done => {
+        savedTaskHeads.length = 0;
+        TaskHead.deleteAll(err => {
+
+            // Create 3 taskHeads
+            taskHeads.forEach((taskHead, i) => {
+                TaskHead.create(taskHead, (err, newTaskHead) => {
+                    savedTaskHeads.push(newTaskHead);
+
+                    if (taskHeads.length - 1 === i) {
+                        done();
+                    }
+                });
+            });
+        });
+    });
+
+    it('Get taskHeads of \'member2\'', done => {
+        TaskHeadModel.find({'members.name': membersB[1].name}, (err, taskheads) => {
+            if(err) {
+                assert.fail('err');
+            }
+            // cannot return just the selected subDocuments, You'll get all of them.
+            // So, You can filter on the client side.
+            for(let i=0; i<taskheads.length; i++) {
+                console.log('\n'+i+ '- '+ taskheads[i]);
+            }
+            done();
+        });
+    });
+
+    it('Invoke an exception when there is no member trying to find', done => {
+        TaskHeadModel.find({'members.name': 'no member'}, (err, taskheads) => {
+            if(err) {
+                assert.fail('err');
+            }
+            if(taskheads.length === 0) {
+                assert.fail('no member');
+            } else {
+                console.log(taskheads);
+            }
+            done();
+        });
+    });
+});

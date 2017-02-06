@@ -3,7 +3,7 @@ const TaskHeadDBController = require(__appbase_dirname + '/models/task/taskhead.
 exports.create = (req, res) => {
 
     TaskHeadDBController.create(req.body.taskHeadInfo, (err, newTaskHead) => {
-        if(err) {
+        if (err) {
             return res.sendStatus(400);
         }
         return res.sendStatus(201);
@@ -12,10 +12,10 @@ exports.create = (req, res) => {
 
 exports.deleteOne = (req, res) => {
     TaskHeadDBController.deleteOne(req.params.id, (err, isRemoved) => {
-        if(err) {
+        if (err) {
             return res.sendStatus(400);
         }
-        if(!isRemoved) {
+        if (!isRemoved) {
             return res.sendStatus(400);
         } else {
             return res.sendStatus(200);
@@ -26,10 +26,10 @@ exports.deleteOne = (req, res) => {
 exports.updateDetails = (req, res) => {
 
     TaskHeadDBController.updateDetails(req.params.id, req.body.details, (err, result) => {
-        if(err) {
+        if (err) {
             return res.sendStatus(401);
         }
-        if(!result) {
+        if (!result) {
             return res.sendStatus(400);
         } else {
             return res.sendStatus(200);
@@ -40,15 +40,15 @@ exports.updateDetails = (req, res) => {
 exports.deleteMulti = (req, res) => {
 
     let deletingTaskHeadIds = req.body.ids;
-    if(!deletingTaskHeadIds) {
+    if (!deletingTaskHeadIds) {
         return res.sendStatus(400);
     }
 
     TaskHeadDBController.deleteMulti(deletingTaskHeadIds, (err, isRemoved) => {
-        if(err) {
+        if (err) {
             return res.sendStatus(401);
         }
-        if(!isRemoved) {
+        if (!isRemoved) {
             return res.sendStatus(400);
         } else {
             return res.sendStatus(200);
@@ -63,13 +63,31 @@ exports.deleteMember = (req, res) => {
     let memberId = req.params.memberid;
     TaskHeadDBController.deleteMember(taskheadId, memberId, (err, result) => {
 
-        if(err) {
+        if (err) {
             return res.sendStatus(401);
         }
-        if(!result) {
+        if (!result) {
             return res.sendStatus(400);
         } else {
             return res.sendStatus(200);
+        }
+    });
+};
+
+// Get taskHeads of the member
+exports.getTaskHeads = (req, res) => {
+
+    TaskHeadDBController.readByMemberName(req.params.name, (err, taskheads) => {
+        if (err) {
+            return res.sendStatus(401);
+        }
+        if (!taskheads) {
+            return res.sendStatus(400);
+        }
+        else {
+            return res.status(200).json({
+                taskheads: taskheads
+            });
         }
     });
 };

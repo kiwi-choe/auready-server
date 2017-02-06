@@ -245,7 +245,71 @@ describe('TaskHead - need the accessToken to access API resources ', () => {
                     done();
                 });
         });
+    });
 
+    describe('GET taskHeads ', () => {
+
+        const membersA = [
+            {name: 'member0', email: 'email_member0', tasks: []},
+            {name: 'member1', email: 'email_member1', tasks: []},
+        ];
+        const membersB = [
+            {name: 'member1', email: 'email_member1', tasks: []},
+            {name: 'member2', email: 'email_member2', tasks: []},
+        ];
+
+        const taskHeads = [
+            {title: 'titleOfTaskHead0', order: [{member: 'member0', order: 0}], members: membersA},
+            {title: 'titleOfTaskHead1', order: [{member: 'member0', order: 1}], members: membersB},
+            {title: 'titleOfTaskHead2', order: [{member: 'member0', order: 2}], members: membersB}
+        ];
+
+        let savedTaskHeads = [];
+        beforeEach(done => {
+            savedTaskHeads.length = 0;
+            TaskHeadDBController.deleteAll(err => {
+
+                // Create 3 taskHeads
+                taskHeads.forEach((taskHead, i) => {
+                    TaskHeadDBController.create(taskHead, (err, newTaskHead) => {
+                        savedTaskHeads.push(newTaskHead);
+
+                        if (taskHeads.length - 1 === i) {
+                            done();
+                        }
+                    });
+                });
+            });
+        });
+
+        it('GET /taskhead/:name - there is no taskheads of the member - returns 400', done => {
+            // Delete All taskheads, no taskheads of 'member2'
+            TaskHeadDBController.deleteAll(err => {
+            });
+
+            request
+                .get('/taskhead/' + membersB[1].name)
+                .set({Authorization: 'Bearer' + ' ' + accessToken})
+                .expect(400)
+                .end((err, res) => {
+                    if (err) throw err;
+                    res.status.should.equal(400);
+                    done();
+                });
+        });
+
+        it('GET /taskhead/:name - member0 - returns 200', done => {
+            request
+                .get('/taskhead/' + membersA[0].name)
+                .set({Authorization: 'Bearer' + ' ' + accessToken})
+                .expect(200)
+                .end((err, res) => {
+                    if (err) throw err;
+                    res.status.should.equal(200);
+                    res.body.should.have.property('taskheads');
+                    done();
+                });
+        });
     });
 
 });
