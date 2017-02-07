@@ -8,10 +8,7 @@ router.post('/', controller.create);
 // Delete tasks
 router.delete('/', controller.deleteMulti);
 
-// Delete a task
-router.delete('/:id', controller.delete);
-
 // Update all
-router.put('/', controller.update);
+router.put('/:id', controller.update);
 
 module.exports = router;

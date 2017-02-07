@@ -16,28 +16,24 @@ const password = '123';
 
 const TaskHeadDBController = require('../../../models/task/taskhead.controller.js');
 const test_tasks = [
-    {order: 0, description: 'des', detailNote: 'detailnote', completed: false},
-    {order: 1, description: 'des1', detailNote: 'detailnote1', completed: false},
-    {order: 2, description: 'des2', detailNote: 'detailnote2', completed: false},
+    {description: 'des', detailNote: 'detailnote', completed: false},
+    {description: 'des1', detailNote: 'detailnote1', completed: false},
+    {description: 'des2', detailNote: 'detailnote2', completed: false},
 ];
 const test_members = [
     {name: 'member1', email: 'email_member1', tasks: test_tasks}
 ];
 const test_taskhead = {
     title: 'titleOfTaskHead',
-    order: [
-        {member: 'member1', order: 0}
-    ],
     members: test_members
 };
 
 const TaskController = require('../../../models/task/task.controller.js');
 
 const taskObj = {
-    order: 555,
-    description: 'desNew',
-    detailNote: 'detailnoteNew',
-    completed: false
+    description: 'desUPDATE!!!!!',
+    detailNote: 'detailnoteUPDATE!!!!!',
+    completed: true
 };
 
 describe('Task - need the accessToken to access API resources and pre saved TaskHeadDBController', () => {
@@ -95,15 +91,6 @@ describe('Task - need the accessToken to access API resources and pre saved Task
     });
 
     describe('DELETE or PUT /tasks', () => {
-        // let task;
-        // console.log(savedTaskHead);
-        // let memberid = savedTaskHead.members[0].id;
-        // beforeEach(done => {
-        //     TaskController.create(memberid, taskObj, (err, updatedTaskHead) => {
-        //         task = updatedTaskHead.tasks[0];
-        //         done();
-        //     });
-        // });
         let savedTasks = [];
         beforeEach(done => {
             // Remove All tasks of taskhead
@@ -156,30 +143,30 @@ describe('Task - need the accessToken to access API resources and pre saved Task
                 });
         });
 
-        // it('it should DELETE a task by given id', done => {
-        //     request
-        //         .delete('/tasks/' + task.id)
-        //         .set({Authorization: 'Bearer' + ' ' + accessToken})
-        //         .expect(200)
-        //         .end((err, res) => {
-        //             if (err) throw err;
-        //             done();
-        //         });
-        // });
-        //
-        // it('it should UPDATE a task by given id', done => {
-        //     let updatingTask = task;
-        //     updatingTask.description = 'changedDescription';
-        //     request
-        //         .put('/tasks/')
-        //         .set({Authorization: 'Bearer' + ' ' + accessToken})
-        //         .send({task: updatingTask})
-        //         .expect(200)
-        //         .end((err, res) => {
-        //             if (err) throw err;
-        //             // res.body.description.should.be.equal(updatingTask.description);
-        //             done();
-        //         });
-        // });
+        it('PUT /tasks/:id returns 404 - with wrong task id', done => {
+            request
+                .put('/tasks/' + 'wrongid')
+                .set({Authorization: 'Bearer' + ' ' + accessToken})
+                .send({task: taskObj})
+                .expect(404)
+                .end((err, res) => {
+                    if (err) throw err;
+                    res.status.should.equal(404);
+                    done();
+                });
+        });
+
+        it('PUT /tasks/:id of index 1 returns 200', done => {
+            request
+                .put('/tasks/' + savedTasks[1].id)
+                .set({Authorization: 'Bearer' + ' ' + accessToken})
+                .send({task: taskObj})
+                .expect(200)
+                .end((err, res) => {
+                    if (err) throw err;
+                    res.status.should.equal(200);
+                    done();
+                });
+        });
     });
 });

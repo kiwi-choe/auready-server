@@ -20,9 +20,6 @@ const test_members = [
 ];
 const test_taskhead = {
     title: 'titleOfTaskHead',
-    order: [
-        {member: 'member1', order: 0}
-    ],
     members: test_members
 };
 
@@ -77,11 +74,6 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
 
             });
         });
-        // after(done => {
-        //     TaskHeadDBController.deleteAll(err => {
-        //         done();
-        //     });
-        // });
 
         it('DELETE /taskheads/:id returns 200', done => {
             request
@@ -94,19 +86,19 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
                     done();
                 });
         });
-        it('DELETE /taskheads/wrongId returns 400', done => {
+        it('DELETE /taskheads/wrongId returns 404', done => {
             request
                 .delete('/taskheads/' + 'wrongId')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .expect(400)
+                .expect(404)
                 .end((err, res) => {
                     if (err) throw err;
-                    res.status.should.equal(400);
+                    res.status.should.equal(404);
                     done();
                 });
         });
 
-        it('PUT /taskheads/:id returns 401 - with wrong taskhead id', done => {
+        it('PUT /taskheads/:id returns 404 - with wrong taskhead id', done => {
             const newMembers = [
                 {name: 'member2', email: 'email_member2', tasks: []}
             ];
@@ -114,10 +106,10 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
                 .put('/taskheads/' + 'wrongId')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .send({details: {title: test_taskhead.title, members: newMembers}})
-                .expect(401)
+                .expect(404)
                 .end((err, res) => {
                     if (err) throw err;
-                    res.status.should.equal(401);
+                    res.status.should.equal(404);
                     done();
                 });
         });
@@ -138,7 +130,7 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
                 });
         });
 
-        it('PUT /taskheads/:id returns 401 - with existing members ', done => {
+        it('PUT /taskheads/:id returns 400 - with existing members ', done => {
             let existingMembers = taskHead.members;
             request
                 .put('/taskheads/' + taskHead.id)
@@ -185,9 +177,9 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
             {name: 'member1', email: 'email_member1', tasks: []},
         ];
         const taskHeads = [
-            {title: 'titleOfTaskHead0', order: [{member: 'member0', order: 0}], members: members},
-            {title: 'titleOfTaskHead1', order: [{member: 'member0', order: 1}], members: members},
-            {title: 'titleOfTaskHead2', order: [{member: 'member0', order: 2}], members: members}
+            {title: 'titleOfTaskHead0', members: members},
+            {title: 'titleOfTaskHead1', members: members},
+            {title: 'titleOfTaskHead2', members: members}
         ];
 
         let savedTaskHeads = [];
@@ -252,9 +244,9 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
         ];
 
         const taskHeads = [
-            {title: 'titleOfTaskHead0', order: [{member: 'member0', order: 0}], members: membersA},
-            {title: 'titleOfTaskHead1', order: [{member: 'member0', order: 1}], members: membersB},
-            {title: 'titleOfTaskHead2', order: [{member: 'member0', order: 2}], members: membersB}
+            {title: 'titleOfTaskHead0', members: membersA},
+            {title: 'titleOfTaskHead1', members: membersB},
+            {title: 'titleOfTaskHead2', members: membersB}
         ];
 
         let savedTaskHeads = [];
@@ -275,7 +267,19 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
             });
         });
 
-        it('GET /taskheads/:name - there is no taskheads of the member - returns 400', done => {
+        it('GET /taskheads/:with wrong member name - returns 404', done => {
+            request
+                .get('/taskheads/' + 'wrong name')
+                .set({Authorization: 'Bearer' + ' ' + accessToken})
+                .expect(404)
+                .end((err, res) => {
+                    if (err) throw err;
+                    res.status.should.equal(404);
+                    done();
+                });
+        });
+
+        it('GET /taskheads/:name - there is no taskheads of the member - returns 404', done => {
             // Delete All taskheads, no taskheads of 'member2'
             TaskHeadDBController.deleteAll(err => {
             });
@@ -283,10 +287,10 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
             request
                 .get('/taskheads/' + membersB[1].name)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .expect(400)
+                .expect(404)
                 .end((err, res) => {
                     if (err) throw err;
-                    res.status.should.equal(400);
+                    res.status.should.equal(404);
                     done();
                 });
         });

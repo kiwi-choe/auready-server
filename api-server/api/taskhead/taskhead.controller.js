@@ -13,7 +13,7 @@ exports.create = (req, res) => {
 exports.deleteOne = (req, res) => {
     TaskHeadDBController.deleteOne(req.params.id, (err, isRemoved) => {
         if (err) {
-            return res.sendStatus(400);
+            return res.sendStatus(404);
         }
         if (!isRemoved) {
             return res.sendStatus(400);
@@ -27,7 +27,7 @@ exports.updateDetails = (req, res) => {
 
     TaskHeadDBController.updateDetails(req.params.id, req.body.details, (err, result) => {
         if (err) {
-            return res.sendStatus(401);
+            return res.sendStatus(404);
         }
         if (!result) {
             return res.sendStatus(400);
@@ -79,10 +79,10 @@ exports.getTaskHeads = (req, res) => {
 
     TaskHeadDBController.readByMemberName(req.params.name, (err, taskheads) => {
         if (err) {
-            return res.sendStatus(401);
+            return res.sendStatus(400);
         }
         if (!taskheads) {
-            return res.sendStatus(400);
+            return res.sendStatus(404);
         }
         else {
             return res.status(200).json({

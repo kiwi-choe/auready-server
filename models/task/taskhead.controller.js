@@ -93,8 +93,11 @@ const _updateDetails = (taskHeadId, details, done) => {
             _id: taskHeadId,
             'members.name': member.name
         }, (err, taskhead) => {
-            if (!taskhead) {
+            if(err) {
                 return done(err);
+            }
+            if (!taskhead) {
+                return done(null, false);
             }
 
             if (taskhead.length === 0) {
@@ -106,8 +109,8 @@ const _updateDetails = (taskHeadId, details, done) => {
             if (i === members.length - 1) {
 
                 console.log('newMembers ', newMembers);
-                // there is no new member to add
                 if (newMembers.length === 0) {
+                    console.log('there is no new member to add');
                     return done(null, false);
                 }
                 // Update
@@ -173,6 +176,5 @@ module.exports = {
     deleteMulti: _deleteMulti,
     updateDetails: _updateDetails,
     deleteMember: _deleteMember,
-    updateTask: _updateTask,
     deleteAll: _deleteAll
 }

@@ -13,9 +13,6 @@ const test_members = [
 ];
 const test_taskhead = {
     title: 'titleOfTaskHead',
-    order: [
-        {member: 'member1', order: 0}
-    ],
     members: []
 };
 
@@ -327,9 +324,9 @@ describe('There are taskheads in DB', () => {
         {name: 'member1', email: 'email_member1', tasks: []},
     ];
     const taskHeads = [
-        {title: 'titleOfTaskHead0', order: [{member: 'member0', order: 0}], members: members},
-        {title: 'titleOfTaskHead1', order: [{member: 'member0', order: 1}], members: members},
-        {title: 'titleOfTaskHead2', order: [{member: 'member0', order: 2}], members: members}
+        {title: 'titleOfTaskHead0', members: members},
+        {title: 'titleOfTaskHead1', members: members},
+        {title: 'titleOfTaskHead2', members: members}
     ];
 
     let savedTaskHeads = [];
@@ -388,9 +385,9 @@ describe('Get taskheads', () => {
     ];
 
     const taskHeads = [
-        {title: 'titleOfTaskHead0', order: [{member: 'member0', order: 0}], members: membersA},
-        {title: 'titleOfTaskHead1', order: [{member: 'member0', order: 1}], members: membersB},
-        {title: 'titleOfTaskHead2', order: [{member: 'member0', order: 2}], members: membersB}
+        {title: 'titleOfTaskHead0', members: membersA},
+        {title: 'titleOfTaskHead1', members: membersB},
+        {title: 'titleOfTaskHead2', members: membersB}
     ];
 
     let savedTaskHeads = [];

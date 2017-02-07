@@ -38,18 +38,31 @@ const _delete = (id, done) => {
     });
 };
 
-const _update = (query, options, done) => {
+const _update = (id, taskObj, done) => {
+    TaskHead.findOne({'members.tasks._id': id}, (err, taskhead) => {
+        if (err) {
+            console.log(err);
+            return done(err);
+        }
+        if (!taskhead) return done(null, false);
 
-    TaskHead.findOne(query, (err, taskHead) => {
-        if (err) return done(err);
-        if (!taskHead) return done(null, false);
+        // extract the updating task from tasks array
+        const taskArr = taskhead.members[0].tasks;
+        let updatingTaskIndex = taskArr.findIndex((task) => {
+            return task._id.equals(id);
+        });
 
         // Modify a task of this taskhead
-        taskHead.members[0].tasks[0] = options;
-        // Update this taskHead
-        taskHead.save((err, updatedTaskHead) => {
+        taskArr[updatingTaskIndex].description = taskObj.description;
+        taskArr[updatingTaskIndex].detailNote = taskObj.detailNote;
+        taskArr[updatingTaskIndex].completed = taskObj.completed;
+
+        // Update taskhead
+        // todo - set modifiedTime pre save
+        taskhead.save((err, updatedTaskHead) => {
             if (err) return done(err);
             if (!updatedTaskHead) return done(null, false);
+            // Check the new tasks are saved
             const updatedTasks = updatedTaskHead.members[0].tasks;
             if (updatedTasks) {
                 return done(null, updatedTaskHead);

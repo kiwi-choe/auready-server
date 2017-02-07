@@ -50,15 +50,14 @@ exports.delete = (req, res) => {
 
 exports.update = (req, res) => {
 
-    // TaskHeadDBController.updateTask(req.body.task, (err, updatedTaskHead) => {
-    //     if(err) {
-    //         return res.sendStatus(400);
-    //     }
-    //     if(updatedTaskHead) {
-    //         console.log(updatedTaskHead);
-    //         console.log(updatedTaskHead.tasks[0].completed);
-    //         return res.sendStatus(200);
-    //     }
-    //     return res.sendStatus(400);
-    // });
+    TaskDBController.update(req.params.id, req.body.task, (err, updatedTaskHead) => {
+        if(err) {
+            console.log(err);
+            return res.sendStatus(404);
+        }
+        if(!updatedTaskHead) {
+            return res.sendStatus(400);
+        }
+        return res.sendStatus(200);
+    });
 };
