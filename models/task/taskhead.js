@@ -1,7 +1,12 @@
 const mongoose = require('mongoose');
-// define the model 'Task'
-require('./task');
-const taskSchema = mongoose.model('Task').schema;
+
+const taskSchema = mongoose.Schema({
+    // order: Number,       // extending function
+    modifiedTime: Number,   // == createdTime
+    description: String,
+    detailNote: String,
+    completed: Boolean
+});
 
 const memberSchema = mongoose.Schema({
     name: String,
