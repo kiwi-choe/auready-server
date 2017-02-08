@@ -144,9 +144,9 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
                 });
         });
 
-        it('PUT /taskheads/:taskheadid/member/:memberid returns 200', done => {
+        it('DELETE /taskheads/member/:id returns 200', done => {
             request
-                .put('/taskheads/' + taskHead.id + '/member/' + taskHead.members[0].id)
+                .delete('/taskheads/member/' + taskHead.members[0].id)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .expect(200)
                 .end((err, res) => {
@@ -156,10 +156,10 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
                 });
         });
 
-        it('PUT /taskheads/:taskheadid/member/:memberid  - without memberId returns 400', done => {
+        it('DELETE /taskheads/member/:id  - without id returns 400', done => {
             let wrongMemberId = 'sdf';
             request
-                .put('/taskheads/' + taskHead.id + '/member/' + wrongMemberId)
+                .delete('/taskheads/member/' + wrongMemberId)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .expect(400)
                 .end((err, res) => {

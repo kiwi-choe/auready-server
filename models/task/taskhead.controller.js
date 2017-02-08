@@ -131,7 +131,7 @@ const _updateDetails = (taskHeadId, details, done) => {
     });
 };
 
-const _deleteMember = (taskHeadId, memberId, done) => {
+const _deleteMember = (memberId, done) => {
 
     function findMembers(member) {
         return member._id.equals(memberId);
