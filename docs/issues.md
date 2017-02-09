@@ -14,4 +14,6 @@ Client 구현하면서 어떤 데이터에 더 많은 접근을 하는 지에 �
 Task에 대한 접근이 더 많으면, 현재 구조인 TaskHead{Members{Tasks{}}}에서 
 Task를 빼는 식으로 수정해야한다. like below  
 TaskHead{Members{}}  
-Task{'memberIdOfTaskHead': String, ...}
+Task{'memberIdOfTaskHead': String, ...}  
+Task{'memberIdOfTaskHead': String, ...}  
+=> Solve. 1 collection - TaskHead, 2 types subDocuments - Member, Task

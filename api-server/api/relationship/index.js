@@ -6,7 +6,7 @@ const RelationshipDBController = require(__appbase_dirname + '/models/relationsh
 const controller = require('./relationship.controller');
 
 // Friend Request - Create a relationship with who has body.userId
-router.post('/:userId', controller.friendRequest);
+router.post('/:name', controller.friendRequest);
 
 // Check what relationship with ':userId'
 router.get('/:userId', controller.checkRelationship);

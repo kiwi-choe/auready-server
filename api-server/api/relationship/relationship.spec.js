@@ -43,11 +43,12 @@ describe('POST /relationship/:userId', () => {
 
     it('friendRequest (Add a relationship) should return 201 code', done => {
         request
-            .post('/relationship/' + otheruser.id)
+            .post('/relationship/' + otheruser.name)
             .set({Authorization: 'Bearer' + ' ' + accessToken})
             .expect(201)
             .end((err, res) => {
                 if (err) throw err;
+                res.status.should.equal(201);
                 done();
             });
     });
