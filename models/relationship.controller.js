@@ -70,6 +70,29 @@ const _readPendingStatus = (toUserId, done) => {
     });
 };
 
+/*
+* Get relationship status of two users
+* regardless orders
+* */
+const _readStatus = (loggedInUserId, otherUserId, done) => {
+    Relationship.findOne().or([
+        {fromUserId: loggedInUserId, toUserId: otherUserId},
+        {fromUserId: otherUserId, toUserId: loggedInUserId},
+    ]).exec((err, relationship) => {
+        if (err) {
+            return done(err);
+        }
+
+        let status;
+        if(relationship) {
+            status = relationship.status;
+        } else {
+            status = null;
+        }
+        return done(null, status);
+    });
+};
+
 const _update = (query, options, done) => {
     Relationship.update(query, options, (err, result) => {
         if (err) {
@@ -105,6 +128,7 @@ module.exports = {
     deleteAll: _deleteAll,
     readAccepted: _readAcceptedStatus,
     readPending: _readPendingStatus,
+    readStatus: _readStatus,
     update: _update,
     delete: _delete,
     statusValues: _status

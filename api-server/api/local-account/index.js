@@ -7,6 +7,6 @@ const controller = require('./local-account.controller.js');
 require('../local-account/localPassportStrategy').setup();
 
 router.post('/signup', controller.signup);
-router.post('/login', controller.login);
+router.get('/login', controller.login);
 
 module.exports = router;

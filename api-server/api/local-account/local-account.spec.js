@@ -73,7 +73,7 @@ describe('POST /local-account/signup - already registered user test', () => {
     });
 });
 
-describe('POST /local-account/login', () => {
+describe('GET /local-account/login', () => {
     let currentUser;
     before(done => {
         // add some test data
@@ -92,7 +92,7 @@ describe('POST /local-account/login', () => {
 
     it('should return 200 status code', (done) => {
         request(server)
-            .post('/local-account/login')
+            .get('/local-account/login')
             .expect(200)
             .send({email: test_email, password: test_password})
             .end((err, res) => {
@@ -103,7 +103,7 @@ describe('POST /local-account/login', () => {
 
     it('should return 400 status code with unregistered email', (done) => {
         request(server)
-            .post('/local-account/login')
+            .get('/local-account/login')
             .expect(400)
             .send({email: 'unregistered email', password: '123'})
             .end((err, res) => {
@@ -114,7 +114,7 @@ describe('POST /local-account/login', () => {
 
     it('should return 400 status code with invalid password', (done) => {
         request(server)
-            .post('/local-account/login')
+            .get('/local-account/login')
             .expect(400)
             .send({email: test_email, password: 'invalid password'})
             .end((err, res) => {

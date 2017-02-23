@@ -1,7 +1,6 @@
 // Set global objects
 global.__appbase_dirname = __dirname;
 
-
 console.log(__dirname);
 
 const express = require('express');
@@ -32,6 +31,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Add middleware for authentication
+process.env.dbURI = 'dev';
 database.initialize();
 apiRouter.initialize(app);
 authRouter.initialize(app);
