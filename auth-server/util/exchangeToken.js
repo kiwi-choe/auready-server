@@ -68,7 +68,7 @@ module.exports = (server) => {
                         token.refreshToken,
                         {
                             expires_in: token.expiredIn,
-                            user_id: user.id
+                            user_name: user.name
                         }
                     );
                 } else {
@@ -85,7 +85,7 @@ module.exports = (server) => {
                                 newToken.refreshToken,
                                 {
                                     expires_in: newToken.expiredIn,
-                                    user_id: user.id
+                                    user_name: user.name
                                 }
                             );
                         });

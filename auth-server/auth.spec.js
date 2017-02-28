@@ -65,7 +65,7 @@ describe('POST /auth/token', () => {
             .expect(200)
             .end((err, res) => {
                 if (err) throw err;
-                res.body.should.have.properties('access_token', 'token_type', 'expires_in', 'refresh_token');
+                res.body.should.have.properties('access_token', 'expires_in', 'refresh_token', 'user_name');
                 done();
             });
     });
