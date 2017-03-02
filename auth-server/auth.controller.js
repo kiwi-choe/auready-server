@@ -14,11 +14,11 @@ router.post('/', (req, res, next) => {
 
 // Logout
 // Delete access token for all grant types
-router.delete('/',
+router.delete('/:token',
     passport.authenticate('bearer', {session: false}),
     (req, res) => {
-        // TODO get using req.body.accessToken -> get from header, coz send same resources of two
-        TokenController.delete(req.body.accessToken, (err, isRemoved) => {
+        // TODO get using req.body.accessToken -> get from header, coz send two of the same strings
+        TokenController.delete(req.params.token, (err, isRemoved) => {
             if (err) {
                 return res.sendStatus(400);
             }
