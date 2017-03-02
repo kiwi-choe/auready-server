@@ -25,8 +25,6 @@ const config = {
     },
 
     bodyForAuthLocal: {
-        client_id: clientId,
-        client_secret: clientSecret,
         grant_type: 'password',
         username: test_email,
         password: test_password
