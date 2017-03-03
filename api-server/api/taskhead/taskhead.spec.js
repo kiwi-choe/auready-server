@@ -16,9 +16,10 @@ const password = '123';
 
 const TaskHeadDBController = require('../../../models/task/taskhead.controller.js');
 const test_members = [
-    {name: 'member1', email: 'email_member1', tasks: []}
+    {id: 'id_member1', name: 'member1', email: 'email_member1', tasks: []}
 ];
 const test_taskhead = {
+    id: 'stubIdOfTaskHead',
     title: 'titleOfTaskHead',
     members: test_members
 };
@@ -46,12 +47,14 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
     });
     describe('Create a taskHead', () => {
 
-        it('POST /taskheads/', done => {
+        it('POST /taskheads', done => {
             request
-                .post('/taskheads/')
+                .post('/taskheads')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .send({
-                    taskHeadInfo: test_taskhead
+                    id: test_taskhead.id,
+                    title: test_taskhead.title,
+                    members: test_members
                 })
                 .expect(201)
                 .end(err => {

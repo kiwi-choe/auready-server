@@ -2,7 +2,12 @@ const TaskHeadDBController = require(__appbase_dirname + '/models/task/taskhead.
 
 exports.create = (req, res) => {
 
-    TaskHeadDBController.create(req.body.taskHeadInfo, (err, newTaskHead) => {
+    const taskHeadInfo = {
+        id: req.body.id,
+        title: req.body.title,
+        members: req.body.members
+    };
+    TaskHeadDBController.create(taskHeadInfo, (err, newTaskHead) => {
         if (err) {
             return res.sendStatus(400);
         }

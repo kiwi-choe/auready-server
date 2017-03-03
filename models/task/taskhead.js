@@ -9,17 +9,15 @@ const taskSchema = mongoose.Schema({
 });
 
 const memberSchema = mongoose.Schema({
+    id: String,     // generated in Clinet
     name: String,
     email: String,
     tasks: [taskSchema]
 });
 
 const taskHeadSchema = mongoose.Schema({
+    id: String,         // generated in Client
     title: String,
-    // order: [{           // Hash type, but don't have ObjectId
-    //     member: String, // key
-    //     order: Number   // value
-    // }],
     modifiedTime: Number,    // == createdTime
     members: [memberSchema]
 });
