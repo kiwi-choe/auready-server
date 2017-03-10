@@ -9,7 +9,8 @@ const schema = mongoose.Schema({
     name: String,
     email: String, 
     password: String,
-    friendCount: Number
+    friendCount: Number,
+    instanceId: String
 });
 
 // taskHeadSchema.pre('save', next => {
