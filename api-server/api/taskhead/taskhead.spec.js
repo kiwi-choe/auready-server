@@ -238,18 +238,18 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
     describe('GET taskHeads ', () => {
 
         const membersA = [
-            {name: 'member0', email: 'email_member0', tasks: []},
-            {name: 'member1', email: 'email_member1', tasks: []},
+            {id: 'member0_id', name: 'member0', email: 'email_member0', tasks: []},
+            {id: 'member1_id', name: 'member1', email: 'email_member1', tasks: []},
         ];
         const membersB = [
-            {name: 'member1', email: 'email_member1', tasks: []},
-            {name: 'member2', email: 'email_member2', tasks: []},
+            {id: 'member1_id', name: 'member1', email: 'email_member1', tasks: []},
+            {id: 'member2_id', name: 'member2', email: 'email_member2', tasks: []},
         ];
 
         const taskHeads = [
-            {title: 'titleOfTaskHead0', members: membersA},
-            {title: 'titleOfTaskHead1', members: membersB},
-            {title: 'titleOfTaskHead2', members: membersB}
+            {id: 'TaskHead0_id', title: 'titleOfTaskHead0', members: membersA},
+            {id: 'TaskHead1_id', title: 'titleOfTaskHead1', members: membersB},
+            {id: 'TaskHead2_id', title: 'titleOfTaskHead2', members: membersB}
         ];
 
         let savedTaskHeads = [];

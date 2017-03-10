@@ -89,6 +89,8 @@ exports.getTaskHeads = (req, res) => {
             return res.sendStatus(404);
         }
         else {
+            console.log('taskheads - ', taskheads);
+            console.log('taskheads.members - ', taskheads[0].members);
             return res.status(200).json({
                 taskheads: taskheads
             });
