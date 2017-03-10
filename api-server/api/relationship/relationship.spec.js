@@ -14,7 +14,7 @@ const User = require('../../../models/user.controller');
 const RelationshipController = require('../../../models/relationship.controller.js');
 const Relationship = require('../../../models/relationship');
 
-describe('POST /relationship/:userId', () => {
+describe('POST /relationships/:userId', () => {
 
     let accessToken;
     let loggedinuser;
@@ -43,7 +43,7 @@ describe('POST /relationship/:userId', () => {
 
     it('friendRequest (Add a relationship) should return 201 code', done => {
         request
-            .post('/relationship/' + otheruser.name)
+            .post('/relationships/' + otheruser.name)
             .set({Authorization: 'Bearer' + ' ' + accessToken})
             .expect(201)
             .end((err, res) => {
@@ -52,9 +52,24 @@ describe('POST /relationship/:userId', () => {
                 done();
             });
     });
+
+    it('duplicating frindRequest, should return 409 code', done => {
+        RelationshipController.create(loggedinuser.id, otheruser.name, (err, relationship, info) => {
+        });
+        request
+            .post('/relationships/' + otheruser.name)
+            .set({Authorization: 'Bearer' + ' ' + accessToken})
+            .expect(409)
+            .end((err, res) => {
+                if (err) throw err;
+                res.status.should.equal(409);
+                done();
+            });
+    });
+
 });
 
-describe('Check the relationship - GET /relationship/user/:userId', () => {
+describe('Check the relationship - GET /relationships/user/:userId', () => {
 
     // conditions
     // 1. 2 users at least
@@ -101,7 +116,7 @@ describe('Check the relationship - GET /relationship/user/:userId', () => {
         });
 
         request
-            .get('/relationship/' + otherUser.id)
+            .get('/relationships/' + otherUser.id)
             .set({Authorization: 'Bearer' + ' ' + accessToken})
             .expect(200)
             .end((err, res) => {
@@ -116,7 +131,7 @@ describe('Check the relationship - GET /relationship/user/:userId', () => {
 
     it('no relationship', done => {
         request
-            .get('/relationship/' + otherUser.id)
+            .get('/relationships/' + otherUser.id)
             .set({Authorization: 'Bearer' + ' ' + accessToken})
             .expect(404)
             .end((err, res) => {
@@ -169,7 +184,7 @@ describe('Read relationships with status', () => {
     });
 
     // status: 1 means friend relationship within two users
-    it('Show friends - GET /relationship/status/:ACCEPTED returns 200', done => {
+    it('Show friends - GET /relationships/status/:ACCEPTED returns 200', done => {
         // Update status to ACCEPTED
         const query = {
             $or: [
@@ -192,7 +207,7 @@ describe('Read relationships with status', () => {
         // get user info by id
         // and set the response body, 'friends'
         request
-            .get('/relationship/status/' + RelationshipController.statusValues.ACCEPTED)
+            .get('/relationships/status/' + RelationshipController.statusValues.ACCEPTED)
             .set({Authorization: 'Bearer' + ' ' + accessToken})
             .expect(200)
             .end((err, res) => {
@@ -204,9 +219,9 @@ describe('Read relationships with status', () => {
     });
 
     // status: 0 means pending status
-    it('Show friends - GET /relationship/status/:ACCEPTED returns 404', done => {
+    it('Show friends - GET /relationships/status/:ACCEPTED returns 404', done => {
         request
-            .get('/relationship/status/' + RelationshipController.statusValues.ACCEPTED)
+            .get('/relationships/status/' + RelationshipController.statusValues.ACCEPTED)
             .set({Authorization: 'Bearer' + ' ' + accessToken})
             .expect(404)
             .end((err, res) => {
@@ -216,9 +231,9 @@ describe('Read relationships with status', () => {
             });
     });
 
-    it('Read Pending requests - GET /relationship/status/:PENDING returns 200', done => {
+    it('Read Pending requests - GET /relationships/status/:PENDING returns 200', done => {
         request
-            .get('/relationship/status/' + RelationshipController.statusValues.PENDING)
+            .get('/relationships/status/' + RelationshipController.statusValues.PENDING)
             .set({Authorization: 'Bearer' + ' ' + accessToken})
             .expect(200)
             .end((err, res) => {
@@ -229,13 +244,13 @@ describe('Read relationships with status', () => {
             });
     });
 
-    it('Read Pending requests - GET /relationship/status/:PENDING returns 404', done => {
+    it('Read Pending requests - GET /relationships/status/:PENDING returns 404', done => {
 
         RelationshipController.deleteAll(err => {
         });
 
         request
-            .get('/relationship/status/' + RelationshipController.statusValues.PENDING)
+            .get('/relationships/status/' + RelationshipController.statusValues.PENDING)
             .set({Authorization: 'Bearer' + ' ' + accessToken})
             .expect(404)
             .end((err, res) => {
@@ -245,9 +260,9 @@ describe('Read relationships with status', () => {
             });
     });
 
-    it('Wrong status value - GET /relationship/status/:anynumbers returns 400', done => {
+    it('Wrong status value - GET /relationships/status/:anynumbers returns 400', done => {
         request
-            .get('/relationship/status/' + 4)
+            .get('/relationships/status/' + 4)
             .set({Authorization: 'Bearer' + ' ' + accessToken})
             .expect(400)
             .end((err, res) => {
@@ -297,9 +312,9 @@ describe('Response to the friend request', () => {
         });
     });
 
-    it('Accept - PUT /relationship/fromUser/:id/accepted', done => {
+    it('Accept - PUT /relationships/fromUser/:id/accepted', done => {
         request
-            .put('/relationship/fromUser/' + otherUser.id + '/accepted')
+            .put('/relationships/fromUser/' + otherUser.id + '/accepted')
             .set({Authorization: 'Bearer' + ' ' + accessToken})
             .expect(200)
             .end((err, res) => {
@@ -309,9 +324,9 @@ describe('Response to the friend request', () => {
             });
     });
 
-    it('Declined - DELETE /relationship/fromUser/:id/declined', done => {
+    it('Declined - DELETE /relationships/fromUser/:id/declined', done => {
         request
-            .delete('/relationship/fromUser/' + otherUser.id + '/declined')
+            .delete('/relationships/fromUser/' + otherUser.id + '/declined')
             .set({Authorization: 'Bearer' + ' ' + accessToken})
             .expect(200)
             .end((err, res) => {
@@ -321,9 +336,9 @@ describe('Response to the friend request', () => {
             });
     });
 
-    it('Declined - DELETE /relationship/fromUser/:id/declined with id which is not exists return 400', done => {
+    it('Declined - DELETE /relationships/fromUser/:id/declined with id which is not exists return 400', done => {
         request
-            .delete('/relationship/fromUser/' + 'wrongId' + '/declined')
+            .delete('/relationships/fromUser/' + 'wrongId' + '/declined')
             .set({Authorization: 'Bearer' + ' ' + accessToken})
             .expect(400)
             .end((err, res) => {
@@ -373,7 +388,7 @@ describe('Remove a friend', () => {
         });
     });
 
-    it('DELETE /relationship/friend/:id', done => {
+    it('DELETE /relationships/friend/:id', done => {
         // Check if the friend relationship exists in db
         const query = {
             $or: [
@@ -390,7 +405,7 @@ describe('Remove a friend', () => {
         });
 
         request
-            .delete('/relationship/friend/' + friend.id)
+            .delete('/relationships/friend/' + friend.id)
             .set({Authorization: 'Bearer' + ' ' + accessToken})
             .expect(200)
             .end((err, res) => {
@@ -399,9 +414,9 @@ describe('Remove a friend', () => {
                 done();
             });
     });
-    it('DELETE /relationship/friend/:id with worngid returns 400', done => {
+    it('DELETE /relationships/friend/:id with worngid returns 400', done => {
         request
-            .delete('/relationship/friend/' + 'wrongId')
+            .delete('/relationships/friend/' + 'wrongId')
             .set({Authorization: 'Bearer' + ' ' + accessToken})
             .expect(400)
             .end((err, res) => {

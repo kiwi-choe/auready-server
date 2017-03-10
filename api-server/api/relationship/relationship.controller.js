@@ -3,7 +3,8 @@ const Relationship = require(__appbase_dirname + '/models/relationship');
 const UserController = require(__appbase_dirname + '/api-server/api/user/user.controller');
 
 exports.friendRequest = (req, res) => {
-    RelationshipDBController.create(req.user.id, req.params.name, (err, relationship, info) => {
+    let friendName = req.params.name;
+    RelationshipDBController.create(req.user.id, friendName, (err, relationship, info) => {
         if (err) {
             return res.sendStatus(400);
         }
