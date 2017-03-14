@@ -6,6 +6,7 @@ const userRouter = require('./api/user');
 const relationshipRouter = require('./api/relationship');
 const taskheadRouter = require('./api/taskhead');
 const taskRouter = require('./api/task');
+const notificationRouter = require('./api/notification');
 
 const oauth2Server = require(__appbase_dirname + '/auth-server/server');
 
@@ -29,4 +30,7 @@ exports.initialize = (app) => {
     app.use('/tasks',
         passport.authenticate('bearer', {session: false}), oauth2Server.error(),
         taskRouter);
+    app.use('/notifications',
+        passport.authenticate('bearer', {session: false}), oauth2Server.error(),
+        notificationRouter);
 };

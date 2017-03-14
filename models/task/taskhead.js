@@ -30,4 +30,4 @@ const taskHeadSchema = mongoose.Schema({
 //     next();
 // });
 
-module.exports = mongoose.model('TaskHeadDBController', taskHeadSchema);
+module.exports = mongoose.model('TaskHead', taskHeadSchema);

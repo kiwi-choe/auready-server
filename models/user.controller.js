@@ -70,11 +70,31 @@ const _readByEmailOrName = (search, done) => {
     });
 };
 
+const _updateInstanceId = (id, instanceId, done) => {
+    User.findOne({_id: id}, (err, user) => {
+        if(err) {
+            return done(err);
+        }
+        // update the found user
+        user.instanceId = instanceId;
+        user.save((err, updatedUser) => {
+            if(err) {
+                return done(err);
+            }
+            if(updatedUser) {
+                return done(null, updatedUser);
+            }
+            return done(null, false);
+        });
+    });
+};
+
 module.exports = {
     create: _create,
     createMany: _createMany,
     deleteAll: _deleteAll,
     readAll: _readAll,
     readById: _readById,
-    readByEmailOrName: _readByEmailOrName
+    readByEmailOrName: _readByEmailOrName,
+    updateInstanceId: _updateInstanceId
 }
