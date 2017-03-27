@@ -9,9 +9,7 @@ const app = express();
 const bodyParser = require('body-parser');
 
 const passport = require('passport');
-
-const port = 3000;
-const httpsPort = 3443;
+const port = require('./predefine').port;
 
 // load signup modules
 const apiRouter = require(__appbase_dirname + '/api-server/index');
@@ -31,7 +29,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Add middleware for authentication
-process.env.dbURI = 'dev';
+// process.env.dbURI = 'dev';
 database.initialize();
 apiRouter.initialize(app);
 authRouter.initialize(app);
@@ -47,12 +45,12 @@ const httpsConfig = {
 };
 
 // http protocol
-app.listen(port, () => {
-	console.log('auready-server listening on port ' + port);
+app.listen(port.httpPort, () => {
+	console.log('auready-server listening on port ' + port.httpPort);
 });
 // https protocol
-https.createServer(httpsConfig, app).listen(httpsPort, () => {
-	console.log('auready-https-server listening on port ' + httpsPort);
+https.createServer(httpsConfig, app).listen(port.httpsPort, () => {
+	console.log('auready-https-server listening on port ' + port.httpsPort);
 });
 
 module.exports = app;

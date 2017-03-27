@@ -1,17 +1,7 @@
 const OauthClient = require('../../models/oauthClient');
-const predefine = require('./predefine');
+const trustedClientInfo = require(__appbase_dirname + '/predefine').trustedClientInfo;
 
-// Register signup client info
-const trustedClientInfo = {
-    name: 'localAccount',
-    grantType: [
-        predefine.oauth2.type.password.name,
-        predefine.oauth2.type.password.token_refreshable
-    ],
-    clientId: 'tEYQAFiAAmLrS2Dl',
-    clientSecret: 'YmE2LYTGKunlVW5OrKNlWF9KQZUZOHDy'
-};
-
+// Register local client info
 module.exports = () => {
     // Add trust client(1st app) as 'password' grant type
     OauthClient.findOne({

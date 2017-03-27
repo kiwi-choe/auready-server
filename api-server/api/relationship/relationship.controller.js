@@ -4,8 +4,11 @@ const UserController = require(__appbase_dirname + '/api-server/api/user/user.co
 
 exports.friendRequest = (req, res) => {
     let friendName = req.params.name;
+    let what = {
+        toUser: ''
+    };
     RelationshipDBController.create(req.user.id, friendName, (err, relationship, info) => {
-        if (err) {
+        if(err) {
             return res.sendStatus(400);
         }
         if (!relationship) {
@@ -13,9 +16,25 @@ exports.friendRequest = (req, res) => {
             return res.sendStatus(409); // 409: Conflict, if resource already exists.
         }
         // res 201 code & TODO add the notification message
-        console.log(relationship);
-        return res.sendStatus(201);
+        console.log('\nrelationship - ', relationship);
+        // req.toUser =
+        what.toUser = relationship.toUserId;
+        notify(res, what);
     });
+};
+
+const notify = (res, what) => {
+    console.log('entered into notify()');
+    console.log('what - ', what);
+    if (what.err) {
+        console.log('entered into err!!!');
+        return res.sendStatus(400);
+    }
+    // if(!success) {
+    //     console.log(info);
+    //     return res.sendStatus(409);
+    // }
+    return res.sendStatus(201);
 };
 
 exports.checkRelationship = (req, res) => {

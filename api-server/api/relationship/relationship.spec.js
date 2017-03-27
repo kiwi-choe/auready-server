@@ -6,15 +6,15 @@ const server = require('../../../www');
 const request = require('supertest')(server);
 
 const Token = require('../../../models/token.controller');
-const predefine = require('../../../auth-server/util/predefine');
-const clientId = 'tEYQAFiAAmLrS2Dl';
+const predefine = require('../../../predefine');
+const clientId = predefine.trustedClientInfo.clientId;
 
 const User = require('../../../models/user.controller');
 
 const RelationshipController = require('../../../models/relationship.controller.js');
 const Relationship = require('../../../models/relationship');
 
-describe('POST /relationships/:userId', () => {
+describe('FriendRequest - POST /relationships/:name', () => {
 
     let accessToken;
     let loggedinuser;
@@ -36,12 +36,14 @@ describe('POST /relationships/:userId', () => {
         // delete all the users
         User.deleteAll(err => {
             Token.deleteAll(err => {
-                done();
+                RelationshipController.deleteAll(err => {
+                    done();
+                });
             });
         });
     });
 
-    it('friendRequest (Add a relationship) should return 201 code', done => {
+    it('new request - should return 201 code', done => {
         request
             .post('/relationships/' + otheruser.name)
             .set({Authorization: 'Bearer' + ' ' + accessToken})
@@ -53,7 +55,7 @@ describe('POST /relationships/:userId', () => {
             });
     });
 
-    it('duplicating frindRequest, should return 409 code', done => {
+    it('duplicating friendRequest, should return 409 code', done => {
         RelationshipController.create(loggedinuser.id, otheruser.name, (err, relationship, info) => {
         });
         request

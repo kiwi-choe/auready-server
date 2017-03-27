@@ -6,8 +6,8 @@ const server = require('../../../www');
 const request = require('supertest')(server);
 
 const Token = require('../../../models/token.controller');
-const predefine = require('../../../auth-server/util/predefine');
-const clientId = 'tEYQAFiAAmLrS2Dl';
+const predefine = require('../../../predefine');
+const clientId = predefine.trustedClientInfo.clientId;
 
 const User = require('../../../models/user');
 const UserController = require('../../../models/user.controller');

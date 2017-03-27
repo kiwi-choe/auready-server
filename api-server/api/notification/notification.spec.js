@@ -7,8 +7,8 @@ const server = require('../../../www');
 const request = require('supertest')(server);
 
 const Token = require('../../../models/token.controller');
-const predefine = require('../../../auth-server/util/predefine');
-const clientId = 'tEYQAFiAAmLrS2Dl';
+const predefine = require('../../../predefine');
+const clientId = predefine.trustedClientInfo.clientId;
 
 const User = require('../../../models/user.controller');
 const name = 'nameofkiwi1';
@@ -49,6 +49,38 @@ describe('This test needs the accessToken to access API resources', () =>{
                     if (err) throw err;
                     done();
                 });
+        });
+    });
+});
+
+const FCM = require('fcm-push');
+const serverkey = predefine.fcmServerKey.key;
+const fcm = new FCM(serverkey);
+
+const instanceID = predefine.test_instanceID;
+
+const message = {
+    to: instanceID,
+    data: {
+        your_custom_data_key: 'your_custom_data_value'
+    },
+    notification: {
+        title: 'Hi kiwi',
+        body: 'This is the test for notification!'
+    }
+};
+
+describe('fcm test', () =>{
+
+    it('send?', done => {
+        fcm.send(message, (err, res) => {
+            if(err) {
+                console.log('something has gone wrong!');
+            } else {
+                console.log('Successfully sent with response:', res);
+            }
+
+            done();
         });
     });
 

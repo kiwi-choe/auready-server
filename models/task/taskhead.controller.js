@@ -50,7 +50,7 @@ const _updateTask = (task, done) => {
 };
 
 const _deleteOne = (id, done) => {
-    TaskHead.remove({_id: id}, (err, removedCount) => {
+    TaskHead.remove({id: id}, (err, removedCount) => {
         if (err) {
             return done(err);
         }

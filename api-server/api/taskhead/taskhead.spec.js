@@ -6,8 +6,8 @@ const server = require('../../../www');
 const request = require('supertest')(server);
 
 const Token = require('../../../models/token.controller');
-const predefine = require('../../../auth-server/util/predefine');
-const clientId = 'tEYQAFiAAmLrS2Dl';
+const predefine = require('../../../predefine');
+const clientId = predefine.trustedClientInfo.clientId;
 
 const User = require('../../../models/user.controller');
 const name = 'nameofkiwi3';
@@ -79,6 +79,7 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
         });
 
         it('DELETE /taskheads/:id returns 200', done => {
+            console.log('taskhead - ', taskHead);
             request
                 .delete('/taskheads/' + taskHead.id)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
@@ -89,14 +90,14 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
                     done();
                 });
         });
-        it('DELETE /taskheads/wrongId returns 404', done => {
+        it('DELETE /taskheads/wrongId returns 400', done => {
             request
                 .delete('/taskheads/' + 'wrongId')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .expect(404)
+                .expect(400)
                 .end((err, res) => {
                     if (err) throw err;
-                    res.status.should.equal(404);
+                    res.status.should.equal(400);
                     done();
                 });
         });

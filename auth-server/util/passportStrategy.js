@@ -3,7 +3,7 @@ const BasicStrategy = require('passport-http').BasicStrategy;
 const BearerStrategy = require('passport-http-bearer').Strategy;
 const oauth2orize = require('oauth2orize');
 
-const predefine = require('./predefine');
+const predefine = require(__appbase_dirname + '/predefine');
 
 const OauthClient = require(__appbase_dirname + '/models/oauthClient');
 const User = require(__appbase_dirname + '/models/user');

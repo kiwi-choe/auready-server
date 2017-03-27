@@ -1,5 +1,5 @@
 const oauth2orize = require('oauth2orize');
-const predefine = require('./predefine');
+const predefine = require(__appbase_dirname + '/predefine');
 
 const User = require(__appbase_dirname + '/models/user');
 const Token = require(__appbase_dirname + '/models/token');

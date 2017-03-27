@@ -51,3 +51,6 @@ jspm_packages
 out
 
 .idea
+
+# private info
+predefine.js
