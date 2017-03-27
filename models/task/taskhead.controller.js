@@ -35,7 +35,7 @@ const _readByMemberName = (name, done) => {
 };
 
 const _updateTask = (task, done) => {
-    TaskHead.findOne({'tasks._id': task._id}, (err, taskHead) => {
+    TaskHead.findOne({'tasks.id': task.id}, (err, taskHead) => {
         // overwrite task
         taskHead.tasks[0] = task;
         taskHead.save((err, updatedTaskHead) => {
@@ -63,7 +63,7 @@ const _deleteOne = (id, done) => {
 
 const _deleteMulti = (ids, done) => {
 
-    TaskHead.remove({_id: {$in: ids}}, (err, removed) => {
+    TaskHead.remove({id: {$in: ids}}, (err, removed) => {
         if(err) {
             console.log('err: ', err);
             return done(err);
@@ -90,7 +90,7 @@ const _updateDetails = (taskHeadId, details, done) => {
 
         // There is no member with newMember.name
         TaskHead.find({
-            _id: taskHeadId,
+            id: taskHeadId,
             'members.name': member.name
         }, (err, taskhead) => {
             if(err) {
@@ -115,7 +115,7 @@ const _updateDetails = (taskHeadId, details, done) => {
                 }
                 // Update
                 TaskHead.update(
-                    {_id: taskHeadId},     // query
+                    {id: taskHeadId},     // query
                     {                       // options
                         $push: {members: {$each: newMembers}},
                         $set: {title: title}
@@ -134,10 +134,10 @@ const _updateDetails = (taskHeadId, details, done) => {
 const _deleteMember = (memberId, done) => {
 
     function findMembers(member) {
-        return member._id.equals(memberId);
+        return (member.id === memberId);
     }
     // find a taskhead including this member's id
-    TaskHead.findOne({'members._id': memberId}, (err, taskhead) => {
+    TaskHead.findOne({'members.id': memberId}, (err, taskhead) => {
         if(!taskhead) {
             console.log('couldn\'t find the taskhead');
             return done(null, false);

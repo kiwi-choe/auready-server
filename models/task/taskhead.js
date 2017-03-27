@@ -6,13 +6,17 @@ const taskSchema = mongoose.Schema({
     description: String,
     detailNote: String,
     completed: Boolean
+}, {
+    _id: false
 });
 
 const memberSchema = mongoose.Schema({
-    id: String,     // generated in Clinet
+    id: String,     // generated in Client
     name: String,
     email: String,
     tasks: [taskSchema]
+}, {
+    _id: false
 });
 
 const taskHeadSchema = mongoose.Schema({

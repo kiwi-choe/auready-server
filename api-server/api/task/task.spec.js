@@ -80,7 +80,7 @@ describe('Task - need the accessToken to access API resources and pre saved Task
             request
                 .post('/tasks')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .send({memberid: savedTaskHead.members[0]._id, task: taskObj})
+                .send({memberid: savedTaskHead.members[0].id, task: taskObj})
                 .expect(201)
                 .end((err, res) => {
                     if (err) throw err;
