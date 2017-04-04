@@ -18,7 +18,7 @@ exports.initialize = (app) => {
     app.use('/social-account', socialAccountRouter);
 
     // request resources with accessToken of auready-server
-    app.use('/user',
+    app.use('/users',
         passport.authenticate('bearer', {session: false}), oauth2Server.error(),
         userRouter);
     app.use('/relationships',

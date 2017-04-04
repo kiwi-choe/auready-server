@@ -71,7 +71,7 @@ exports.getFriends = (loggedInUserId, res) => {
         }
         if (!relationships) {
             console.log(info);
-            return res.sendStatus(404); // Not found.
+            return res.sendStatus(204); // no friend; no status:ACCEPTED
         }
         // loop
         let friendIds = relationships.map(item => {

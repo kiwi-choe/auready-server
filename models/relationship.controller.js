@@ -3,7 +3,8 @@ const Relationship = require(__appbase_dirname + '/models/relationship');
 // enum values of status
 const _status = {
     PENDING: 0,
-    ACCEPTED: 1
+    ACCEPTED: 1,
+    NO_STATUS: 2
 };
 
 // Avoid duplication
@@ -87,7 +88,7 @@ const _readStatus = (loggedInUserId, otherUserId, done) => {
         if(relationship) {
             status = relationship.status;
         } else {
-            status = null;
+            status = _status.NO_STATUS;
         }
         return done(null, status);
     });
