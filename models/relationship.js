@@ -6,14 +6,13 @@ const mongoose = require('mongoose');
 * */
 const PENDING = 0;
 const ACCEPTED = 1;
-const NO_STATUS = 2;
 
 const schema = mongoose.Schema({
     fromUserId: String,
     toUserId: String,
     status: {
         type: Number,
-        enum: [PENDING, ACCEPTED, NO_STATUS]
+        enum: [PENDING, ACCEPTED]
     }
 });
 

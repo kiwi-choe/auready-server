@@ -14,7 +14,7 @@ const User = require('../../../models/user.controller');
 const RelationshipController = require('../../../models/relationship.controller.js');
 const Relationship = require('../../../models/relationship');
 
-describe('FriendRequest - POST /relationships/:name', () => {
+describe('FriendRequest - POST /relationships/:toUserId', () => {
 
     let accessToken;
     let loggedinuser;
@@ -45,7 +45,7 @@ describe('FriendRequest - POST /relationships/:name', () => {
 
     it('new request - should return 201 code', done => {
         request
-            .post('/relationships/' + otheruser.name)
+            .post('/relationships/' + otheruser.id)
             .set({Authorization: 'Bearer' + ' ' + accessToken})
             .expect(201)
             .end((err, res) => {
@@ -56,10 +56,10 @@ describe('FriendRequest - POST /relationships/:name', () => {
     });
 
     it('duplicating friendRequest, should return 409 code', done => {
-        RelationshipController.create(loggedinuser.id, otheruser.name, (err, relationship, info) => {
+        RelationshipController.create(loggedinuser.id, otheruser.id, (err, relationship, info) => {
         });
         request
-            .post('/relationships/' + otheruser.name)
+            .post('/relationships/' + otheruser.id)
             .set({Authorization: 'Bearer' + ' ' + accessToken})
             .expect(409)
             .end((err, res) => {
