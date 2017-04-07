@@ -291,10 +291,10 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
             request
                 .get('/taskheads/' + membersB[1].name)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .expect(404)
+                .expect(204)
                 .end((err, res) => {
                     if (err) throw err;
-                    res.status.should.equal(404);
+                    res.status.should.equal(204);
                     done();
                 });
         });

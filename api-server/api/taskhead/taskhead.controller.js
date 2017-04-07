@@ -86,7 +86,8 @@ exports.getTaskHeads = (req, res) => {
             return res.sendStatus(400);
         }
         if (!taskheads) {
-            return res.sendStatus(404);
+            console.log('\nno taskheads');
+            return res.sendStatus(204);
         }
         else {
             console.log('taskheads - ', taskheads);
