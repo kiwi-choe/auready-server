@@ -1,5 +1,4 @@
-const UserDBController = require(__appbase_dirname + '/models/user.controller');
-const UserModel = require(__appbase_dirname + '/models/user');
+const User = require(__appbase_dirname + '/models/user.controller');
 const Relationship = require(__appbase_dirname + '/models/relationship.controller');
 const Status = Relationship.statusValues;
 
@@ -10,7 +9,7 @@ exports.getUsersByEmailOrName = (req, res) => {
     const loggedInUserId = req.user.id;
 
     // Search using 'search'
-    UserDBController.readByEmailOrName(regexValue, (err, users) => {
+    User.readByEmailOrName(regexValue, (err, users) => {
         if (err) {
             return res.sendStatus(400);
         }
@@ -60,10 +59,10 @@ exports.getUsersByEmailOrName = (req, res) => {
 };
 
 exports.getUsersByIds = (ids, done) => {
-    // UserDBController.read
+    // User.read
     let foundUsers = [];
     ids.forEach((id, i) => {
-        UserDBController.readById(id, (err, user) => {
+        User.readNameEmailOnly(id, (err, user) => {
             if (err) return done(err, null);
             foundUsers.push(user);
 
@@ -73,5 +72,25 @@ exports.getUsersByIds = (ids, done) => {
         });
 
     });
+};
 
+exports.putInstanceId = (id, instanceId, done) => {
+    User.updateInstanceId(id, instanceId, (err, updatedUser) => {
+        if (err) {
+            console.log('updateInstanceId is failed');
+            return done(err);
+        }
+        if (!updatedUser) {
+            console.log('update fail');
+            return done(null, false);
+        }
+        return done(null, true);
+    });
+};
+
+exports.getInstanceIdByUserId = (id, done) => {
+    User.readById(id, (err, user) => {
+        if(err) return done(err, null);
+        return done(null, user.instanceId);
+    });
 };

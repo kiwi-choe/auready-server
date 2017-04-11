@@ -281,7 +281,7 @@ describe('Response to the friend request', () => {
     let accessToken;
     let fromUserId;
     let status;
-    before(done => {
+    beforeEach(done => {
         // Create two users
         // Create over 1 token
         // Create over 1 relationship - {'a', 'b', PENDING}
@@ -314,9 +314,9 @@ describe('Response to the friend request', () => {
         });
     });
 
-    it('Accept - PUT /relationships/fromUser/:id/accepted', done => {
+    it('Accept - PUT /relationships/:fromUserId/accepted', done => {
         request
-            .put('/relationships/fromUser/' + otherUser.id + '/accepted')
+            .put('/relationships/' + otherUser.id + '/accepted')
             .set({Authorization: 'Bearer' + ' ' + accessToken})
             .expect(200)
             .end((err, res) => {
@@ -326,9 +326,9 @@ describe('Response to the friend request', () => {
             });
     });
 
-    it('Declined - DELETE /relationships/fromUser/:id/declined', done => {
+    it('Declined - DELETE /relationships/:fromUserId', done => {
         request
-            .delete('/relationships/fromUser/' + otherUser.id + '/declined')
+            .delete('/relationships/' + otherUser.id)
             .set({Authorization: 'Bearer' + ' ' + accessToken})
             .expect(200)
             .end((err, res) => {
@@ -338,9 +338,9 @@ describe('Response to the friend request', () => {
             });
     });
 
-    it('Declined - DELETE /relationships/fromUser/:id/declined with id which is not exists return 400', done => {
+    it('Declined - DELETE /relationships/:fromUserId with id which is not exists return 400', done => {
         request
-            .delete('/relationships/fromUser/' + 'wrongId' + '/declined')
+            .delete('/relationships/' + 'wrongId')
             .set({Authorization: 'Bearer' + ' ' + accessToken})
             .expect(400)
             .end((err, res) => {

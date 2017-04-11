@@ -17,10 +17,10 @@ const Status = RelationshipController.statusValues;
 describe('Read', () => {
 
     let savedUsers;
+    const stubbedInstanceId = 'stub_instanceId';
     before(done => {
-
         const userArr = [
-            {name: 'nameofkiwi1', email: 'kiwi1@gmail.com', password: '123'},
+            {name: 'nameofkiwi1', email: 'kiwi1@gmail.com', password: '123', instanceId: stubbedInstanceId},
             {name: 'nameofkiwi2', email: 'kiwi2@gmail.com', password: '123'},
             {name: 'nameofkiwi3', email: 'kiwi3@gmail.com', password: '123'},
             {name: 'nameofkiwi4', email: 'kiwi4@gmail.com', password: '123'}];
@@ -45,6 +45,14 @@ describe('Read', () => {
         done();
     });
 
+    it('get an instanceId by an userId', done => {
+        const userId = savedUsers[0]._id;
+        User.findOne({_id: userId}, (err, user) => {
+            if(err) throw err;
+            assert.equal(user.instanceId, stubbedInstanceId);
+        });
+        done();
+    });
 
     after(done => {
         // delete all the users
@@ -245,4 +253,39 @@ describe('Read users with Relationship', () => {
         });
     });
 
+});
+
+describe('Update', () => {
+
+    let savedUser;
+    before(done => {
+        const user = {name: 'nameofkiwi1', email: 'kiwi1@gmail.com', password: '123', isLocalAccount: true};
+        // create 4 users
+        UserController.create(user.name, user.email, user.password, user.isLocalAccount, (err, newUser) => {
+            savedUser = newUser;
+            console.log('savedUser- ', savedUser);
+            done();
+        });
+    });
+
+    it('update instanceId field', done => {
+        let instanceId = 'stub_instanceId';
+        UserController.updateInstanceId(savedUser.id, instanceId, (err, updatedUser) => {
+            if(err) {
+                assert.ifError(err);
+            }
+            if(!updatedUser) {
+                assert.fail('isupdated is false');
+            }
+            console.log('\nupdatedUser- ', updatedUser);
+            done();
+        });
+    });
+
+    after(done => {
+        // delete all the users
+        UserController.deleteAll(err => {
+            done();
+        });
+    });
 });

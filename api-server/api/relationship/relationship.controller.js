@@ -1,13 +1,16 @@
 const RelationshipDBController = require(__appbase_dirname + '/models/relationship.controller');
 const Relationship = require(__appbase_dirname + '/models/relationship');
 const UserController = require(__appbase_dirname + '/api-server/api/user/user.controller');
+const NotificationController = require(__appbase_dirname + '/api-server/api/notification/notification.controller');
+const TYPES = require(__appbase_dirname + '/api-server/api/notification/notificationUtils').types;
 
 exports.friendRequest = (req, res) => {
-    let toUserId = req.params.toUserId;
-    let what = {
-        toUser: ''
+    const toUserId = req.params.toUserId;
+    const fromUser = {
+        id: req.user.id,
+        name: req.user.name
     };
-    RelationshipDBController.create(req.user.id, toUserId, (err, relationship, info) => {
+    RelationshipDBController.create(fromUser.id, toUserId, (err, relationship, info) => {
         if(err) {
             return res.sendStatus(400);
         }
@@ -15,26 +18,16 @@ exports.friendRequest = (req, res) => {
             console.log(info);
             return res.sendStatus(409); // 409: Conflict, if resource already exists.
         }
-        // res 201 code & TODO add the notification message
         console.log('\nrelationship - ', relationship);
-        // req.toUser =
-        what.toUser = relationship.toUserId;
-        notify(res, what);
-    });
-};
 
-const notify = (res, what) => {
-    console.log('entered into notify()');
-    console.log('what - ', what);
-    if (what.err) {
-        console.log('entered into err!!!');
-        return res.sendStatus(400);
-    }
-    // if(!success) {
-    //     console.log(info);
-    //     return res.sendStatus(409);
-    // }
-    return res.sendStatus(201);
+        NotificationController.sendNotification(TYPES.friend_request, toUserId, fromUser, isSuccess => {
+            if(!isSuccess) {
+                console.log('send a notification to fcm server is failed');
+                return res.sendStatus(500);
+            }
+            return res.sendStatus(201);
+        });
+    });
 };
 
 exports.checkRelationship = (req, res) => {
@@ -83,14 +76,17 @@ exports.getFriends = (loggedInUserId, res) => {
         });
 
         // get user info by id
-        getUsers(friendIds, (err, foundFriends) => {
+        getUsers(friendIds, (err, friends) => {
             if (err) {
                 return res.sendStatus(404); // Not found - users by ids
             }
-            console.log(foundFriends);
+            console.log(friends);
+            if(!friends) {
+                return res.sendStatus(204); // Not found
+            }
             // and set the response body, 'friends' - id, name, email
             return res.status(200).json({
-                friends: foundFriends
+                friends: friends
             });
         });
 
@@ -120,13 +116,13 @@ exports.getPendingRequest = (toUserId, res) => {
 exports.acceptFriendRequest = (req, res) => {
 
     const query = {
-        fromUserId: req.params.id,
+        fromUserId: req.params.fromUserId,
         toUserId: req.user.id,
         status: RelationshipDBController.statusValues.PENDING
     };
     const options = {
         fromUserId: req.user.id,
-        toUserId: req.params.id,
+        toUserId: req.params.fromUserId,
         status: RelationshipDBController.statusValues.ACCEPTED,
     };
     RelationshipDBController.update(query, options, (err, result) => {
@@ -141,10 +137,9 @@ exports.acceptFriendRequest = (req, res) => {
     });
 };
 
-exports.declineFriendRequest = (req, res) => {
-
+exports.deleteFriendRequest = (req, res) => {
     const query = {
-        fromUserId: req.params.id,
+        fromUserId: req.params.fromUserId,
         toUserId: req.user.id,
         status: RelationshipDBController.statusValues.PENDING
     };

@@ -14,6 +14,7 @@ router.get('/:userId', controller.checkRelationship);
 // Get friends, status: ACCEPTED
 router.get('/status/:status', (req, res) => {
     const status = req.params.status;
+    console.log('\nstatus - ', status);
     if (status == RelationshipDBController.statusValues.ACCEPTED) {
         controller.getFriends(req.user.id, res);
     }
@@ -27,10 +28,10 @@ router.get('/status/:status', (req, res) => {
 });
 
 // Accept the friend request
-router.put('/fromUser/:id/accepted', controller.acceptFriendRequest);
+router.put('/:fromUserId/accepted', controller.acceptFriendRequest);
 
-// Decline the friend request
-router.delete('/fromUser/:id/declined', controller.declineFriendRequest);
+// Delete the friend request
+router.delete('/:fromUserId', controller.deleteFriendRequest);
 
 // Remove a friend
 router.delete('/friend/:id', controller.deleteFriend);

@@ -29,7 +29,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Add middleware for authentication
-// process.env.dbURI = 'dev';
+process.env.dbURI = 'dev';
 database.initialize();
 apiRouter.initialize(app);
 authRouter.initialize(app);

@@ -57,6 +57,13 @@ const _readById = (id, done) => {
     });
 };
 
+const _readNameEmailOnly = (id, done) => {
+    User.findOne({_id: id}, {name: 1, email: 1}, (err, user) => {
+        if (err) throw err;
+        return done(null, user);
+    });
+};
+
 const _readByEmailOrName = (search, done) => {
     User.find().or([
         {'email': new RegExp(search)},
@@ -72,16 +79,16 @@ const _readByEmailOrName = (search, done) => {
 
 const _updateInstanceId = (id, instanceId, done) => {
     User.findOne({_id: id}, (err, user) => {
-        if(err) {
+        if (err) {
             return done(err);
         }
         // update the found user
         user.instanceId = instanceId;
         user.save((err, updatedUser) => {
-            if(err) {
+            if (err) {
                 return done(err);
             }
-            if(updatedUser) {
+            if (updatedUser) {
                 return done(null, updatedUser);
             }
             return done(null, false);
@@ -95,6 +102,7 @@ module.exports = {
     deleteAll: _deleteAll,
     readAll: _readAll,
     readById: _readById,
+    readNameEmailOnly: _readNameEmailOnly,
     readByEmailOrName: _readByEmailOrName,
     updateInstanceId: _updateInstanceId
 }
