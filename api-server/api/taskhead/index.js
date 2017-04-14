@@ -10,7 +10,7 @@ router.delete('/:id', controller.deleteOne);
 // Update details - title, members
 router.put('/:id', controller.updateDetails);
 
-// Delete tasks
+// Delete taskheads
 router.delete('/', controller.deleteMulti);
 
 // Delete a member - [나가기] 기능

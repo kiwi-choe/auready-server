@@ -15,12 +15,17 @@ const email = 'kiwi3@gmail.com';
 const password = '123';
 
 const TaskHeadDBController = require('../../../models/task/taskhead.controller.js');
-const test_members = [
-    {id: 'id_member1', name: 'member1', email: 'email_member1', tasks: []}
+const test_members = [{
+    id: 'id_member1',
+    friendId: 'stubbed_friendId',
+    name: 'member1',
+    email: 'email_member1',
+    tasks: []}
 ];
 const test_taskhead = {
     id: 'stubIdOfTaskHead',
     title: 'titleOfTaskHead',
+    color: 222,  // default color
     members: test_members
 };
 
@@ -54,6 +59,7 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
                 .send({
                     id: test_taskhead.id,
                     title: test_taskhead.title,
+                    color: test_taskhead.color,
                     members: test_members
                 })
                 .expect(201)
@@ -177,13 +183,14 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
     describe('Delete taskHeads', () => {
 
         const members = [
-            {name: 'member0', email: 'email_member1', tasks: []},
-            {name: 'member1', email: 'email_member1', tasks: []},
+            {id: 'id_member0', friendId: 'stubbed_friendId0', name: 'member0', email: 'email_member1', tasks: []},
+            {id: 'id_member1', friendId: 'stubbed_friendId1', name: 'member1', email: 'email_member1', tasks: []},
         ];
+
         const taskHeads = [
-            {title: 'titleOfTaskHead0', members: members},
-            {title: 'titleOfTaskHead1', members: members},
-            {title: 'titleOfTaskHead2', members: members}
+            {id: 'stubIdOfTaskHead0', title: 'titleOfTaskHead0', color: 222, members: members},
+            {id: 'stubIdOfTaskHead1', title: 'titleOfTaskHead1', color: 222, members: members},
+            {id: 'stubIdOfTaskHead2', title: 'titleOfTaskHead2', color: 222, members: members}
         ];
 
         let savedTaskHeads = [];
@@ -206,16 +213,16 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
 
         it('DELETE /taskheads/ returns 200', done => {
 
-            let deletingTaskHeadIds = [];
+            let ids = [];
             for (let i = 0; i < savedTaskHeads.length; i++) {
-                deletingTaskHeadIds.push(savedTaskHeads[i].id);
+                console.log(savedTaskHeads[i].id);
+                ids.push(savedTaskHeads[i].id);
             }
-
             request
-                .delete('/taskheads/')
+                .delete('/taskheads')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .expect(200)
-                .send({ids: deletingTaskHeadIds})
+                .send({ids: ids})
                 .end((err, res) => {
                     if (err) throw err;
                     res.status.should.equal(200);
@@ -239,18 +246,18 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
     describe('GET taskHeads ', () => {
 
         const membersA = [
-            {id: 'member0_id', name: 'member0', email: 'email_member0', tasks: []},
-            {id: 'member1_id', name: 'member1', email: 'email_member1', tasks: []},
+            {id: 'member0_id', friendId: 'stubbed_friendId0', name: 'member0', email: 'email_member0', tasks: []},
+            {id: 'member1_id', friendId: 'stubbed_friendId1', name: 'member1', email: 'email_member1', tasks: []}
         ];
         const membersB = [
-            {id: 'member1_id', name: 'member1', email: 'email_member1', tasks: []},
-            {id: 'member2_id', name: 'member2', email: 'email_member2', tasks: []},
+            {id: 'member1_id', friendId: 'stubbed_friendId1', name: 'member1', email: 'email_member1', tasks: []},
+            {id: 'member2_id', friendId: 'stubbed_friendId2', name: 'member2', email: 'email_member2', tasks: []},
         ];
 
         const taskHeads = [
-            {id: 'TaskHead0_id', title: 'titleOfTaskHead0', members: membersA},
-            {id: 'TaskHead1_id', title: 'titleOfTaskHead1', members: membersB},
-            {id: 'TaskHead2_id', title: 'titleOfTaskHead2', members: membersB}
+            {id: 'TaskHead0_id', title: 'titleOfTaskHead0', color: 222, members: membersA},
+            {id: 'TaskHead1_id', title: 'titleOfTaskHead1', color: 222, members: membersB},
+            {id: 'TaskHead2_id', title: 'titleOfTaskHead2', color: 222, members: membersB}
         ];
 
         let savedTaskHeads = [];
@@ -271,14 +278,14 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
             });
         });
 
-        it('GET /taskheads/:with wrong member name - returns 404', done => {
+        it('GET /taskheads/:with wrong member name - returns 204', done => {
             request
                 .get('/taskheads/' + 'wrong name')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .expect(404)
+                .expect(204)
                 .end((err, res) => {
                     if (err) throw err;
-                    res.status.should.equal(404);
+                    res.status.should.equal(204);
                     done();
                 });
         });
@@ -307,7 +314,6 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
                 .end((err, res) => {
                     if (err) throw err;
                     res.status.should.equal(200);
-                    res.body.should.have.property('taskheads');
                     done();
                 });
         });

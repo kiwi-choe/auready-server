@@ -12,6 +12,7 @@ const taskSchema = mongoose.Schema({
 
 const memberSchema = mongoose.Schema({
     id: String,     // generated in Client
+    friendId: String,
     name: String,
     email: String,
     tasks: [taskSchema]
@@ -22,6 +23,7 @@ const memberSchema = mongoose.Schema({
 const taskHeadSchema = mongoose.Schema({
     id: String,         // generated in Client
     title: String,
+    color: Number,
     modifiedTime: Number,    // == createdTime
     members: [memberSchema]
 });

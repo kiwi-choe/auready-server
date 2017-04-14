@@ -92,9 +92,7 @@ exports.getTaskHeads = (req, res) => {
         else {
             console.log('taskheads - ', taskheads);
             console.log('taskheads.members - ', taskheads[0].members);
-            return res.status(200).json({
-                taskheads: taskheads
-            });
+            return res.status(200).json(taskheads);
         }
     });
 };
