@@ -60,6 +60,8 @@ module.exports = (server) => {
                         'server_error'
                     ));
                 }
+                let userInfo = {id: user.id, email: user.email, name: user.name};
+
                 if (token) {
                     console.log('token exists already');
                     // Check access token expiration
@@ -68,8 +70,7 @@ module.exports = (server) => {
                         token.refreshToken,
                         {
                             expires_in: token.expiredIn,
-                            user_name: user.name,
-                            user_email: user.email
+                            user_info: userInfo
                         }
                     );
                 } else {
@@ -86,8 +87,7 @@ module.exports = (server) => {
                                 newToken.refreshToken,
                                 {
                                     expires_in: newToken.expiredIn,
-                                    user_name: user.name,
-                                    user_email: user.email
+                                    user_info: userInfo
                                 }
                             );
                         });
