@@ -81,7 +81,7 @@ exports.deleteMember = (req, res) => {
 // Get taskHeads of the member
 exports.getTaskHeads = (req, res) => {
 
-    TaskHeadDBController.readByMemberName(req.params.name, (err, taskheads) => {
+    TaskHeadDBController.readByUserId(req.params.userid, (err, taskheads) => {
         if (err) {
             return res.sendStatus(400);
         }

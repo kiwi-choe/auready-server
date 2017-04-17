@@ -271,8 +271,8 @@ describe('Update a taskhead - delete a member', () => {
 
     let existingTaskHead;
     const existingMembers = [
-        {id: 'stubbed_memberId', name: 'member1', email: 'email_member1', tasks: []},
-        {id: 'stubbed_memberId', name: 'member2', email: 'email_member2', tasks: []}
+        {id: 'stubbed_memberId1', name: 'member1', email: 'email_member1', tasks: []},
+        {id: 'stubbed_memberId2', name: 'member2', email: 'email_member2', tasks: []}
     ];
     beforeEach(done => {
         TaskHead.deleteAll(err => {
@@ -410,7 +410,7 @@ describe('Get taskheads', () => {
     });
 
     it('Get taskHeads of \'member2\'', done => {
-        TaskHeadModel.find({'members.name': membersB[1].name}, (err, taskheads) => {
+        TaskHeadModel.find({'members.userId': membersB[1].userId}, (err, taskheads) => {
             if(err) {
                 assert.fail('err');
             }
@@ -424,14 +424,14 @@ describe('Get taskheads', () => {
     });
 
     it('Invoke an exception when there is no member trying to find', done => {
-        TaskHeadModel.find({'members.name': 'no member'}, (err, taskheads) => {
+        TaskHeadModel.find({'members.userId': 'no member'}, (err, taskheads) => {
             if(err) {
                 assert.fail('err');
             }
             if(taskheads.length === 0) {
-                assert.fail('no member');
+                assert.ok('no member');
             } else {
-                console.log(taskheads);
+                assert.fail('found taskheads - ', taskheads);
             }
             done();
         });

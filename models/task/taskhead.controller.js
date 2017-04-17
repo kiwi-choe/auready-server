@@ -19,9 +19,9 @@ const _readById = (id, done) => {
     });
 };
 
-const _readByMemberName = (name, done) => {
+const _readByUserId = (userId, done) => {
 
-    TaskHead.find({'members.name': name}, (err, taskheads) => {
+    TaskHead.find({'members.userId': userId}, (err, taskheads) => {
         if (err) {
             return done(err);
         }
@@ -177,7 +177,7 @@ const _deleteAll = done => {
 module.exports = {
     create: _create,
     readById: _readById,
-    readByMemberName: _readByMemberName,
+    readByUserId: _readByUserId,
     deleteOne: _deleteOne,
     deleteMulti: _deleteMulti,
     updateDetails: _updateDetails,

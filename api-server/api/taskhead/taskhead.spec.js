@@ -278,9 +278,9 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
             });
         });
 
-        it('GET /taskheads/:with wrong member name - returns 204', done => {
+        it('GET /taskheads/:with wrong member userid - returns 204', done => {
             request
-                .get('/taskheads/' + 'wrong name')
+                .get('/taskheads/' + 'wrong userid')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .expect(204)
                 .end((err, res) => {
@@ -290,13 +290,13 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
                 });
         });
 
-        it('GET /taskheads/:name - there is no taskheads of the member - returns 404', done => {
+        it('GET /taskheads/:userid - there is no taskheads of the member - returns 404', done => {
             // Delete All taskheads, no taskheads of 'member2'
             TaskHeadDBController.deleteAll(err => {
             });
 
             request
-                .get('/taskheads/' + membersB[1].name)
+                .get('/taskheads/' + membersB[1].userId)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .expect(204)
                 .end((err, res) => {
@@ -306,9 +306,9 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
                 });
         });
 
-        it('GET /taskheads/:name - member0 - returns 200', done => {
+        it('GET /taskheads/:userid - member0 - returns 200', done => {
             request
-                .get('/taskheads/' + membersA[0].name)
+                .get('/taskheads/' + membersA[0].userId)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .expect(200)
                 .end((err, res) => {

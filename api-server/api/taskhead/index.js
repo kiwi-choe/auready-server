@@ -17,6 +17,6 @@ router.delete('/', controller.deleteMulti);
 router.delete('/member/:id', controller.deleteMember);
 
 // Read taskHeads of the user - search by members.name
-router.get('/:name', controller.getTaskHeads);
+router.get('/:userid', controller.getTaskHeads);
 
 module.exports = router;
