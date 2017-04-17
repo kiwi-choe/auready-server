@@ -12,7 +12,7 @@ const taskSchema = mongoose.Schema({
 
 const memberSchema = mongoose.Schema({
     id: String,     // generated in Client
-    friendId: String,
+    userId: String,
     name: String,
     email: String,
     tasks: [taskSchema]

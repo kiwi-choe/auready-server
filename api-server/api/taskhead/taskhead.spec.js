@@ -17,7 +17,7 @@ const password = '123';
 const TaskHeadDBController = require('../../../models/task/taskhead.controller.js');
 const test_members = [{
     id: 'id_member1',
-    friendId: 'stubbed_friendId',
+    userId: 'stubbed_userId',
     name: 'member1',
     email: 'email_member1',
     tasks: []}
@@ -108,25 +108,25 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
                 });
         });
 
-        it('PUT /taskheads/:id returns 404 - with wrong taskhead id', done => {
+        it('PUT /taskheads/:id returns 400 - with wrong taskhead id', done => {
             const newMembers = [
-                {name: 'member2', email: 'email_member2', tasks: []}
+                {id: 'id_member2', userId: 'stubbed_userId2', name: 'member2', email: 'email_member2', tasks: []}
             ];
             request
                 .put('/taskheads/' + 'wrongId')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .send({details: {title: test_taskhead.title, members: newMembers}})
-                .expect(404)
+                .expect(400)
                 .end((err, res) => {
                     if (err) throw err;
-                    res.status.should.equal(404);
+                    res.status.should.equal(400);
                     done();
                 });
         });
 
         it('PUT /taskheads/:id', done => {
             const newMembers = [
-                {name: 'member2', email: 'email_member2', tasks: []}
+                {id: 'id_member2', userId: 'stubbed_userId2', name: 'member2', email: 'email_member2', tasks: []}
             ];
             request
                 .put('/taskheads/' + taskHead.id)
@@ -183,8 +183,8 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
     describe('Delete taskHeads', () => {
 
         const members = [
-            {id: 'id_member0', friendId: 'stubbed_friendId0', name: 'member0', email: 'email_member1', tasks: []},
-            {id: 'id_member1', friendId: 'stubbed_friendId1', name: 'member1', email: 'email_member1', tasks: []},
+            {id: 'id_member0', userId: 'stubbed_userId0', name: 'member0', email: 'email_member1', tasks: []},
+            {id: 'id_member1', userId: 'stubbed_userId1', name: 'member1', email: 'email_member1', tasks: []},
         ];
 
         const taskHeads = [
@@ -246,12 +246,12 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
     describe('GET taskHeads ', () => {
 
         const membersA = [
-            {id: 'member0_id', friendId: 'stubbed_friendId0', name: 'member0', email: 'email_member0', tasks: []},
-            {id: 'member1_id', friendId: 'stubbed_friendId1', name: 'member1', email: 'email_member1', tasks: []}
+            {id: 'member0_id', userId: 'stubbed_userId0', name: 'member0', email: 'email_member0', tasks: []},
+            {id: 'member1_id', userId: 'stubbed_userId1', name: 'member1', email: 'email_member1', tasks: []}
         ];
         const membersB = [
-            {id: 'member1_id', friendId: 'stubbed_friendId1', name: 'member1', email: 'email_member1', tasks: []},
-            {id: 'member2_id', friendId: 'stubbed_friendId2', name: 'member2', email: 'email_member2', tasks: []},
+            {id: 'member1_id', userId: 'stubbed_userId1', name: 'member1', email: 'email_member1', tasks: []},
+            {id: 'member2_id', userId: 'stubbed_userId2', name: 'member2', email: 'email_member2', tasks: []},
         ];
 
         const taskHeads = [

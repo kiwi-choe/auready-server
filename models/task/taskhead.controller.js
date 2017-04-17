@@ -13,7 +13,7 @@ const _create = (taskHeadInfo, done) => {
 };
 
 const _readById = (id, done) => {
-    TaskHead.findById(id, (err, taskHead) => {
+    TaskHead.findOne({id: id}, (err, taskHead) => {
         if (err) throw  err;
         return done(null, taskHead);
     });
@@ -22,10 +22,10 @@ const _readById = (id, done) => {
 const _readByMemberName = (name, done) => {
 
     TaskHead.find({'members.name': name}, (err, taskheads) => {
-        if(err) {
+        if (err) {
             return done(err);
         }
-        if(taskheads.length === 0) {
+        if (taskheads.length === 0) {
             return done(null, false);
         }
         else {
@@ -64,11 +64,11 @@ const _deleteOne = (id, done) => {
 const _deleteMulti = (ids, done) => {
 
     TaskHead.remove({id: {$in: ids}}, (err, removed) => {
-        if(err) {
+        if (err) {
             console.log('err: ', err);
             return done(err);
         }
-        if(removed.result.n !== ids.length) {
+        if (removed.result.n !== ids.length) {
             return done(null, false);
         }
         return done(null, true);
@@ -87,47 +87,52 @@ const _updateDetails = (taskHeadId, details, done) => {
     // Duplication check to add new members
     let newMembers = [];
     members.forEach((member, i) => {
-
-        // There is no member with newMember.name
-        TaskHead.find({
-            id: taskHeadId,
-            'members.name': member.name
-        }, (err, taskhead) => {
-            if(err) {
+        // 1. taskhead is exist?
+        TaskHead.findOne({id: taskHeadId}, (err, taskhead) => {
+            if (err) {
                 return done(err);
             }
             if (!taskhead) {
+                console.log('taskhead is not exist');
                 return done(null, false);
             }
 
-            if (taskhead.length === 0) {
-                // push new member
-                newMembers.push(member);
-            }
-
-            // Start to update
-            if (i === members.length - 1) {
-
-                console.log('newMembers ', newMembers);
-                if (newMembers.length === 0) {
-                    console.log('there is no new member to add');
-                    return done(null, false);
+            // 2. member with newMember.name
+            TaskHead.find({'members.name': member.name}, (err, taskheads) => {
+                if (err) {
+                    return done(err);
                 }
-                // Update
-                TaskHead.update(
-                    {id: taskHeadId},     // query
-                    {                       // options
-                        $push: {members: {$each: newMembers}},
-                        $set: {title: title}
-                    }, (err, result) => {
-                        if (err) {
-                            return done(err);
-                        }
-                        return done(null, result);
-                    });
-            }   // end of updating
-        }); // end of checking duplication
+                console.log(taskheads);
+                if (taskheads.length === 0) {
+                    // push new member
+                    console.log('newMember- ', member);
+                    newMembers.push(member);
+                }
 
+                // Start to update
+                if (i === members.length - 1) {
+
+                    console.log('newMembers ', newMembers);
+                    if (newMembers.length === 0) {
+                        console.log('there is no new member to add');
+                        return done(null, false);
+                    }
+                    // Update
+                    TaskHead.update(
+                        {id: taskHeadId},     // query
+                        {                       // options
+                            $push: {members: {$each: newMembers}},
+                            $set: {title: title}
+                        }, (err, result) => {
+                            if (err) {
+                                return done(err);
+                            }
+                            return done(null, result);
+                        });
+                }   // end of updating
+            }); // end of checking duplication
+
+        }); //end of checking TaskHead is exist
     });
 };
 
@@ -136,9 +141,10 @@ const _deleteMember = (memberId, done) => {
     function findMembers(member) {
         return (member.id === memberId);
     }
+
     // find a taskhead including this member's id
     TaskHead.findOne({'members.id': memberId}, (err, taskhead) => {
-        if(!taskhead) {
+        if (!taskhead) {
             console.log('couldn\'t find the taskhead');
             return done(null, false);
         }

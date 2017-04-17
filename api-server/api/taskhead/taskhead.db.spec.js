@@ -9,9 +9,12 @@ const TaskHead = require('../../../models/task/taskhead.controller');
 const TaskHeadModel = require('../../../models/task/taskhead');
 
 const test_members = [
-    {name: 'member1', email: 'email_member1', tasks: []}
+    {id: 'stubbed_memberId0', userId: 'userId0', name: 'member0', email: 'email_member0', tasks: []},
+    {id: 'stubbed_memberId1', userId: 'userId1', name: 'member1', email: 'email_member1', tasks: []},
 ];
+
 const test_taskhead = {
+    id: 'stubbed_taskheadId',
     title: 'titleOfTaskHead',
     members: []
 };
@@ -48,11 +51,15 @@ describe('TaskHeadDBController model', () => {
 describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
 
     let existingTaskHead;
+
+    const existingMembers = [
+        {id: 'stubbed_memberId0', userId: 'userId0', name: 'member0', email: 'email_member1', tasks: []}
+    ];
     beforeEach(done => {
         TaskHead.deleteAll(err => {
             // Push test_members to create members
             test_taskhead.members.length = 0;
-            test_taskhead.members.push(...test_members);
+            test_taskhead.members.push(...existingMembers);
             existingTaskHead = null;
             TaskHead.create(test_taskhead, (err, newTaskHead) => {
                 existingTaskHead = newTaskHead;
@@ -75,7 +82,7 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
         updatingTaskHead.title = 'updatingTaskHead';
 
         console.log('\n-----------------before update ', existingTaskHead);
-        TaskHeadModel.update({_id: existingTaskHead.id},
+        TaskHeadModel.update({id: existingTaskHead.id},
             updatingTaskHead, (err, result) => {
                 if (err) {
                     assert.ifError(err);
@@ -97,17 +104,14 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
     it('Update taskhead - add new members', done => {
         // new member: 'member2'
         // the array does not include the existing members.
-        const newMembers = [
-            {name: 'member1', email: 'email_member1', tasks: []},
-            {name: 'member2', email: 'email_member2', tasks: []}
-        ];
+        const newMembers = test_members;
         console.log('\n-----------------before update ', existingTaskHead);
 
         // Duplication check
         newMembers.forEach((newMember, i) => {
             // There is no member with newMember.name
             TaskHeadModel.find({
-                _id: existingTaskHead.id,
+                id: existingTaskHead.id,
                 'members.name': newMember.name
             }, (err, found) => {
                 console.log('newMember- ', newMember);
@@ -116,7 +120,7 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
                 }
                 // push new member and update
                 TaskHeadModel.update(
-                    {_id: existingTaskHead.id},
+                    {id: existingTaskHead.id},
                     {$push: {members: newMember}},
                     (err, result) => {
                         if (err) {
@@ -146,9 +150,9 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
         // new member: 'member2', 'member3'
         // WARN! but this array includes the existing member.
         const paramMembers = [
-            {name: 'member1', email: 'email_member1', tasks: []},
-            {name: 'member2', email: 'email_member2', tasks: []},
-            {name: 'member3', email: 'email_member3', tasks: []}
+            {id: 'stubbed_memberId0', userId: 'userId0', name: 'member0', email: 'email_member0', tasks: []},
+            {id: 'stubbed_memberId2', userId: 'userId2', name: 'member2', email: 'email_member2', tasks: []},
+            {id: 'stubbed_memberId3', userId: 'userId3', name: 'member3', email: 'email_member3', tasks: []}
         ];
         console.log('\n-----------------before update ', existingTaskHead);
 
@@ -157,7 +161,7 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
         paramMembers.forEach((member, i) => {
             // There is no member with newMember.name
             TaskHeadModel.find({
-                _id: existingTaskHead.id,
+                id: existingTaskHead.id,
                 'members.name': member.name
             }, (err, found) => {
                 if (found.length !== 0) {
@@ -174,7 +178,7 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
 
                     // Update
                     TaskHeadModel.update(
-                        {_id: existingTaskHead.id},     // query
+                        {id: existingTaskHead.id},     // query
                         {
                             $push: {members: {$each: newMembers}},    // options
                             $set: {title: updatingTaskHead.title}
@@ -193,7 +197,7 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
                                 assert.equal(updatedTaskHead.members.length, 3);
                                 updatedTaskHead.members.forEach((member, i) => {
                                     if (member.name === existingTaskHead.members[0].name) {
-                                        assert.deepEqual(member._id, existingTaskHead.members[0]._id);
+                                        assert.deepEqual(member.id, existingTaskHead.members[0].id);
                                     }
 
                                     if (i === updatedTaskHead.members.length - 1) {
@@ -226,8 +230,8 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
 
             // There is no member with newMember.name
             TaskHeadModel.find({
-                // _id: existingTaskHead.id,
-                _id: 'wrongid',
+                // id: existingTaskHead.id,
+                id: 'wrongid',
                 'members.name': member.name
             }, (err, found) => {
                 if (!found) {
@@ -267,8 +271,8 @@ describe('Update a taskhead - delete a member', () => {
 
     let existingTaskHead;
     const existingMembers = [
-        {name: 'member1', email: 'email_member1', tasks: []},
-        {name: 'member2', email: 'email_member2', tasks: []}
+        {id: 'stubbed_memberId', name: 'member1', email: 'email_member1', tasks: []},
+        {id: 'stubbed_memberId', name: 'member2', email: 'email_member2', tasks: []}
     ];
     beforeEach(done => {
         TaskHead.deleteAll(err => {
@@ -285,14 +289,14 @@ describe('Update a taskhead - delete a member', () => {
 
     it('member id of the index 0', done => {
 
-        let deletingMemberId = existingTaskHead.members[1]._id;
+        let deletingMemberId = existingTaskHead.members[1].id;
         console.log('deletingMemberId - ', deletingMemberId);
-        
+
         function findMembers(member) {
-            return member._id.equals(deletingMemberId);
+            return (member.id === deletingMemberId);
         }
         // find a taskhead including this member's id
-        TaskHeadModel.findOne({'members._id': deletingMemberId}, (err, taskhead) => {
+        TaskHeadModel.findOne({'members.id': deletingMemberId}, (err, taskhead) => {
             if(!taskhead) {
                 assert.fail('fail to find the taskhead');
                 done();
@@ -319,10 +323,7 @@ describe('Update a taskhead - delete a member', () => {
 
 describe('There are taskheads in DB', () => {
 
-    const members = [
-        {name: 'member0', email: 'email_member1', tasks: []},
-        {name: 'member1', email: 'email_member1', tasks: []},
-    ];
+    const members = test_members;
     const taskHeads = [
         {title: 'titleOfTaskHead0', members: members},
         {title: 'titleOfTaskHead1', members: members},
@@ -354,11 +355,11 @@ describe('There are taskheads in DB', () => {
         }
         console.log(deletingTaskHeadIds);
         // delete multi
-        TaskHeadModel.remove({_id: {$in: deletingTaskHeadIds}}, (err, removed) => {
+        TaskHeadModel.remove({id: {$in: deletingTaskHeadIds}}, (err, removed) => {
             assert.equal(removed.result.n, 3);
             if (removed.result.n !== 0) {
                 // Find to check if removed successfully
-                TaskHeadModel.find({_id: {$in: deletingTaskHeadIds}}, (err, taskheads) => {
+                TaskHeadModel.find({id: {$in: deletingTaskHeadIds}}, (err, taskheads) => {
                     if (taskheads.length !== 0) {
                         assert.fail('remove fail');
                     } else {
@@ -376,12 +377,12 @@ describe('There are taskheads in DB', () => {
 describe('Get taskheads', () => {
 
     const membersA = [
-        {name: 'member0', email: 'email_member0', tasks: []},
-        {name: 'member1', email: 'email_member1', tasks: []},
+        {id: 'member0_id', userId: 'member0_userId', name: 'member0', email: 'email_member0', tasks: []},
+        {id: 'member1_id', userId: 'member1_userId', name: 'member1', email: 'email_member1', tasks: []},
     ];
     const membersB = [
-        {name: 'member1', email: 'email_member1', tasks: []},
-        {name: 'member2', email: 'email_member2', tasks: []},
+        {id: 'member0_id', userId: 'member0_userId', name: 'member1', email: 'email_member1', tasks: []},
+        {id: 'member1_id', userId: 'member1_userId', name: 'member2', email: 'email_member2', tasks: []},
     ];
 
     const taskHeads = [
