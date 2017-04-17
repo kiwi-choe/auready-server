@@ -6,6 +6,7 @@ const request = require('supertest');
 const server = require('../../../www');
 
 const User = require('../../../models/user.controller');
+const Relationship = require('../../../models/relationship.controller');
 
 const test_name = 'nameofkiwi3';
 const test_email = 'kiwi3@gmail.com';
@@ -16,7 +17,9 @@ describe('POST /local-account/signup', () => {
     afterEach(done => {
         // delete all the users
         User.deleteAll(err => {
-            done();
+            Relationship.deleteAll(err => {
+                done();
+            });
         });
     });
 

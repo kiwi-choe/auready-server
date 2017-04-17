@@ -1,5 +1,6 @@
 const passport = require('passport');
 const passportStrategy = require(__appbase_dirname + '/auth-server/util/passportStrategy');
+const Relationship = require(__appbase_dirname + '/models/relationship.controller');
 
 exports.signup = (req, res, next) => {
 
@@ -13,9 +14,18 @@ exports.signup = (req, res, next) => {
             console.log(info);
             return res.sendStatus(400);
         }
-        // 201 code: registered a new user; signup success
-        console.log('user: \n', user);
-        return res.status(201).json(user);
+
+        // Create the new relationship - friend 'ME'
+        Relationship.createFriendMe(user.id, isSuccess => {
+            if(!isSuccess) {
+                console.log('\n Creating friend ME is failed');
+                return res.sendStatus(400);
+            }
+            // 201 code: registered a new user; signup success
+            console.log('user: \n', user);
+            return res.status(201).json(user);
+        });
+
     })(req, res, next);
 };
 

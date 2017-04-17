@@ -12,6 +12,51 @@ const User = require('../../../models/user.controller');
 
 const RelationshipController = require('../../../models/relationship.controller.js');
 const Relationship = require('../../../models/relationship');
+const Status = RelationshipController.statusValues;
+
+/*
+* Create test
+* */
+describe('Create test', () => {
+   before(done => {
+       RelationshipController.deleteAll(err => {
+           done();
+       });
+   });
+
+   it('create a friend(status: ACCEPTED)', done => {
+       const fromUserId = 'a';
+       const toUserId = 'b';
+       // Check to avoid duplicate
+       Relationship.find().or([
+           {fromUserId: fromUserId, toUserId: toUserId},
+           {fromUserId: toUserId, toUserId: fromUserId}
+       ]).exec((err, relationships) => {
+           if (err) {
+               assert.ifError(err);
+           }
+           // exists a relationship already, res 400 code
+           if (relationships.length !== 0) {
+               console.log('WARNING! this relationship already exists');
+               assert.fail(relationships, false, 'exist relationship!');
+           }
+
+           // create new relationship
+           let newRelationShip = new Relationship();
+           newRelationShip.fromUserId = fromUserId;
+           newRelationShip.toUserId = toUserId;
+           newRelationShip.status = Status.ACCEPTED;
+           newRelationShip.save(err => {
+               if (err) {
+                   assert.ifError(err);
+               }
+               assert.ok(newRelationShip, 'success to save new friend relationship');
+           });
+
+           done();
+       });
+   });
+});
 
 /*
  * DB TEST: Relationship model controller test

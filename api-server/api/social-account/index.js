@@ -5,6 +5,7 @@ const oauthInfo = require(__appbase_dirname + '/predefine').socialAuthInfo;
 
 const User = require(__appbase_dirname + '/models/user');
 const UserController = require(__appbase_dirname + '/models/user.controller');
+const Relationship = require(__appbase_dirname + '/models/relationship.controller');
 
 router.post('/signup', (req, res) => {
 
@@ -21,7 +22,16 @@ router.post('/signup', (req, res) => {
                 if (err) {
                     return res.sendStatus(401);
                 }
-                return res.status(201).json(newUser);
+                // Create the new relationship - friend 'ME'
+                Relationship.createFriendMe(newUser.id, isSuccess => {
+                    if(!isSuccess) {
+                        console.log('\n Creating friend ME is failed');
+                        return res.sendStatus(400);
+                    }
+                    // 201 code: registered a new user; signup success
+                    console.log('newUser: \n', newUser);
+                    return res.status(201).json(newUser);
+                });
             });
         });
     };

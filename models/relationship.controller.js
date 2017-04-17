@@ -36,6 +36,34 @@ const _create = (fromUserId, toUserId, done) => {
     });
 };
 
+const _createFriendMe = (userId, done) => {
+    // Check to avoid duplicate
+    Relationship.find({fromUserId: userId, toUserId: userId},
+        (err, relationships) => {
+            if (err) {
+                return done(false);
+            }
+            // exists a relationship already, res 400 code
+            if (relationships.length !== 0) {
+                console.log('WARNING! this relationship already exists');
+                return done(false);
+            }
+
+            // create new relationship
+            let newRelationShip = new Relationship();
+            newRelationShip.fromUserId = userId;
+            newRelationShip.toUserId = userId;
+            newRelationShip.status = _status.ACCEPTED;
+            newRelationShip.save(err => {
+                if (err) {
+                    return done(false);
+                }
+                console.log('\nsuccess to save creating FriendMe relationship, ', newRelationShip);
+                return done(true);
+            });
+        });
+};
+
 /*
  * Show friends
  * {status: 1} means they are friends.
@@ -72,9 +100,9 @@ const _readPendingStatus = (toUserId, done) => {
 };
 
 /*
-* Get relationship status of two users
-* regardless orders
-* */
+ * Get relationship status of two users
+ * regardless orders
+ * */
 const _readStatus = (loggedInUserId, otherUserId, done) => {
     Relationship.findOne().or([
         {fromUserId: loggedInUserId, toUserId: otherUserId},
@@ -85,7 +113,7 @@ const _readStatus = (loggedInUserId, otherUserId, done) => {
         }
 
         let status;
-        if(relationship) {
+        if (relationship) {
             status = relationship.status;
         } else {
             status = _status.NO_STATUS;
@@ -126,6 +154,7 @@ const _deleteAll = done => {
 
 module.exports = {
     create: _create,
+    createFriendMe: _createFriendMe,
     deleteAll: _deleteAll,
     readAccepted: _readAcceptedStatus,
     readPending: _readPendingStatus,
