@@ -5,6 +5,7 @@ exports.create = (req, res) => {
     const taskHeadInfo = {
         id: req.body.id,
         title: req.body.title,
+        color: req.body.color,
         members: req.body.members
     };
     TaskHeadDBController.create(taskHeadInfo, (err, newTaskHead) => {
@@ -30,7 +31,13 @@ exports.deleteOne = (req, res) => {
 
 exports.updateDetails = (req, res) => {
 
-    TaskHeadDBController.updateDetails(req.params.id, req.body.details, (err, result) => {
+    const details = {
+        id: req.body.id,
+        title: req.body.title,
+        color: req.body.color,
+        members: req.body.members
+    };
+    TaskHeadDBController.updateDetails(req.params.id, details, (err, result) => {
         if (err) {
             return res.sendStatus(404);
         }

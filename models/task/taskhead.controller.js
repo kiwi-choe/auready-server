@@ -79,6 +79,77 @@ const _deleteMulti = (ids, done) => {
  * Update details
  * ; title, color, members(only adding)
  * */
+const addNewMembers = (addingMembers, done) => {
+
+    // Duplication check to add new members
+    let newMembers = [];
+    for (let i = 0, len = addingMembers.length; i < len; i++) {
+        let newMember = addingMembers[i];
+        TaskHead.find({'members.id': newMember.id}, (err, members) => {
+            if (err) {
+                return done(err);
+            }
+
+            if (members.length === 0) {
+                // push new member
+                newMembers.push(newMember);
+            }
+
+            // Start to update
+            if (i === addingMembers.length - 1) {
+
+                if (newMembers.length === 0) {
+                    console.log('there is no new member to add');
+                    return done(null, false);
+                }
+                // Update
+                TaskHead.update(
+                    {id: taskHeadId},     // query
+                    {                       // options
+                        $push: {members: {$each: newMembers}},
+                        $set: {
+                            title: details.title,
+                            color: details.color
+                        }
+                    }, (err, result) => {
+                        if (err) {
+                            return done(err);
+                        }
+                        return done(null, result);
+                    });
+            }   // end of updating
+        }); // end of checking duplication
+    }
+};
+
+const updateTaskHead = (taskHeadId, newMembers, details, done) => {
+
+    let options;
+    if (!newMembers) {
+        options = {
+            $set: {
+                title: details.title,
+                color: details.color
+            }
+        };
+    } else {
+        options = {
+            $push: {members: {$each: newMembers}},
+            $set: {
+                title: details.title,
+                color: details.color
+            }
+        };
+    }
+
+    TaskHead.update({id: taskHeadId}, options, (err, result) => {
+        if (err) {
+            return done(err);
+        }
+        return done(null, result);
+    });
+};
+
 const _updateDetails = (taskHeadId, details, done) => {
 
     console.log('taskheadId', taskHeadId);
@@ -86,28 +157,38 @@ const _updateDetails = (taskHeadId, details, done) => {
 
     const members = details.members;
 
-    // Duplication check to add new members
-    let newMembers = [];
-    members.forEach((member, i) => {
-        // 1. taskhead is exist?
-        TaskHead.findOne({id: taskHeadId}, (err, taskhead) => {
-            if (err) {
-                return done(err);
-            }
-            if (!taskhead) {
-                console.log('taskhead is not exist');
-                return done(null, false);
-            }
+    // 1. Check if this taskHead is exist
+    TaskHead.findOne({id: taskHeadId}, (err, taskhead) => {
+        if (err) {
+            return done(err);
+        }
+        if (!taskhead) {
+            console.log('taskhead is not exist');
+            return done(null, false);
+        }
 
-            // 2. push the new member
-            // Check if there is no taskhead with this member id
-            TaskHead.find({'members.id': member.id}, (err, taskheads) => {
+        // 2. Push the new members
+        // 2.1 If no member
+        if (members.length === 0) {
+            // Update
+            updateTaskHead(taskHeadId, false, details, (err, result) => {
+                if (err) {
+                    return done(err);
+                }
+                return done(null, result);
+            });
+        }
+        // 2.2 If there are adding members
+        // 3. Duplication check to add new members
+        let newMembers = [];
+        for (let i = 0, len = members.length; i < len; i++) {
+            let newMember = members[i];
+            TaskHead.find({'members.id': newMember.id}, (err, taskheads) => {
                 if (err) {
                     return done(err);
                 }
                 if (taskheads.length === 0) {
-                    // push new member
-                    newMembers.push(member);
+                    newMembers.push(newMember);
                 }
 
                 // Start to update
@@ -115,28 +196,25 @@ const _updateDetails = (taskHeadId, details, done) => {
 
                     if (newMembers.length === 0) {
                         console.log('there is no new member to add');
-                        return done(null, false);
-                    }
-                    // Update
-                    TaskHead.update(
-                        {id: taskHeadId},     // query
-                        {                       // options
-                            $push: {members: {$each: newMembers}},
-                            $set: {
-                                title: details.taskhead.title,
-                                color: details.taskhead.color
-                            }
-                        }, (err, result) => {
+                        updateTaskHead(taskHeadId, false, details, (err, result) => {
                             if (err) {
                                 return done(err);
                             }
                             return done(null, result);
                         });
+                    }
+
+                    updateTaskHead(taskHeadId, newMembers, details, (err, result) => {
+                        if (err) {
+                            return done(err);
+                        }
+                        return done(null, result);
+                    });
                 }   // end of updating
             }); // end of checking duplication
+        }
 
-        }); //end of checking TaskHead is exist
-    });
+    }); //end of checking TaskHead is exist
 };
 
 const _deleteMember = (memberId, done) => {

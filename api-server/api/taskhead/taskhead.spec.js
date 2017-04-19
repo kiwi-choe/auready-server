@@ -115,7 +115,12 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
             request
                 .put('/taskheads/' + 'wrongId')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .send({details: {taskhead: test_taskhead, members: newMembers}})
+                .send({
+                    id: test_taskhead.id,
+                    title: test_taskhead.title,
+                    color: test_taskhead.color,
+                    members: newMembers
+                })
                 .expect(400)
                 .end((err, res) => {
                     if (err) throw err;
@@ -131,7 +136,12 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
             request
                 .put('/taskheads/' + taskHead.id)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .send({details: {taskhead: test_taskhead, members: newMembers}})
+                .send({
+                    id: test_taskhead.id,
+                    title: test_taskhead.title,
+                    color: test_taskhead.color,
+                    members: newMembers
+                })
                 .expect(200)
                 .end((err, res) => {
                     if (err) throw err;
@@ -145,7 +155,12 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
             request
                 .put('/taskheads/' + taskHead.id)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .send({details: {title: test_taskhead.title, members: existingMembers}})
+                .send({
+                    id: test_taskhead.id,
+                    title: test_taskhead.title,
+                    color: test_taskhead.color,
+                    members: existingMembers
+                })
                 .expect(400)
                 .end((err, res) => {
                     if (err) throw err;
