@@ -16,6 +16,7 @@ const test_members = [
 const test_taskhead = {
     id: 'stubbed_taskheadId',
     title: 'titleOfTaskHead',
+    color: 222,
     members: []
 };
 
@@ -109,13 +110,15 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
 
         // Duplication check
         newMembers.forEach((newMember, i) => {
-            // There is no member with newMember.name
+            // There is no member with newMember.id
             TaskHeadModel.find({
                 id: existingTaskHead.id,
-                'members.name': newMember.name
+                'members.id': newMember.id
             }, (err, found) => {
-                console.log('newMember- ', newMember);
                 if (found.length !== 0) {
+                    if (i === newMembers.length - 1) {
+                        done();
+                    }
                     return;
                 }
                 // push new member and update
@@ -147,6 +150,7 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
     it('Update all - update details ( title, members )', done => {
         let updatingTaskHead = test_taskhead;
         updatingTaskHead.title = 'updatingTaskHead';
+        updatingTaskHead.color = 555;
         // new member: 'member2', 'member3'
         // WARN! but this array includes the existing member.
         const paramMembers = [
@@ -159,57 +163,64 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
         // Duplication check to add new members
         let newMembers = [];
         paramMembers.forEach((member, i) => {
-            // There is no member with newMember.name
-            TaskHeadModel.find({
-                id: existingTaskHead.id,
-                'members.name': member.name
-            }, (err, found) => {
-                if (found.length !== 0) {
+            TaskHead.readById(existingTaskHead.id, (err, taskhead) => {
+                if (!taskhead) {
+                    console.log('taskhead id is wrong');
+                    if (i === paramMembers.length - 1) {
+                        done();
+                    }
                     return;
                 }
-                // push new member
-                console.log('newMember- ', member);
-                newMembers.push(member);
 
-                // when end of paramMembers,
-                if (i === paramMembers.length - 1) {
+                // There is no member with newMember.name
+                TaskHeadModel.find({'members.id': member.id}, (err, found) => {
+                    if (found.length === 0) {
+                        // push new member
+                        newMembers.push(member);
+                    }
 
-                    console.log('----------------- newMembers \n', newMembers);
 
-                    // Update
-                    TaskHeadModel.update(
-                        {id: existingTaskHead.id},     // query
-                        {
-                            $push: {members: {$each: newMembers}},    // options
-                            $set: {title: updatingTaskHead.title}
-                        }, (err, result) => {
-                            if (err) {
-                                assert.ifError(err);
-                            }
-                            if (!result.n) {
-                                assert.fail();
-                            }
-                            // Find updated taskhead, check taskhead
-                            TaskHead.readById(existingTaskHead.id, (err, updatedTaskHead) => {
-                                console.log('-----------------after update ');
-                                console.log(updatedTaskHead);
-                                assert.equal(updatedTaskHead.title, updatingTaskHead.title);
-                                assert.equal(updatedTaskHead.members.length, 3);
-                                updatedTaskHead.members.forEach((member, i) => {
-                                    if (member.name === existingTaskHead.members[0].name) {
-                                        assert.deepEqual(member.id, existingTaskHead.members[0].id);
-                                    }
+                    // when end of paramMembers,
+                    if (i === paramMembers.length - 1) {
 
-                                    if (i === updatedTaskHead.members.length - 1) {
-                                        done();
-                                    }
+                        console.log('----------------- newMembers \n', newMembers);
+                        if (newMembers.length === 0) {
+                            done();
+                        }
+                        // Update
+                        TaskHeadModel.update(
+                            {id: existingTaskHead.id},     // query
+                            {
+                                $push: {members: {$each: newMembers}},    // options
+                                $set: {title: updatingTaskHead.title, color: updatingTaskHead.color}
+                            }, (err, result) => {
+                                if (err) {
+                                    assert.ifError(err);
+                                }
+                                if (!result.n) {
+                                    assert.fail();
+                                }
+                                // Find updated taskhead, check taskhead
+                                TaskHead.readById(existingTaskHead.id, (err, updatedTaskHead) => {
+                                    console.log('-----------------after update ');
+                                    console.log(updatedTaskHead);
+                                    assert.equal(updatedTaskHead.title, updatingTaskHead.title);
+                                    assert.equal(updatedTaskHead.color, updatingTaskHead.color);
+                                    assert.equal(updatedTaskHead.members.length, 3);
+                                    updatedTaskHead.members.forEach((member, i) => {
+                                        if (member.name === existingTaskHead.members[0].name) {
+                                            assert.deepEqual(member.id, existingTaskHead.members[0].id);
+                                        }
+
+                                        if (i === updatedTaskHead.members.length - 1) {
+                                            done();
+                                        }
+                                    });
                                 });
                             });
-                        });
-                }
-
+                    }
+                });
             });
-
         });
     });
 
@@ -217,49 +228,42 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
         // new member: 'member2'
         // WARN! but this array includes the existing member only.
         const paramMembers = [
-            {name: 'member1', email: 'email_member1', tasks: []},
-            {name: 'member2', email: 'email_member2', tasks: []}
+            {id: 'stubbedMembersId1', name: 'member1', email: 'email_member1', tasks: []},
+            {id: 'stubbedMembersId2', name: 'member2', email: 'email_member2', tasks: []}
         ];
         console.log('\n-----------------before update ', existingTaskHead);
 
         // Duplication check to add new members
         let newMembers = [];
         paramMembers.forEach((member, i) => {
-            console.log('member ', member);
-            console.log('i ', i);
-
-            // There is no member with newMember.name
-            TaskHeadModel.find({
-                // id: existingTaskHead.id,
-                id: 'wrongid',
-                'members.name': member.name
-            }, (err, found) => {
-                if (!found) {
+            TaskHead.readById(existingTaskHead.id, (err, taskhead) => {
+                if (!taskhead) {
                     console.log('taskhead id is wrong');
-                    done();
+                    if (i === paramMembers.length - 1) {
+                        done();
+                    }
                     return;
                 }
 
-                console.log('\nfound.length ', found.length);
-                if (found.length === 0) {
-                    // push new member
-                    console.log('\nnewMember- ', member);
-                    newMembers.push(member);
-                } else {
-                    console.log('paramMembers.length ', paramMembers.length);
-                }
-
-                if (i === paramMembers.length - 1) {
-
-                    console.log('newMembers ', newMembers);
-                    console.log('newMembers.length ', newMembers.length);
-                    if (newMembers.length === 0) {
-                        done();
-                    } else {
-                        // Update
-                        done();
+                // There is no member with newMember.name
+                TaskHeadModel.find({'members.id': member.id}, (err, found) => {
+                    if (found.length === 0) {
+                        // push new member
+                        console.log('\nnewMember- ', member);
+                        newMembers.push(member);
                     }
-                }
+
+                    if (i === paramMembers.length - 1) {
+
+                        console.log('newMembers ', newMembers);
+                        if (newMembers.length === 0) {
+                            done();
+                        } else {
+                            // Update
+                            done();
+                        }
+                    }
+                });
             });
         });
 
@@ -295,9 +299,10 @@ describe('Update a taskhead - delete a member', () => {
         function findMembers(member) {
             return (member.id === deletingMemberId);
         }
+
         // find a taskhead including this member's id
         TaskHeadModel.findOne({'members.id': deletingMemberId}, (err, taskhead) => {
-            if(!taskhead) {
+            if (!taskhead) {
                 assert.fail('fail to find the taskhead');
                 done();
             }
@@ -411,13 +416,13 @@ describe('Get taskheads', () => {
 
     it('Get taskHeads of \'member2\'', done => {
         TaskHeadModel.find({'members.userId': membersB[1].userId}, (err, taskheads) => {
-            if(err) {
+            if (err) {
                 assert.fail('err');
             }
             // cannot return just the selected subDocuments, You'll get all of them.
             // So, You can filter on the client side.
-            for(let i=0; i<taskheads.length; i++) {
-                console.log('\n'+i+ '- '+ taskheads[i]);
+            for (let i = 0; i < taskheads.length; i++) {
+                console.log('\n' + i + '- ' + taskheads[i]);
             }
             done();
         });
@@ -425,10 +430,10 @@ describe('Get taskheads', () => {
 
     it('Invoke an exception when there is no member trying to find', done => {
         TaskHeadModel.find({'members.userId': 'no member'}, (err, taskheads) => {
-            if(err) {
+            if (err) {
                 assert.fail('err');
             }
-            if(taskheads.length === 0) {
+            if (taskheads.length === 0) {
                 assert.ok('no member');
             } else {
                 assert.fail('found taskheads - ', taskheads);

@@ -75,13 +75,15 @@ const _deleteMulti = (ids, done) => {
     });
 };
 
-// Update details - current details are 'title', 'members'
+/*
+ * Update details
+ * ; title, color, members(only adding)
+ * */
 const _updateDetails = (taskHeadId, details, done) => {
 
     console.log('taskheadId', taskHeadId);
     console.log('details', details);
 
-    const title = details.title;
     const members = details.members;
 
     // Duplication check to add new members
@@ -97,22 +99,20 @@ const _updateDetails = (taskHeadId, details, done) => {
                 return done(null, false);
             }
 
-            // 2. member with newMember.name
-            TaskHead.find({'members.name': member.name}, (err, taskheads) => {
+            // 2. push the new member
+            // Check if there is no taskhead with this member id
+            TaskHead.find({'members.id': member.id}, (err, taskheads) => {
                 if (err) {
                     return done(err);
                 }
-                console.log(taskheads);
                 if (taskheads.length === 0) {
                     // push new member
-                    console.log('newMember- ', member);
                     newMembers.push(member);
                 }
 
                 // Start to update
                 if (i === members.length - 1) {
 
-                    console.log('newMembers ', newMembers);
                     if (newMembers.length === 0) {
                         console.log('there is no new member to add');
                         return done(null, false);
@@ -122,7 +122,10 @@ const _updateDetails = (taskHeadId, details, done) => {
                         {id: taskHeadId},     // query
                         {                       // options
                             $push: {members: {$each: newMembers}},
-                            $set: {title: title}
+                            $set: {
+                                title: details.taskhead.title,
+                                color: details.taskhead.color
+                            }
                         }, (err, result) => {
                             if (err) {
                                 return done(err);
