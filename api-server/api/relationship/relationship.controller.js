@@ -10,21 +10,22 @@ exports.friendRequest = (req, res) => {
         id: req.user.id,
         name: req.user.name
     };
-    RelationshipDBController.create(fromUser.id, toUserId, (err, relationship, info) => {
-        if(err) {
-            return res.sendStatus(400);
-        }
-        if (!relationship) {
-            console.log(info);
-            return res.sendStatus(409); // 409: Conflict, if resource already exists.
-        }
-        console.log('\nrelationship - ', relationship);
 
-        NotificationController.sendNotification(TYPES.friend_request, toUserId, fromUser, isSuccess => {
-            if(!isSuccess) {
-                console.log('send a notification to fcm server is failed');
-                return res.sendStatus(500);
+    NotificationController.sendNotification(TYPES.friend_request, toUserId, fromUser, isSuccess => {
+        if(!isSuccess) {
+            console.log('send a notification to fcm server is failed');
+            return res.sendStatus(500);
+        }
+
+        RelationshipDBController.create(fromUser.id, toUserId, (err, relationship, info) => {
+            if(err) {
+                return res.sendStatus(400);
             }
+            if (!relationship) {
+                console.log(info);
+                return res.sendStatus(409); // 409: Conflict, if resource already exists.
+            }
+            console.log('\nrelationship - ', relationship);
             return res.sendStatus(201);
         });
     });

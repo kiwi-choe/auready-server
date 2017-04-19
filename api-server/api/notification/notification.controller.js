@@ -64,7 +64,7 @@ exports.sendNotification = (type, toUserId, fromUser, done) => {
 
         fcm.send(message, (err, res) => {
             if (err) {
-                console.log('something has gone wrong!');
+                console.log('something has gone wrong!, err- ', err);
                 return done(false);
             }
             console.log('Successfully sent with response:', res);
