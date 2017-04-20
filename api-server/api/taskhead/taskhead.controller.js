@@ -55,16 +55,15 @@ exports.deleteMulti = (req, res) => {
     if (!deletingTaskHeadIds) {
         return res.sendStatus(400);
     }
-
-    TaskHeadDBController.deleteMulti(deletingTaskHeadIds, (err, isRemoved) => {
+    const userId = req.user.id;
+    TaskHeadDBController.deleteMulti(userId, deletingTaskHeadIds, (err, isRemoved) => {
         if (err) {
             return res.sendStatus(401);
         }
         if (!isRemoved) {
             return res.sendStatus(400);
-        } else {
-            return res.sendStatus(200);
         }
+        return res.sendStatus(200);
     });
 };
 
@@ -72,12 +71,13 @@ exports.deleteMulti = (req, res) => {
 exports.deleteMember = (req, res) => {
 
     let memberId = req.params.id;
-    TaskHeadDBController.deleteMember(memberId, (err, result) => {
+    TaskHeadDBController.deleteMember(memberId, (err, updatedTaskHead) => {
 
         if (err) {
             return res.sendStatus(401);
         }
-        if (!result) {
+
+        if (!updatedTaskHead) {
             return res.sendStatus(400);
         } else {
             return res.sendStatus(200);

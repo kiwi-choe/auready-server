@@ -248,7 +248,7 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
             // 2. Push new members to update
             const addingMembers = updatingTaskHead.members;
             // if No members
-            if(addingMembers.length === 0) {
+            if (addingMembers.length === 0) {
 
                 // Update
                 TaskHeadModel.update(
@@ -334,13 +334,28 @@ describe('Update a taskhead - delete a member', () => {
     });
 });
 
-describe('There are taskheads in DB', () => {
+describe('There are taskheads in DB to Delete multi taskheads', () => {
 
-    const members = test_members;
+    const memberOne = [
+        {id: 'stubbed_memberId0', userId: 'userId0', name: 'member0', email: 'email_member0', tasks: []}
+    ];
+    const membersTwo = [
+        {id: 'stubbed_memberId1', userId: 'userId0', name: 'member0', email: 'email_member0', tasks: []},
+        {id: 'stubbed_memberId2', userId: 'userId1', name: 'member1', email: 'email_member1', tasks: []},
+    ];
     const taskHeads = [
-        {title: 'titleOfTaskHead0', members: members},
-        {title: 'titleOfTaskHead1', members: members},
-        {title: 'titleOfTaskHead2', members: members}
+        {
+            id: 'stubbed_taskheadId0',
+            title: 'titleOfTaskHead0',
+            color: 222,
+            members: memberOne
+        },
+        {
+            id: 'stubbed_taskheadId1',
+            title: 'titleOfTaskHead1',
+            color: 222,
+            members: membersTwo
+        }
     ];
 
     let savedTaskHeads = [];
@@ -385,6 +400,136 @@ describe('There are taskheads in DB', () => {
 
     });
 
+    it('Delete a taskhead - with member 1', done => {
+        const deletingTaskHead = savedTaskHeads[0];
+        TaskHeadModel.findOne({id: deletingTaskHead.id}, (err, taskhead) => {
+            if (taskhead.members.length <= 1) {
+                // Delete this taskhead
+                TaskHead.deleteOne(deletingTaskHead.id, (err, isRemoved) => {
+                    if (err) {
+                        assert.ifError(err);
+                    }
+                    if (!isRemoved) {
+                        assert.fail(isRemoved, true, "fail to delete taskhead");
+                    }
+                    done();
+                });
+            }
+        });
+    });
+
+    it('Delete a taskhead - with members', done => {
+        const deletingTaskHead = savedTaskHeads[1];
+        TaskHeadModel.findOne({id: deletingTaskHead.id}, (err, taskhead) => {
+            if (taskhead.members.length <= 1) {
+                // Delete this taskhead
+                TaskHead.deleteOne(deletingTaskHead.id, (err, isRemoved) => {
+                    if (err) {
+                        assert.ifError(err);
+                    }
+                    if (!isRemoved) {
+                        assert.fail(isRemoved, true, "fail to delete taskhead");
+                        done();
+                    }
+                    done();
+                });
+            }
+
+            // Delete this member and update taskhead
+            const deletingMemberId = deletingTaskHead.members[0].id;
+            TaskHead.deleteMember(deletingMemberId, (err, updatedTaskHead) => {
+                if (!updatedTaskHead) {
+                    assert.fail("fail");
+                    done();
+                }
+                console.log('updatedTaskHead- ' + updatedTaskHead);
+                done();
+            })
+        });
+    });
+
+    it('Delete taskheads - with members', done => {
+        const deletingTaskHeads = savedTaskHeads;
+        const userIdOfDeletingTaskHeads = 'userId1';//membersTwo[0].userId;
+        deletingTaskHeads.forEach((deletingTaskHead, i) => {
+
+            TaskHeadModel.findOne({id: deletingTaskHead.id}, (err, taskhead) => {
+                if (taskhead.members.length <= 1) {
+                    // Delete this taskhead
+                    TaskHead.deleteOne(deletingTaskHead.id, (err, isRemoved) => {
+                        if (err) {
+                            assert.ifError(err);
+                            done();
+                        }
+                        if (!isRemoved) {
+                            assert.fail(isRemoved, true, "fail to delete taskhead");
+                            done();
+                        }
+
+                        if (deletingTaskHeads.length - 1 === i) {
+                            done();
+                        }
+                    });
+                } else {
+
+                    // Delete this member and update taskhead
+                    const deletingUserId = userIdOfDeletingTaskHeads;
+
+                    function findMembers(member) {
+                        return (member.userId === deletingUserId);
+                    }
+
+                    // delete the member from member array
+                    let deletingIndex = taskhead.members.findIndex(findMembers);
+                    taskhead.members.splice(deletingIndex, 1);
+
+                    taskhead.save((err, updatedTaskHead) => {
+                        if (!updatedTaskHead) {
+                            assert.fail('update fail');
+                            done();
+                        }
+                        console.log('\nupdatedTaskHead- ' + updatedTaskHead);
+                        if (deletingTaskHeads.length - 1 === i) {
+                            // Check taskhead collections
+                            done();
+                        }
+                    });
+                }
+
+            });
+        });
+
+    });
+
+    it('test', done => {
+        TaskHeadModel.findOne({id: savedTaskHeads[1].id}, (err, taskhead) => {
+            if (!taskhead) {
+                assert.fail();
+                done();
+            }
+
+            // Delete this member and update taskhead
+            const deletingUserId = 'userId0';
+
+            function findMembers(member) {
+                return (member.userId === deletingUserId);
+            }
+
+            // delete the member from member array
+            let deletingIndex = taskhead.members.findIndex(findMembers);
+            taskhead.members.splice(deletingIndex, 1);
+
+            taskhead.save((err, updatedTaskHead) => {
+                if (!updatedTaskHead) {
+                    assert.fail('update fail');
+                    done();
+                }
+                console.log('\nupdatedTaskHead- ' + updatedTaskHead);
+
+                done();
+            });
+        });
+    });
 });
 
 describe('Get taskheads', () => {

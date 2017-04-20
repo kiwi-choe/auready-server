@@ -32,9 +32,11 @@ const test_taskhead = {
 describe('TaskHeadDBController - need the accessToken to access API resources ', () => {
 
     let accessToken;
-    before(done => {
+    let currentUserId;
+    beforeEach(done => {
         // Register user first
         User.create(name, email, password, true, (err, user, info) => {
+            currentUserId = user.id;
             // Add Token
             Token.create(clientId, user.id, predefine.oauth2.type.password, (err, newToken) => {
                 accessToken = newToken.accessToken;
@@ -42,7 +44,7 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
             });
         });
     });
-    after(done => {
+    afterEach(done => {
         // delete all the users
         User.deleteAll(err => {
             Token.deleteAll(err => {
@@ -195,69 +197,6 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
         });
     });
 
-    describe('Delete taskHeads', () => {
-
-        const members = [
-            {id: 'id_member0', userId: 'stubbed_userId0', name: 'member0', email: 'email_member1', tasks: []},
-            {id: 'id_member1', userId: 'stubbed_userId1', name: 'member1', email: 'email_member1', tasks: []},
-        ];
-
-        const taskHeads = [
-            {id: 'stubIdOfTaskHead0', title: 'titleOfTaskHead0', color: 222, members: members},
-            {id: 'stubIdOfTaskHead1', title: 'titleOfTaskHead1', color: 222, members: members},
-            {id: 'stubIdOfTaskHead2', title: 'titleOfTaskHead2', color: 222, members: members}
-        ];
-
-        let savedTaskHeads = [];
-        beforeEach(done => {
-            savedTaskHeads.length = 0;
-            TaskHeadDBController.deleteAll(err => {
-
-                // Create 3 taskHeads
-                taskHeads.forEach((taskHead, i) => {
-                    TaskHeadDBController.create(taskHead, (err, newTaskHead) => {
-                        savedTaskHeads.push(newTaskHead);
-
-                        if (taskHeads.length - 1 === i) {
-                            done();
-                        }
-                    });
-                });
-            });
-        });
-
-        it('DELETE /taskheads/ returns 200', done => {
-
-            let ids = [];
-            for (let i = 0; i < savedTaskHeads.length; i++) {
-                console.log(savedTaskHeads[i].id);
-                ids.push(savedTaskHeads[i].id);
-            }
-            request
-                .delete('/taskheads')
-                .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .expect(200)
-                .send({ids: ids})
-                .end((err, res) => {
-                    if (err) throw err;
-                    res.status.should.equal(200);
-                    done();
-                });
-        });
-
-        it('DELETE /taskhead/ - deletingTaskHeadIds is undefined - returns 400', done => {
-            request
-                .delete('/taskheads/')
-                .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .expect(400)
-                .end((err, res) => {
-                    if (err) throw err;
-                    res.status.should.equal(400);
-                    done();
-                });
-        });
-    });
-
     describe('GET taskHeads ', () => {
 
         const membersA = [
@@ -334,4 +273,103 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
         });
     });
 
+});
+
+describe('Delete taskHeads', () => {
+
+    const members = [
+        {id: 'id_member0', name: 'member0', email: 'email_member1', tasks: []},
+        {id: 'id_member1', userId: 'otherUserId', name: 'member1', email: 'email_member1', tasks: []},
+    ];
+    console.log('currendUserId - ',currentUserId);
+    // members[0].userId = currentUser.id;
+    const taskHeads = [
+        {id: 'stubIdOfTaskHead0', title: 'titleOfTaskHead0', color: 222, members: members},
+        {id: 'stubIdOfTaskHead1', title: 'titleOfTaskHead1', color: 222, members: members},
+        {id: 'stubIdOfTaskHead2', title: 'titleOfTaskHead2', color: 222, members: members}
+    ];
+
+    let savedTaskHeads = [];
+    let accessToken;
+    beforeEach(done => {
+        // Register user first
+        User.create(name, email, password, true, (err, user, info) => {
+            // Add Token
+            Token.create(clientId, user.id, predefine.oauth2.type.password, (err, newToken) => {
+                accessToken = newToken.accessToken;
+
+                savedTaskHeads.length = 0;
+                TaskHeadDBController.deleteAll(err => {
+
+                    members[0].userId = user.id;
+                    // Create 3 taskHeads
+                    taskHeads.forEach((taskHead, i) => {
+                        TaskHeadDBController.create(taskHead, (err, newTaskHead) => {
+                            savedTaskHeads.push(newTaskHead);
+
+                            if (taskHeads.length - 1 === i) {
+                                done();
+                            }
+                        });
+                    });
+                });
+            });
+        });
+    });
+    afterEach(done => {
+        // delete all the users
+        User.deleteAll(err => {
+            Token.deleteAll(err => {
+                done();
+            });
+        });
+    });
+
+    beforeEach(done => {
+        savedTaskHeads.length = 0;
+        TaskHeadDBController.deleteAll(err => {
+
+            // Create 3 taskHeads
+            taskHeads.forEach((taskHead, i) => {
+                TaskHeadDBController.create(taskHead, (err, newTaskHead) => {
+                    savedTaskHeads.push(newTaskHead);
+
+                    if (taskHeads.length - 1 === i) {
+                        done();
+                    }
+                });
+            });
+        });
+    });
+
+    it('DELETE /taskheads/ returns 200', done => {
+
+        // console.log('currentUserId- ', currentUserId);
+        let ids = [];
+        for (let i = 0; i < savedTaskHeads.length; i++) {
+            ids.push(savedTaskHeads[i].id);
+        }
+        request
+            .delete('/taskheads')
+            .set({Authorization: 'Bearer' + ' ' + accessToken})
+            .expect(200)
+            .send({ids: ids})
+            .end((err, res) => {
+                if (err) throw err;
+                res.status.should.equal(200);
+                done();
+            });
+    });
+
+    it('DELETE /taskhead/ - deletingTaskHeadIds is undefined - returns 400', done => {
+        request
+            .delete('/taskheads/')
+            .set({Authorization: 'Bearer' + ' ' + accessToken})
+            .expect(400)
+            .end((err, res) => {
+                if (err) throw err;
+                res.status.should.equal(400);
+                done();
+            });
+    });
 });

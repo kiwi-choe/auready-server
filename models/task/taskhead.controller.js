@@ -61,17 +61,60 @@ const _deleteOne = (id, done) => {
     });
 };
 
-const _deleteMulti = (ids, done) => {
+const deleteMemberByUserId = (userId, taskhead, done) => {
 
-    TaskHead.remove({id: {$in: ids}}, (err, removed) => {
-        if (err) {
-            console.log('err: ', err);
-            return done(err);
-        }
-        if (removed.result.n !== ids.length) {
+    // Delete the member from member array
+    function findMembers(member) {
+        return (member.userId === userId);
+    }
+
+    let deletingIndex = taskhead.members.findIndex(findMembers);
+    if(deletingIndex>=0) {
+        taskhead.members.splice(deletingIndex, 1);
+    }
+    taskhead.save((err, updatedTaskHead) => {
+        if (!updatedTaskHead) {
             return done(null, false);
         }
-        return done(null, true);
+        return done(null, updatedTaskHead);
+    });
+};
+
+const _deleteMulti = (userId, ids, done) => {
+
+    // 1. Check members
+    ids.forEach((id, i) => {
+        TaskHead.findOne({id: id}, (err, taskhead) => {
+            // member is 0 or 1, delete the taskhead
+            if (taskhead.members.length <= 1) {
+                _deleteOne(id, (err, isRemoved) => {
+                    if (err) {
+                        return done(err);
+                    }
+                    if (!isRemoved) {
+                        return done(null, false);
+                    }
+
+                    if (ids.length - 1 === i) {
+                        return done(null, true);
+                    }
+                });
+            }
+            else {
+                deleteMemberByUserId(userId, taskhead, (err, updatedTaskHead) => {
+                    if(err) {
+                        return done(err);
+                    }
+                    if(!updatedTaskHead) {
+                        return done(null, false);
+                    }
+
+                    if (ids.length - 1 === i) {
+                        return done(null, true);
+                    }
+                });
+            }
+        });
     });
 };
 
@@ -79,49 +122,6 @@ const _deleteMulti = (ids, done) => {
  * Update details
  * ; title, color, members(only adding)
  * */
-const addNewMembers = (addingMembers, done) => {
-
-    // Duplication check to add new members
-    let newMembers = [];
-    for (let i = 0, len = addingMembers.length; i < len; i++) {
-        let newMember = addingMembers[i];
-        TaskHead.find({'members.id': newMember.id}, (err, members) => {
-            if (err) {
-                return done(err);
-            }
-
-            if (members.length === 0) {
-                // push new member
-                newMembers.push(newMember);
-            }
-
-            // Start to update
-            if (i === addingMembers.length - 1) {
-
-                if (newMembers.length === 0) {
-                    console.log('there is no new member to add');
-                    return done(null, false);
-                }
-                // Update
-                TaskHead.update(
-                    {id: taskHeadId},     // query
-                    {                       // options
-                        $push: {members: {$each: newMembers}},
-                        $set: {
-                            title: details.title,
-                            color: details.color
-                        }
-                    }, (err, result) => {
-                        if (err) {
-                            return done(err);
-                        }
-                        return done(null, result);
-                    });
-            }   // end of updating
-        }); // end of checking duplication
-    }
-};
-
 const updateTaskHead = (taskHeadId, newMembers, details, done) => {
 
     let options;
@@ -229,8 +229,6 @@ const _deleteMember = (memberId, done) => {
             console.log('couldn\'t find the taskhead');
             return done(null, false);
         }
-        console.log(taskhead);
-
         // delete the member from member array
         let deletingIndex = taskhead.members.findIndex(findMembers);
         taskhead.members.splice(deletingIndex, 1);
