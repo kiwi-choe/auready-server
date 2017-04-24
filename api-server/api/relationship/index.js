@@ -12,20 +12,19 @@ router.post('/:toUserId', controller.friendRequest);
 router.get('/:userId', controller.checkRelationship);
 
 // Get friends, status: ACCEPTED
-router.get('/status/:status', (req, res) => {
-    const status = req.params.status;
-    console.log('\nstatus - ', status);
-    if (status == RelationshipDBController.statusValues.ACCEPTED) {
-        controller.getFriends(req.user.id, res);
-    }
-    else if (status == RelationshipDBController.statusValues.PENDING) {
-        controller.getPendingRequest(req.user.id, res);
-    }
-    else {
-        console.log('wrong status value');
-        return res.sendStatus(400);
-    }
-});
+router.get('/status/accepted', controller.getFriends);
+router.get('/status/pending', controller.getPendingRequest);
+    // console.log('xxx: ', status);
+    // if (status == RelationshipDBController.statusValues.ACCEPTED) {
+    //     controller.getFriends(req.user.id, res);
+    // }
+    // else if (status == RelationshipDBController.statusValues.PENDING) {
+    //     controller.getPendingRequest(req.user.id, res);
+    // }
+    // else {
+    //     console.log('wrong status value');
+    //     return res.sendStatus(400);
+    // }
 
 // Accept the friend request
 router.put('/:fromUserId/accepted', controller.acceptFriendRequest);

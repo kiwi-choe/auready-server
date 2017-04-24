@@ -41,7 +41,8 @@ exports.checkRelationship = (req, res) => {
             return res.sendStatus(400);
         }
         if (!relationship) {
-            return res.sendStatus(404); // 404: Not found.
+            console.log('no relationships');
+            return res.sendStatus(204); // 204: Not found.
         }
         // There is a relationship within two users
         return res.status(200).json({
@@ -51,8 +52,11 @@ exports.checkRelationship = (req, res) => {
     });
 };
 
-exports.getFriends = (loggedInUserId, res) => {
+exports.getFriends = (req, res) => {
 
+    const loggedInUserId = req.user.id;
+
+    console.log('entered into getFriends');
     let getUsers = (friendIds, done) => {
         UserController.getUsersByIds(friendIds, (err, friends) => {
             return done(err, friends);
@@ -94,7 +98,9 @@ exports.getFriends = (loggedInUserId, res) => {
     });
 };
 
-exports.getPendingRequest = (toUserId, res) => {
+exports.getPendingRequest = (req, res) => {
+
+    const toUserId = req.user.id;
     // Find pending requests to the logged in user
     RelationshipDBController.readPending(toUserId, (err, relationships, info) => {
         if (err) {
@@ -102,7 +108,7 @@ exports.getPendingRequest = (toUserId, res) => {
         }
         if (!relationships) {
             console.log(info);
-            return res.sendStatus(404); // Not found
+            return res.sendStatus(204); // no pending relationship
         }
         // loop
         let fromUsers = relationships.map(item => {

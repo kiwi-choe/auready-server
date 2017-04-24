@@ -135,11 +135,11 @@ describe('Check the relationship - GET /relationships/user/:userId', () => {
         request
             .get('/relationships/' + otherUser.id)
             .set({Authorization: 'Bearer' + ' ' + accessToken})
-            .expect(404)
+            .expect(204)
             .end((err, res) => {
                 if (err) throw err;
                 // can check what relationship with 'otherUser.id' using 'actionUserId' and 'status'
-                res.status.should.equal(404);
+                res.status.should.equal(204);
                 done();
             });
     });
@@ -186,7 +186,7 @@ describe('Read relationships with status', () => {
     });
 
     // status: 1 means friend relationship within two users
-    it('Show friends - GET /relationships/status/:ACCEPTED returns 200', done => {
+    it('Show friends - GET /relationships/status/accepted returns 200', done => {
         // Update status to ACCEPTED
         const query = {
             $or: [
@@ -209,7 +209,7 @@ describe('Read relationships with status', () => {
         // get user info by id
         // and set the response body, 'friends'
         request
-            .get('/relationships/status/' + RelationshipController.statusValues.ACCEPTED)
+            .get('/relationships/status/accepted')
             .set({Authorization: 'Bearer' + ' ' + accessToken})
             .expect(200)
             .end((err, res) => {
@@ -220,9 +220,9 @@ describe('Read relationships with status', () => {
             });
     });
 
-    it('no friends - GET /relationships/status/:ACCEPTED returns 204', done => {
+    it('no friends - GET /relationships/status/accepted returns 204', done => {
         request
-            .get('/relationships/status/' + RelationshipController.statusValues.ACCEPTED)
+            .get('/relationships/status/accepted')
             .set({Authorization: 'Bearer' + ' ' + accessToken})
             .expect(204)
             .end((err, res) => {
@@ -233,9 +233,9 @@ describe('Read relationships with status', () => {
     });
 
     // status: 0 means pending status
-    it('Read Pending requests - GET /relationships/status/:PENDING returns 200', done => {
+    it('Read Pending requests - GET /relationships/status/pending returns 200', done => {
         request
-            .get('/relationships/status/' + RelationshipController.statusValues.PENDING)
+            .get('/relationships/status/pending')
             .set({Authorization: 'Bearer' + ' ' + accessToken})
             .expect(200)
             .end((err, res) => {
@@ -252,27 +252,16 @@ describe('Read relationships with status', () => {
         });
 
         request
-            .get('/relationships/status/' + RelationshipController.statusValues.PENDING)
+            .get('/relationships/status/pending')
             .set({Authorization: 'Bearer' + ' ' + accessToken})
-            .expect(404)
+            .expect(204)
             .end((err, res) => {
                 if (err) throw err;
-                res.status.should.equal(404);
+                res.status.should.equal(204);
                 done();
             });
     });
 
-    it('Wrong status value - GET /relationships/status/:anynumbers returns 400', done => {
-        request
-            .get('/relationships/status/' + 4)
-            .set({Authorization: 'Bearer' + ' ' + accessToken})
-            .expect(400)
-            .end((err, res) => {
-                if (err) throw err;
-                res.status.should.equal(400);
-                done();
-            });
-    })
 });
 
 describe('Response to the friend request', () => {
