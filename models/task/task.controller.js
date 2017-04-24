@@ -1,25 +1,24 @@
 const TaskHead = require(__appbase_dirname + '/models/task/taskhead');
 
 const _create = (memberId, newTask, done) => {
-    TaskHead.findOne({'members._id': memberId},
-        (err, taskheadOfMemberAt) => {
+    TaskHead.findOne({'members.id': memberId}, (err, taskheadOfMemberAt) => {
+        if (err) return done(err);
+        if (!taskheadOfMemberAt) {
+            return done(null, false);
+        }
+        taskheadOfMemberAt.members[0].tasks.push(newTask);
+        taskheadOfMemberAt.save((err, updatedTaskHeadOfMember) => {
             if (err) return done(err);
-            if (!taskheadOfMemberAt) {
-                return done(null, false);
-            }
-            taskheadOfMemberAt.members[0].tasks.push(newTask);
-            taskheadOfMemberAt.save((err, updatedTaskHeadOfMember) => {
-                if (err) return done(err);
 
-                const tasksByMemberId = updatedTaskHeadOfMember.members[0].tasks;
-                if (tasksByMemberId) {
-                    const createdTask =
-                        tasksByMemberId[tasksByMemberId.length - 1];
-                    return done(null, createdTask);
-                }
-                return done(null, false);
-            });
+            const tasksByMemberId = updatedTaskHeadOfMember.members[0].tasks;
+            if (tasksByMemberId) {
+                const createdTask =
+                    tasksByMemberId[tasksByMemberId.length - 1];
+                return done(null, createdTask);
+            }
+            return done(null, false);
         });
+    });
 };
 
 const _delete = (id, done) => {
@@ -54,7 +53,6 @@ const _update = (id, taskObj, done) => {
 
         // Modify a task of this taskhead
         taskArr[updatingTaskIndex].description = taskObj.description;
-        taskArr[updatingTaskIndex].detailNote = taskObj.detailNote;
         taskArr[updatingTaskIndex].completed = taskObj.completed;
 
         // Update taskhead

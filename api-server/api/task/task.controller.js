@@ -4,7 +4,18 @@ const TaskHead = require(__appbase_dirname + '/models/task/taskhead');
 
 exports.create = (req, res) => {
 
-    TaskDBController.create(req.body.memberid, req.body.task, (err, createdTask) => {
+    const memberId = req.body.memberid;
+    if(!memberId) {
+        console.log('memberId is ' + memberId);
+        return res.sendStatus(400);
+    }
+    const taskInfo = {
+        id: req.body.id,
+        description: req.body.description,
+        completed: req.body.completed,
+        order: req.body.order
+    };
+    TaskDBController.create(memberId, taskInfo, (err, createdTask) => {
         if(err) {
             return res.sendStatus(400);
         }

@@ -16,12 +16,12 @@ const password = '123';
 
 const TaskHeadDBController = require('../../../models/task/taskhead.controller.js');
 const test_tasks = [
-    {description: 'des', detailNote: 'detailnote', completed: false},
-    {description: 'des1', detailNote: 'detailnote1', completed: false},
-    {description: 'des2', detailNote: 'detailnote2', completed: false},
+    {description: 'des', completed: false, order: 0},
+    {description: 'des1', completed: false, order: 0},
+    {description: 'des2', completed: false, order: 0}
 ];
 const test_members = [
-    {name: 'member1', email: 'email_member1', tasks: test_tasks}
+    {id: 'stubbedMemberId', name: 'member1', email: 'email_member1', tasks: test_tasks}
 ];
 const test_taskhead = {
     title: 'titleOfTaskHead',
@@ -31,9 +31,10 @@ const test_taskhead = {
 const TaskController = require('../../../models/task/task.controller.js');
 
 const taskObj = {
+    id: 'stubbedTaskId',
     description: 'desUPDATE!!!!!',
-    detailNote: 'detailnoteUPDATE!!!!!',
-    completed: true
+    completed: true,
+    order: 0
 };
 
 describe('Task - need the accessToken to access API resources and pre saved TaskHeadDBController', () => {
@@ -77,10 +78,18 @@ describe('Task - need the accessToken to access API resources and pre saved Task
                 });
         });
         it('it should POST a task and returns 201', done => {
+
+            const taskInfo = {
+                memberid: savedTaskHead.members[0].id,
+                id: taskObj.id,
+                description: taskObj.description,
+                completed: taskObj.completed,
+                order: taskObj.order
+            };
             request
                 .post('/tasks')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .send({memberid: savedTaskHead.members[0].id, task: taskObj})
+                .send(taskInfo)
                 .expect(201)
                 .end((err, res) => {
                     if (err) throw err;

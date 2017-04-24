@@ -2,10 +2,11 @@ const mongoose = require('mongoose');
 
 const taskSchema = mongoose.Schema({
     // order: Number,       // extending function
+    id: String,             // generated in Client
     modifiedTime: Number,   // == createdTime
     description: String,
-    detailNote: String,
-    completed: Boolean
+    completed: Boolean,
+    order: Number
 }, {
     _id: false
 });

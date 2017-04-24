@@ -17,9 +17,9 @@ const test_taskhead = {
 };
 
 const test_tasks = [
-    {description: 'des', detailNote: 'detailnote', completed: false},
-    {description: 'des1', detailNote: 'detailnote1', completed: false},
-    {description: 'des2', detailNote: 'detailnote2', completed: false},
+    {id: 'stubbedTaskId0', description: 'des', completed: false, order: 0},
+    {id: 'stubbedTaskId1', description: 'des1', completed: false, order: 0},
+    {id: 'stubbedTaskId2', description: 'des2', completed: false, order: 0}
 ];
 
 describe('There is a taskhead in DB ', () => {
@@ -174,7 +174,6 @@ describe('There is a taskhead in DB ', () => {
         it('updating task index is 1', done => {
             const taskObj = {
                 description: 'desUPDATE!!!!!',
-                detailNote: 'detailnoteUPDATE!!!!!',
                 completed: true
             };
 
@@ -200,7 +199,6 @@ describe('There is a taskhead in DB ', () => {
 
                 // Overwrite data
                 taskArr[updatingTaskIndex].description = taskObj.description;
-                taskArr[updatingTaskIndex].detailNote = taskObj.detailNote;
                 taskArr[updatingTaskIndex].completed = taskObj.completed;
                 console.log('\ntaskArr - ', taskArr);
                 // Update taskhead
