@@ -281,7 +281,7 @@ describe('Delete taskHeads', () => {
         {id: 'id_member0', name: 'member0', email: 'email_member1', tasks: []},
         {id: 'id_member1', userId: 'otherUserId', name: 'member1', email: 'email_member1', tasks: []},
     ];
-    console.log('currendUserId - ',currentUserId);
+    // console.log('currendUserId - ',currentUserId);
     // members[0].userId = currentUser.id;
     const taskHeads = [
         {id: 'stubIdOfTaskHead0', title: 'titleOfTaskHead0', color: 222, members: members},

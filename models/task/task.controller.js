@@ -6,7 +6,11 @@ const _create = (memberId, newTask, done) => {
         if (!taskheadOfMemberAt) {
             return done(null, false);
         }
-        taskheadOfMemberAt.members[0].tasks.push(newTask);
+        console.log('taskheadOfMemberAt - ', taskheadOfMemberAt);
+        let index = taskheadOfMemberAt.members.findIndex(member => {
+            return member.id === memberId;
+        });
+        taskheadOfMemberAt.members[index].tasks.push(newTask);
         taskheadOfMemberAt.save((err, updatedTaskHeadOfMember) => {
             if (err) return done(err);
 

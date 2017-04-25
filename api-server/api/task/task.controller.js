@@ -4,7 +4,7 @@ const TaskHead = require(__appbase_dirname + '/models/task/taskhead');
 
 exports.create = (req, res) => {
 
-    const memberId = req.body.memberid;
+    const memberId = req.params.memberid;
     if(!memberId) {
         console.log('memberId is ' + memberId);
         return res.sendStatus(400);

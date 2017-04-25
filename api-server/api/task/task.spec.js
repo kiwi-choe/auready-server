@@ -65,9 +65,9 @@ describe('Task - need the accessToken to access API resources and pre saved Task
     });
 
     describe('POST /tasks', () => {
-        it('it should not POST a task without taskHeadId field and returns 400', done => {
+        it('it should not POST a task without memberId field and returns 400', done => {
             request
-                .post('/tasks')
+                .post('/tasks/')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .send({task: taskObj})
                 .expect(400)
@@ -80,14 +80,13 @@ describe('Task - need the accessToken to access API resources and pre saved Task
         it('it should POST a task and returns 201', done => {
 
             const taskInfo = {
-                memberid: savedTaskHead.members[0].id,
                 id: taskObj.id,
                 description: taskObj.description,
                 completed: taskObj.completed,
                 order: taskObj.order
             };
             request
-                .post('/tasks')
+                .post('/tasks/' + savedTaskHead.members[0].id)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .send(taskInfo)
                 .expect(201)

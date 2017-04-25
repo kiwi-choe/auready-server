@@ -3,7 +3,7 @@ const router = express.Router();
 
 const controller = require('./task.controller');
 
-router.post('/', controller.create);
+router.post('/:memberid', controller.create);
 
 // Delete tasks
 router.delete('/', controller.deleteMulti);
