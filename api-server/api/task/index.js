@@ -8,7 +8,7 @@ router.post('/:memberid', controller.create);
 // Delete tasks
 router.delete('/', controller.deleteMulti);
 
-// Update all
-router.put('/:id', controller.update);
+// Update all tasks of the certain member
+router.put('/:memberid', controller.update);
 
 module.exports = router;

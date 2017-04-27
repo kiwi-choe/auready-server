@@ -8,34 +8,44 @@ const Task = require('../../../models/task/task.controller');
 const TaskHead = require('../../../models/task/taskhead.controller');
 const TaskHeadModel = require('../../../models/task/taskhead');
 
-const test_members = [
-    {name: 'member1', email: 'email_member1', tasks: []}
-];
-const test_taskhead = {
-    title: 'titleOfTaskHead',
-    members: test_members
-};
-
 const test_tasks = [
     {id: 'stubbedTaskId0', description: 'des', completed: false, order: 0},
     {id: 'stubbedTaskId1', description: 'des1', completed: false, order: 0},
     {id: 'stubbedTaskId2', description: 'des2', completed: false, order: 0}
 ];
+const test_tasks1 = [
+    {id: 'stubbedTaskId3', description: 'des3', completed: false, order: 0},
+    {id: 'stubbedTaskId4', description: 'des4', completed: false, order: 0},
+    {id: 'stubbedTaskId5', description: 'des5', completed: false, order: 0}
+];
+const test_members = [
+    {id: 'stubbedMemberId0', name: 'member0', email: 'email_member0', tasks: test_tasks},
+    {id: 'stubbedMemberId1', name: 'member1', email: 'email_member1', tasks: test_tasks1}
+];
+const test_taskhead = {
+    id: 'stubbedTaskHeadId',
+    title: 'titleOfTaskHead',
+    members: test_members
+};
+
 
 describe('There is a taskhead in DB ', () => {
     let savedTaskHead;
     before(done => {
-        // delete all the users
-        TaskHead.deleteAll(err => {
 
-            // Create a TaskHeadDBController
-            TaskHead.create(test_taskhead, (err, newTaskHead) => {
-                savedTaskHead = newTaskHead;
-                done();
-            });
+        // Create a TaskHeadDBController
+        TaskHead.create(test_taskhead, (err, newTaskHead) => {
+            savedTaskHead = newTaskHead;
+            done();
         });
     });
 
+    after(done => {
+        // delete all the users
+        TaskHead.deleteAll(err => {
+            done();
+        });
+    });
     describe('CREATE a task', () => {
         it('A task is created', done => {
             let test_task = test_tasks[0];
@@ -84,7 +94,7 @@ describe('There is a taskhead in DB ', () => {
             deletingTaskIds.push('wrong id');
 
             // find tasks including this task ids
-            TaskHeadModel.findOne({'members.tasks._id': {$in: deletingTaskIds}}, (err, taskhead) => {
+            TaskHeadModel.findOne({'members.tasks.id': {$in: deletingTaskIds}}, (err, taskhead) => {
                 if (!taskhead) {
                     assert.ok('cannot find a taskhead doc with wrong id');
                 } else {
@@ -95,77 +105,16 @@ describe('There is a taskhead in DB ', () => {
             });
 
         });
-
-        it('task indexes are 0, 2', done => {
-            let deletingTaskIds = [];
-            deletingTaskIds.push(savedTasks[0].id);
-            deletingTaskIds.push(savedTasks[2].id);
-
-            // find tasks including this task ids
-            TaskHeadModel.findOne({'members.tasks._id': {$in: deletingTaskIds}}, (err, taskhead) => {
-                if (err) {
-                    assert.fail(err);
-                }
-                if (!taskhead) {
-                    assert.fail('cannot find a taskhead doc');
-                    done();
-                }
-                // found taskhead's member is only one coz task's id is unique - taskhead.member.length: 1
-                // delete tasks from task array
-                const taskArr = taskhead.members[0].tasks;
-                deletingTaskIds.forEach((deletingTaskId, i) => {
-                    let deletingIndex = taskArr.findIndex((task) => {
-                        return task._id.equals(deletingTaskId);
-                    });
-                    let deletedTask = taskArr.splice(deletingIndex, 1);
-                    console.log('\ndeletedTask - ', deletedTask);
-
-                    if (deletingTaskIds.length - 1 === i) {
-                        // Update taskhead
-                        taskhead.save((err, updatedTaskHead) => {
-                            assert.equal(updatedTaskHead.members[0].tasks.length, 1);
-                            console.log('\nupdatedTaskHead.member[0].tasks - ', updatedTaskHead.members[0].tasks);
-                            done();
-                        });
-                    }
-                });
-            });
-
-        });
     });
 
     describe('Update a taskhead - update a task', () => {
 
-        let savedTasks = [];
-        beforeEach(done => {
-            // Remove All tasks of taskhead
-            savedTasks.length = 0;
-            Task.deleteAll(savedTaskHead.id, (err, isRemoved) => {
-                assert.ifError(err);
-                isRemoved.should.be.true('isRemoved should be true');
-
-                // Create 3 tasks
-                test_tasks.forEach((task, i) => {
-                    Task.create(savedTaskHead.members[0].id, task, (err, newTask) => {
-                        savedTasks.push(newTask);
-
-                        if (test_tasks.length - 1 === i) {
-                            assert.equal(savedTasks.length, 3);
-                            done();
-                        }
-                    });
-                });
-
-            });
-        });
-
         it('with wrong task id', done => {
-
-            TaskHeadModel.findOne({'members.tasks._id': 'wrongid'}, (err, taskhead) => {
+            TaskHeadModel.findOne({'members.tasks.id': 'wrongid'}, (err, taskhead) => {
                 if (err) {
-                    assert.ok(err, 'should be called with wrong id');
+                    assert.ifError(err);
                 } else {
-                    assert.fail('fail');
+                    assert.ok('should be called with wrong id');
                 }
                 done();
             });
@@ -177,8 +126,8 @@ describe('There is a taskhead in DB ', () => {
                 completed: true
             };
 
-            const updatingTask = savedTasks[1];
-            TaskHeadModel.findOne({'members.tasks._id': updatingTask.id}, (err, taskhead) => {
+            const updatingTask = test_tasks[1];
+            TaskHeadModel.findOne({'members.tasks.id': updatingTask.id}, (err, taskhead) => {
                 if (err) {
                     assert.fail('called with wrong id');
                     done();
@@ -192,7 +141,7 @@ describe('There is a taskhead in DB ', () => {
                 // extract the updating task from tasks array
                 const taskArr = taskhead.members[0].tasks;
                 let updatingTaskIndex = taskArr.findIndex((task) => {
-                    return task._id.equals(updatingTask.id);
+                    return task.id === updatingTask.id;
                 });
 
                 assert.equal(updatingTaskIndex, 1, 'savedTaskHead index same to updatingTaskIndex');
@@ -203,11 +152,11 @@ describe('There is a taskhead in DB ', () => {
                 console.log('\ntaskArr - ', taskArr);
                 // Update taskhead
                 taskhead.save((err, updatedTaskHead) => {
-                    if(err) {
+                    if (err) {
                         assert.fail('fail to update');
                     }
 
-                    if(!updatedTaskHead) {
+                    if (!updatedTaskHead) {
                         assert.fail('fail to update');
                         done();
                     }
@@ -216,5 +165,55 @@ describe('There is a taskhead in DB ', () => {
                 });
             });
         });
+
+        it('updating tasks with memberid', done => {
+            const memberId0 = test_members[0].id;
+            const memberId1 = test_members[1].id;
+            const updatingTasks = [
+                {id: 'stubbedTaskId0', description: 'updating DES0', completed: false, order: 0},
+                {id: 'stubbedTaskId1', description: 'updating DES1', completed: false, order: 0},
+                {id: 'stubbedTaskId3', description: 'updating DES3', completed: false, order: 0},
+                {id: 'stubbedTaskId4', description: 'updating DES4', completed: false, order: 0},
+            ];
+            TaskHeadModel.findOne({'members.id': savedTaskHead.members[1].id}, (err, taskhead) => {
+
+                let updatingMemberIndex = taskhead.members.findIndex((member) => {
+                    return member.id === memberId1;
+                });
+                const taskArr = taskhead.members[updatingMemberIndex].tasks;
+                console.log('this member id - ', taskhead.members[updatingMemberIndex].id);
+                console.log('taskArr - ', taskArr);
+                const len = updatingTasks.length;
+                for (let i = 0; i < len; i++) {
+                    // extract the updating task from tasks array
+                    // const tmpTaskArr = taskhead.members[0].tasks;
+                    let updatingTaskIndex = taskArr.findIndex((task) => {
+                        return task.id === updatingTasks[i].id;
+                    });
+                    taskArr[updatingTaskIndex] = updatingTasks[i];
+
+                    if (i === len - 1) {
+                        taskhead.save((err, updatedTaskHead) => {
+                            if (!updatedTaskHead) {
+                                assert.fail('no updatedTaskHead');
+                                done();
+                            }
+                            // Check the new tasks are saved
+                            const updatedTasks = updatedTaskHead.members[updatingMemberIndex].tasks;
+                            if (updatedTasks) {
+                                console.log('\nupdatedTasks - ', updatedTasks);
+                                assert.ok('updating success');
+                                done();
+                            } else {
+
+                                // fail to update
+                                done();
+                            }
+                        });
+                    }
+                }
+            });
+        });
+
     });
 });

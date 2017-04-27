@@ -61,7 +61,12 @@ exports.delete = (req, res) => {
 
 exports.update = (req, res) => {
 
-    TaskDBController.update(req.params.id, req.body.task, (err, updatedTaskHead) => {
+    const memberId = req.params.memberid;
+    if(!memberId) {
+        console.log('memberId is ' + memberId);
+        return res.sendStatus(400);
+    }
+    TaskDBController.update(memberId, req.body, (err, updatedTaskHead) => {
         if(err) {
             console.log(err);
             return res.sendStatus(404);

@@ -16,14 +16,15 @@ const password = '123';
 
 const TaskHeadDBController = require('../../../models/task/taskhead.controller.js');
 const test_tasks = [
-    {description: 'des', completed: false, order: 0},
-    {description: 'des1', completed: false, order: 0},
-    {description: 'des2', completed: false, order: 0}
+    {id: 'stubbedTaskId0', description: 'des', completed: false, order: 0},
+    {id: 'stubbedTaskId1', description: 'des1', completed: false, order: 0},
+    {id: 'stubbedTaskId2', description: 'des2', completed: false, order: 0}
 ];
 const test_members = [
     {id: 'stubbedMemberId', name: 'member1', email: 'email_member1', tasks: test_tasks}
 ];
 const test_taskhead = {
+    id: 'stubbedTaskHeadId',
     title: 'titleOfTaskHead',
     members: test_members
 };
@@ -151,24 +152,24 @@ describe('Task - need the accessToken to access API resources and pre saved Task
                 });
         });
 
-        it('PUT /tasks/:id returns 404 - with wrong task id', done => {
+        it('PUT /tasks/:memberid returns 404 - with wrong task id', done => {
             request
                 .put('/tasks/' + 'wrongid')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .send({task: taskObj})
-                .expect(404)
+                .send(test_tasks)
+                .expect(400)
                 .end((err, res) => {
                     if (err) throw err;
-                    res.status.should.equal(404);
+                    res.status.should.equal(400);
                     done();
                 });
         });
 
-        it('PUT /tasks/:id of index 1 returns 200', done => {
+        it('PUT /tasks/:memberid of index 1 returns 200', done => {
             request
-                .put('/tasks/' + savedTasks[1].id)
+                .put('/tasks/' + savedTaskHead.members[0].id)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .send({task: taskObj})
+                .send(test_tasks)
                 .expect(200)
                 .end((err, res) => {
                     if (err) throw err;

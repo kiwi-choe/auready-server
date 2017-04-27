@@ -6,7 +6,6 @@ const _create = (memberId, newTask, done) => {
         if (!taskheadOfMemberAt) {
             return done(null, false);
         }
-        console.log('taskheadOfMemberAt - ', taskheadOfMemberAt);
         let index = taskheadOfMemberAt.members.findIndex(member => {
             return member.id === memberId;
         });
@@ -26,7 +25,7 @@ const _create = (memberId, newTask, done) => {
 };
 
 const _delete = (id, done) => {
-    TaskHead.findOne({'members.tasks._id': id}, (err, taskHead) => {
+    TaskHead.findOne({'members.tasks.id': id}, (err, taskHead) => {
         if (err) return done(err);
         if (!taskHead) return done(null, false);
 
@@ -41,41 +40,48 @@ const _delete = (id, done) => {
     });
 };
 
-const _update = (id, taskObj, done) => {
-    TaskHead.findOne({'members.tasks._id': id}, (err, taskhead) => {
+const _update = (memberId, updatingTasks, done) => {
+    console.log('memberId - ', memberId);
+    TaskHead.findOne({'members.id': memberId}, (err, taskhead) => {
         if (err) {
-            console.log(err);
             return done(err);
         }
-        if (!taskhead) return done(null, false);
-
-        // extract the updating task from tasks array
-        const taskArr = taskhead.members[0].tasks;
-        let updatingTaskIndex = taskArr.findIndex((task) => {
-            return task._id.equals(id);
-        });
-
-        // Modify a task of this taskhead
-        taskArr[updatingTaskIndex].description = taskObj.description;
-        taskArr[updatingTaskIndex].completed = taskObj.completed;
-
-        // Update taskhead
-        // todo - set modifiedTime pre save
-        taskhead.save((err, updatedTaskHead) => {
-            if (err) return done(err);
-            if (!updatedTaskHead) return done(null, false);
-            // Check the new tasks are saved
-            const updatedTasks = updatedTaskHead.members[0].tasks;
-            if (updatedTasks) {
-                return done(null, updatedTaskHead);
-            }
+        if (!taskhead) {
+            console.log('no taskhead');
             return done(null, false);
+        }
+
+        let updatingMemberIndex = taskhead.members.findIndex((member) => {
+            return member.id === memberId;
         });
+        const taskArr = taskhead.members[updatingMemberIndex].tasks;
+        const len = updatingTasks.length;
+        for (let i = 0; i < len; i++) {
+            // extract the updating task from tasks array
+            let updatingTaskIndex = taskArr.findIndex((task) => {
+                return task.id === updatingTasks[i].id;
+            });
+            taskArr[updatingTaskIndex] = updatingTasks[i];
+            // Update taskhead
+            if (i === len - 1) {
+                // todo - set modifiedTime pre save
+                taskhead.save((err, updatedTaskHead) => {
+                    if (err) return done(err);
+                    if (!updatedTaskHead) return done(null, false);
+                    // Check the new tasks are saved
+                    const updatedTasks = updatedTaskHead.members[updatingMemberIndex].tasks;
+                    if (updatedTasks) {
+                        return done(null, updatedTaskHead);
+                    }
+                    return done(null, false);
+                });
+            }
+        }
     });
 };
 
 const _readById = (id, done) => {
-    TaskHead.findOne({'members.task._id': id}, (err, taskHead) => {
+    TaskHead.findOne({'members.task.id': id}, (err, taskHead) => {
         if (err) return done(err);
         if (!taskHead) return done(null, false);
         if (taskHead.members[0]) {
@@ -91,7 +97,7 @@ const _readById = (id, done) => {
 const _deleteMulti = (ids, done) => {
 
     // find tasks including this task ids
-    TaskHead.findOne({'members.tasks._id': {$in: ids}}, (err, taskhead) => {
+    TaskHead.findOne({'members.tasks.id': {$in: ids}}, (err, taskhead) => {
         if (err) {
             return done(err);
         }
@@ -105,7 +111,7 @@ const _deleteMulti = (ids, done) => {
         const taskArr = taskhead.members[0].tasks;
         ids.forEach((deletingTaskId, i) => {
             let deletingIndex = taskArr.findIndex((task) => {
-                return task._id.equals(deletingTaskId);
+                return task.id.equals(deletingTaskId);
             });
             let deletedTask = taskArr.splice(deletingIndex, 1);
             console.log('\ndeletedTask - ', deletedTask);
@@ -130,9 +136,12 @@ const _deleteMulti = (ids, done) => {
 // Delete all tasks of the taskhead
 const _deleteAll = (id, done) => {
 
-    TaskHead.findOne({_id: id}, (err, taskHead) => {
+    TaskHead.findOne({id: id}, (err, taskHead) => {
         if (err) return done(err);
-        if (!taskHead) return done(null, false);
+        if (!taskHead) {
+            console.log('no taskhead');
+            return done(null, false);
+        }
 
         // Remove tasks of this taskHead
         const len = taskHead.members.length;
