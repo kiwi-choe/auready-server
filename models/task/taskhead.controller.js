@@ -34,21 +34,6 @@ const _readByUserId = (userId, done) => {
     });
 };
 
-const _updateTask = (task, done) => {
-    TaskHead.findOne({'tasks.id': task.id}, (err, taskHead) => {
-        // overwrite task
-        taskHead.tasks[0] = task;
-        taskHead.save((err, updatedTaskHead) => {
-            if (err) return done(err);
-
-            if (updatedTaskHead) {
-                return done(false, updatedTaskHead);
-            }
-            return done(false, null);
-        });
-    });
-};
-
 const _deleteOne = (id, done) => {
     TaskHead.remove({id: id}, (err, removedCount) => {
         if (err) {

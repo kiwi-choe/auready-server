@@ -64,28 +64,14 @@ describe('There is a taskhead in DB ', () => {
         });
     });
 
-    describe('Update a taskhead - delete tasks within a member ', () => {
+    describe('Delete tasks within a member - Update a taskhead', () => {
 
-        let savedTasks = [];
         beforeEach(done => {
             // Remove All tasks of taskhead
-            savedTasks.length = 0;
             Task.deleteAll(savedTaskHead.id, (err, isRemoved) => {
                 assert.ifError(err);
                 isRemoved.should.be.true('isRemoved should be true');
-
-                // Create 3 tasks
-                test_tasks.forEach((task, i) => {
-                    Task.create(savedTaskHead.members[0].id, task, (err, newTask) => {
-                        savedTasks.push(newTask);
-
-                        if (test_tasks.length - 1 === i) {
-                            assert.equal(savedTasks.length, 3);
-                            done();
-                        }
-                    });
-                });
-
+                done();
             });
         });
 
@@ -96,7 +82,7 @@ describe('There is a taskhead in DB ', () => {
             // find tasks including this task ids
             TaskHeadModel.findOne({'members.tasks.id': {$in: deletingTaskIds}}, (err, taskhead) => {
                 if (!taskhead) {
-                    assert.ok('cannot find a taskhead doc with wrong id');
+                    console.log('\ncannot find a taskhead doc with wrong id');
                 } else {
                     assert.fail('fail this test');
                 }
@@ -105,6 +91,45 @@ describe('There is a taskhead in DB ', () => {
             });
 
         });
+
+        it('delete a task - xxx refactoring', done => {
+            let id = test_tasks[0].id;
+            console.log('deleting id - ', id);
+            TaskHeadModel.update({'members.tasks.id': id},
+                // {'$pull': {'members': { 'tasks': {id: id}}}}, (err, updated) => {
+                {$pull: {members: {tasks: {id: id}}}}, (err, updated) => {
+                    console.log(updated);
+                    // Check updated taskhead
+                    TaskHeadModel.findOne({id: savedTaskHead.id}, (err, taskhead) => {
+                        console.log(taskhead.members);
+                        done();
+                    });
+                });
+        });
+
+        it('delete a task test', done => {
+            let id = test_tasks[0].id;
+            console.log('deleting id - ', id);
+            TaskHeadModel.findOne({'members.tasks.id': id}, (err, taskhead) => {
+                for (let member of taskhead.members) {
+                    for (let i in member.tasks) {
+                        if (member.tasks[i].id === id) {
+                            // Remove a task of this taskhead
+                            console.log('\nmember.tasks[i] - ', member.tasks[i]);
+                            member.tasks.splice(i, 1);
+
+                            taskhead.save((err, updated) => {
+                                console.log('updated - ', updated.members[0].tasks);
+                                assert.equal(updated.members[0].tasks.length, 2);
+                                done();
+                            });
+                        }
+                    }
+
+                }
+            });
+        });
+
     });
 
     describe('Update a taskhead - update a task', () => {
@@ -170,10 +195,10 @@ describe('There is a taskhead in DB ', () => {
             const memberId0 = test_members[0].id;
             const memberId1 = test_members[1].id;
             const updatingTasks = [
-                {id: 'stubbedTaskId0', description: 'updating DES0', completed: false, order: 0},
-                {id: 'stubbedTaskId1', description: 'updating DES1', completed: false, order: 0},
-                {id: 'stubbedTaskId3', description: 'updating DES3', completed: false, order: 0},
-                {id: 'stubbedTaskId4', description: 'updating DES4', completed: false, order: 0},
+                {id: test_tasks[0].id, description: 'updating DES0', completed: false, order: 0},
+                {id: test_tasks[1].id, description: 'updating DES1', completed: false, order: 0},
+                {id: test_tasks1[0].id, description: 'updating DES3', completed: false, order: 0},
+                {id: test_tasks1[1].id, description: 'updating DES4', completed: false, order: 0},
             ];
             TaskHeadModel.findOne({'members.id': savedTaskHead.members[1].id}, (err, taskhead) => {
 
@@ -212,6 +237,85 @@ describe('There is a taskhead in DB ', () => {
                         });
                     }
                 }
+            });
+        });
+
+        it('updating tasks with tasks.id', done => {
+            const taskObj = {
+                description: 'desUPDATE!!!!!',
+                completed: true
+            };
+
+            const updatingTask = test_tasks[1];
+            TaskHeadModel.findOne({'members.tasks.id': updatingTask.id}, (err, taskhead) => {
+                if (err) {
+                    assert.fail('called with wrong id');
+                    done();
+                }
+                if (!taskhead) {
+                    assert.fail('called with wrong id');
+                    done();
+                }
+
+                console.log('\n\n--------before \n taskhead.members[0].tasks - ', taskhead.members[0].tasks);
+                // extract the updating task from tasks array
+                const taskArr = taskhead.members[0].tasks;
+                let updatingTaskIndex = taskArr.findIndex((task) => {
+                    return task.id === updatingTask.id;
+                });
+
+                assert.equal(updatingTaskIndex, 1, 'savedTaskHead index same to updatingTaskIndex');
+
+                // Overwrite data
+                taskArr[updatingTaskIndex].description = taskObj.description;
+                taskArr[updatingTaskIndex].completed = taskObj.completed;
+                console.log('\ntaskArr - ', taskArr);
+                // Update taskhead
+                taskhead.save((err, updatedTaskHead) => {
+                    if (err) {
+                        assert.fail('fail to update');
+                    }
+
+                    if (!updatedTaskHead) {
+                        assert.fail('fail to update');
+                        done();
+                    }
+                    console.log('\n\n--------after \n updatedTaskHead.member[0] - ', updatedTaskHead.members[0]);
+                    done();
+                });
+            });
+        });
+
+        it('updating tasks with taskHeadId, find members and tasks without mongodb query', done => {
+            const taskHeadId = savedTaskHead.id;
+            const updatingTasks = [
+                {id: test_tasks[0].id, description: 'updating DES0', completed: false, order: 0},
+                {id: test_tasks[1].id, description: 'updating DES1', completed: false, order: 0}];
+            const updatingTasks1 = [
+                {id: test_tasks1[0].id, description: 'updating DES3', completed: false, order: 0},
+                {id: test_tasks1[1].id, description: 'updating DES4', completed: false, order: 0}];
+            const memberTasks = [
+                {memberid: test_members[0].id, tasks: updatingTasks},
+                {memberid: test_members[1].id, tasks: updatingTasks1}];
+
+            TaskHeadModel.findOne({id: taskHeadId}, (err, taskhead) => {
+                memberTasks.forEach((memberTask, i) => {
+                    let updatingMemberIndex = taskhead.members.findIndex(member => {
+                        return member.id === memberTask.memberid;
+                    });
+                    const taskArr = taskhead.members[updatingMemberIndex].tasks;
+                    taskArr.length = 0;
+                    taskArr.push(...memberTask.tasks);
+
+                    if (i === memberTasks.length - 1) {
+                        taskhead.save((err, updated) => {
+                            console.log('updated.members[0] - ', updated.members[0]);
+                            console.log('updated.members[1] - ', updated.members[1]);
+
+                            done();
+                        });
+                    }
+                });
             });
         });
 

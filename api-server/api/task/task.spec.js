@@ -20,8 +20,14 @@ const test_tasks = [
     {id: 'stubbedTaskId1', description: 'des1', completed: false, order: 0},
     {id: 'stubbedTaskId2', description: 'des2', completed: false, order: 0}
 ];
+const test_tasks1 = [
+    {id: 'stubbedTaskId3', description: 'des3', completed: false, order: 0},
+    {id: 'stubbedTaskId4', description: 'des4', completed: false, order: 0},
+    {id: 'stubbedTaskId5', description: 'des5', completed: false, order: 0}
+];
 const test_members = [
-    {id: 'stubbedMemberId', name: 'member1', email: 'email_member1', tasks: test_tasks}
+    {id: 'stubbedMemberId0', name: 'member0', email: 'email_member0', tasks: test_tasks},
+    {id: 'stubbedMemberId1', name: 'member1', email: 'email_member1', tasks: test_tasks}
 ];
 const test_taskhead = {
     id: 'stubbedTaskHeadId',
@@ -152,11 +158,35 @@ describe('Task - need the accessToken to access API resources and pre saved Task
                 });
         });
 
-        it('PUT /tasks/:memberid returns 404 - with wrong task id', done => {
+        it('DELETE /tasks/:id returns 200', done => {
+            const deletingTaskId = savedTasks[0].id;
             request
-                .put('/tasks/' + 'wrongid')
+                .delete('/tasks/' + deletingTaskId)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .send(test_tasks)
+                .expect(200)
+                .end((err, res) => {
+                    if (err) throw err;
+                    res.status.should.equal(200);
+                    done();
+                });
+        });
+
+        it('DELETE a task - deletingTaskId is wrong id - returns 400', done => {
+            request
+                .delete('/tasks/' + 'wrong id')
+                .set({Authorization: 'Bearer' + ' ' + accessToken})
+                .expect(400)
+                .end((err, res) => {
+                    if (err) throw err;
+                    res.status.should.equal(400);
+                    done();
+                });
+        });
+
+        it('PUT /tasks/ - no params returns 400', done => {
+            request
+                .put('/tasks/')
+                .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .expect(400)
                 .end((err, res) => {
                     if (err) throw err;
@@ -166,10 +196,20 @@ describe('Task - need the accessToken to access API resources and pre saved Task
         });
 
         it('PUT /tasks/:memberid of index 1 returns 200', done => {
+            const updatingTasks = [
+                {id: test_tasks[0].id, description: 'updating DES0', completed: false, order: 0},
+                {id: test_tasks[1].id, description: 'updating DES1', completed: false, order: 0}];
+            const updatingTasks1 = [
+                {id: test_tasks1[0].id, description: 'updating DES3', completed: false, order: 0},
+                {id: test_tasks1[1].id, description: 'updating DES4', completed: false, order: 0}];
+                const memberTasks = [
+                    {memberid: test_members[0].id, tasks: updatingTasks},
+                    {memberid: test_members[1].id, tasks: updatingTasks1}
+                ];
             request
-                .put('/tasks/' + savedTaskHead.members[0].id)
+                .put('/tasks/' + test_taskhead.id)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .send(test_tasks)
+                .send(memberTasks)
                 .expect(200)
                 .end((err, res) => {
                     if (err) throw err;

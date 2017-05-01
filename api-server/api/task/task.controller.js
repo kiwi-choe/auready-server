@@ -47,9 +47,11 @@ exports.deleteMulti = (req, res) => {
 };
 
 exports.delete = (req, res) => {
+
+    console.log('entered into delete');
     TaskDBController.delete(req.params.id, (err, isRemoved) => {
         if(err) {
-            return res.sendStatus(400);
+            return res.sendStatus(404);
         }
         if(!isRemoved) {
             return res.sendStatus(400);
@@ -59,14 +61,18 @@ exports.delete = (req, res) => {
 };
 
 
-exports.update = (req, res) => {
+exports.updateMulti = (req, res) => {
 
-    const memberId = req.params.memberid;
-    if(!memberId) {
-        console.log('memberId is ' + memberId);
+    console.log('\nentered into update tasks');
+
+    const taskheadId = req.params.taskheadid;
+    if(!taskheadId) {
+        console.log('req params taskheadid is ', taskheadId);
         return res.sendStatus(400);
     }
-    TaskDBController.update(memberId, req.body, (err, updatedTaskHead) => {
+
+    const tasks = req.body;
+    TaskDBController.updateMulti(taskheadId, tasks, (err, updatedTaskHead) => {
         if(err) {
             console.log(err);
             return res.sendStatus(404);
