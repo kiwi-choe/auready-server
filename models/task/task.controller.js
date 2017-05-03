@@ -85,21 +85,14 @@ const _updateMulti = (taskHeadId, memberTasks, done) => {
             // Updating tasks
             const taskArr = taskhead.members[updatingMemberIndex].tasks;
             taskArr.length = 0;
-            taskArr.push(...memberTask.tasks);
+            Array.prototype.push.apply(taskArr, memberTask.tasks);
 
             if (i === memberTasks.length - 1) {
                 taskhead.save((err, updatedTaskHead) => {
                     if (err) return done(err);
                     if (!updatedTaskHead) return done(null, false);
-                    // Check the new tasks are saved
-                    // forEach loop for TEST
-                    updatedTaskHead.members.forEach((member, i) => {
-                        console.log('\nmember.tasks - ', member.tasks);
-                        if (i === updatedTaskHead.members.length - 1) {
-
-                            return done(null, updatedTaskHead);
-                        }
-                    });
+                    console.log('updatedTaskHead - ', updatedTaskHead);
+                    return done(null, updatedTaskHead);
                 });
             }
         });
