@@ -192,51 +192,37 @@ describe('There is a taskhead in DB ', () => {
         });
 
         it('updating tasks with memberid', done => {
-            const memberId0 = test_members[0].id;
-            const memberId1 = test_members[1].id;
+            const memberId = test_members[0].id;
+            // const memberId1 = test_members[1].id;
             const updatingTasks = [
                 {id: test_tasks[0].id, description: 'updating DES0', completed: false, order: 0},
                 {id: test_tasks[1].id, description: 'updating DES1', completed: false, order: 0},
                 {id: test_tasks1[0].id, description: 'updating DES3', completed: false, order: 0},
                 {id: test_tasks1[1].id, description: 'updating DES4', completed: false, order: 0},
             ];
-            TaskHeadModel.findOne({'members.id': savedTaskHead.members[1].id}, (err, taskhead) => {
+            TaskHeadModel.findOne({'members.id': memberId}, (err, taskhead) => {
 
-                let updatingMemberIndex = taskhead.members.findIndex((member) => {
-                    return member.id === memberId1;
+                let updatingMemberIndex = taskhead.members.findIndex(member => {
+                    return member.id === memberId;
                 });
                 const taskArr = taskhead.members[updatingMemberIndex].tasks;
-                console.log('this member id - ', taskhead.members[updatingMemberIndex].id);
-                console.log('taskArr - ', taskArr);
-                const len = updatingTasks.length;
-                for (let i = 0; i < len; i++) {
-                    // extract the updating task from tasks array
-                    // const tmpTaskArr = taskhead.members[0].tasks;
-                    let updatingTaskIndex = taskArr.findIndex((task) => {
-                        return task.id === updatingTasks[i].id;
-                    });
-                    taskArr[updatingTaskIndex] = updatingTasks[i];
+                // Init
+                taskArr.length = 0;
+                Array.prototype.push.apply(taskArr, updatingTasks);
 
-                    if (i === len - 1) {
-                        taskhead.save((err, updatedTaskHead) => {
-                            if (!updatedTaskHead) {
-                                assert.fail('no updatedTaskHead');
-                                done();
-                            }
-                            // Check the new tasks are saved
-                            const updatedTasks = updatedTaskHead.members[updatingMemberIndex].tasks;
-                            if (updatedTasks) {
-                                console.log('\nupdatedTasks - ', updatedTasks);
-                                assert.ok('updating success');
-                                done();
-                            } else {
-
-                                // fail to update
-                                done();
-                            }
-                        });
+                taskhead.save((err, updated) => {
+                    if(err) {
+                        assert.ifError(err);
+                        done();
                     }
-                }
+                    if(!updated) {
+                        assert.fail();
+                        done();
+                    }
+                    assert.equal(updated.members[0].tasks[0].description, updatingTasks[0].description);
+                    console.log(updated.members[0].tasks);
+                    done();
+                });
             });
         });
 

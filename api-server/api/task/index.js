@@ -12,6 +12,7 @@ router.delete('/', controller.deleteMulti);
 router.delete('/:id', controller.delete);
 
 // Update all tasks of a taskhead
-router.put('/:taskheadid', controller.updateMulti);
-
+router.put('/:taskheadid', controller.updateOfTaskHead);
+// Update tasks of a member
+router.put('/', controller.updateOfMember);
 module.exports = router;

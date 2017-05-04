@@ -62,7 +62,7 @@ const _delete = (id, done) => {
  * Update tasks of a taskHead
  * ; Clear the existing tasks of a taskHead and push new updating tasks
  * */
-const _updateMulti = (taskHeadId, memberTasks, done) => {
+const _updateOfTaskHead = (taskHeadId, memberTasks, done) => {
 
     TaskHead.findOne({id: taskHeadId}, (err, taskhead) => {
         if (err) {
@@ -95,6 +95,36 @@ const _updateMulti = (taskHeadId, memberTasks, done) => {
                     return done(null, updatedTaskHead);
                 });
             }
+        });
+    });
+};
+
+const _updateOfMember = (memberId, updatingTasks, done) => {
+    TaskHead.findOne({'members.id': memberId}, (err, taskhead) => {
+        if(err) {
+            return done(err);
+        }
+        if(!taskhead) {
+            console.log('no taskhead');
+            return done(null, false);
+        }
+
+        let updatingMemberIndex = taskhead.members.findIndex(member => {
+            return member.id === memberId;
+        });
+        const taskArr = taskhead.members[updatingMemberIndex].tasks;
+        // Init
+        taskArr.length = 0;
+        Array.prototype.push.apply(taskArr, updatingTasks);
+
+        taskhead.save((err, updated) => {
+            if(err) return done(err);
+            if(!updated) {
+                return done(null, false);
+            }
+            console.log('updated.members[0] -', updated.members[0]);
+            console.log('updated.members[1] -', updated.members[1]);
+            return done(null, updated);
         });
     });
 };
@@ -180,7 +210,8 @@ const _deleteAll = (id, done) => {
 module.exports = {
     create: _create,
     delete: _delete,
-    updateMulti: _updateMulti,
+    updateOfTaskHead: _updateOfTaskHead,
+    updateOfMember: _updateOfMember,
     readById: _readById,
     deleteMulti: _deleteMulti,
     deleteAll: _deleteAll

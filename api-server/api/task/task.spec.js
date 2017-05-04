@@ -195,7 +195,7 @@ describe('Task - need the accessToken to access API resources and pre saved Task
                 });
         });
 
-        it('PUT /tasks/:memberid of index 1 returns 200', done => {
+        it('PUT /tasks/:taskheadid 1 returns 200', done => {
             const updatingTasks = [
                 {id: test_tasks[0].id, description: 'updating DES0', completed: false, order: 0},
                 {id: test_tasks[1].id, description: 'updating DES1', completed: false, order: 0}];
@@ -214,6 +214,34 @@ describe('Task - need the accessToken to access API resources and pre saved Task
                 .end((err, res) => {
                     if (err) throw err;
                     res.status.should.equal(200);
+                    done();
+                });
+        });
+
+        it('PUT /tasks/?memberid= memberid value returns 200', done => {
+            const updatingTasks = [
+                {id: test_tasks[0].id, description: 'updating DES0', completed: false, order: 0},
+                {id: test_tasks[1].id, description: 'updating DES1', completed: false, order: 0}];
+
+            request
+                .put('/tasks/?memberid=' + test_members[0].id)
+                .set({Authorization: 'Bearer' + ' ' + accessToken})
+                .send(updatingTasks)
+                .expect(200)
+                .end((err, res) => {
+                    if (err) throw err;
+                    res.status.should.equal(200);
+                    done();
+                });
+        });
+        it('PUT /tasks/?memberid= returns 404', done => {
+            request
+                .put('/tasks/')
+                .set({Authorization: 'Bearer' + ' ' + accessToken})
+                .expect(404)
+                .end((err, res) => {
+                    if (err) throw err;
+                    res.status.should.equal(404);
                     done();
                 });
         });

@@ -61,8 +61,7 @@ exports.delete = (req, res) => {
 };
 
 
-exports.updateMulti = (req, res) => {
-
+exports.updateOfTaskHead = (req, res) => {
     console.log('\nentered into update tasks');
 
     const taskheadId = req.params.taskheadid;
@@ -72,12 +71,33 @@ exports.updateMulti = (req, res) => {
     }
 
     const tasks = req.body;
-    TaskDBController.updateMulti(taskheadId, tasks, (err, updatedTaskHead) => {
+    TaskDBController.updateOfTaskHead(taskheadId, tasks, (err, updatedTaskHead) => {
         if(err) {
             console.log(err);
             return res.sendStatus(404);
         }
         if(!updatedTaskHead) {
+            return res.sendStatus(400);
+        }
+        return res.sendStatus(200);
+    });
+};
+
+exports.updateOfMember = (req, res) => {
+    console.log(req.query);
+    console.log('\nentered into updateOfMember');
+
+    const memberId = req.query.memberid;
+    if(!memberId) {
+        console.log('params memberId is ', memberId);
+        return res.sendStatus(404);
+    }
+
+    TaskDBController.updateOfMember(memberId, req.body, (err, updated) => {
+        if(err) {
+            return res.sendStatus(400);
+        }
+        if(!updated) {
             return res.sendStatus(400);
         }
         return res.sendStatus(200);
