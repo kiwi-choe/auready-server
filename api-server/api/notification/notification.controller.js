@@ -36,7 +36,7 @@ exports.sendNotification = (type, toUserId, fromUser, done) => {
             return done(false);
         }
 
-        if(!instanceId) {
+        if (!instanceId) {
             console.log('\ncouldnt find instanceId');
             return done(false);
         }
@@ -46,17 +46,19 @@ exports.sendNotification = (type, toUserId, fromUser, done) => {
         if (type === TYPES.friend_request) {
             noti_title = '친구 요청';
             noti_body = fromUser.name + ' 님이 친구하고 싶답니다.';
+        } else if (type === TYPES.exit_group_taskhead) {
+            noti_title = 'Group TaskHead';
+            noti_body = '';
         }
+
         let message = {
             to: instanceId,
             data: {
-                noti_type: TYPES.friend_request,
+                noti_type: type,
                 fromUserId: fromUser.id,
-                fromUserName: fromUser.name
-            },
-            notification: {
-                title: noti_title,
-                body: noti_body
+                fromUserName: fromUser.name,
+                notiTitle: noti_title,
+                notiBody: noti_body
             }
         };
 
@@ -71,5 +73,52 @@ exports.sendNotification = (type, toUserId, fromUser, done) => {
             return done(true);
         });
 
+    });
+};
+
+exports.exitTaskHead = (toUserIds, fromUser, taskHeadTitle, done) => {
+
+    // 1. Get the instanceId of toUsers
+    toUserIds.forEach((id, i) => {
+        User.getInstanceIdByUserId(id, (err, instanceId) => {
+            if (err) {
+                console.log('get instanceId is failed of ', id);
+                return done(false);
+            }
+
+            if (!instanceId) {
+                console.log('\ncouldnt find instanceId of ', id);
+                return done(false);
+            }
+
+            const noti_title = 'Group TaskHead';
+            const noti_body = fromUser.name + '님이 ' + taskHeadTitle + ' 에서 나갔습니다.';
+            let message = {
+                to: instanceId,
+                data: {
+                    noti_type: TYPES.exit_group_taskhead,
+                    fromUserId: fromUser.id,
+                    fromUserName: fromUser.name,
+                    notiTitle: noti_title,
+                    notiBody: noti_body
+                }
+            };
+            console.log('\nmessage - ', message);
+
+            // Send notifications to Users
+            // todo find the way that send a message to users at once
+            fcm.send(message, (err, res) => {
+                if (err) {
+                    console.log('something has gone wrong!, err- ', err);
+                    return done(false);
+                }
+                console.log('Successfully sent with response:', res);
+            });
+
+            if (i === toUserIds.length - 1) {
+                // success to send all the messages
+                return done(true);
+            }
+        });
     });
 };

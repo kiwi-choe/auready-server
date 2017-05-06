@@ -279,7 +279,7 @@ describe('Delete taskHeads', () => {
 
     const members = [
         {id: 'id_member0', name: 'member0', email: 'email_member1', tasks: []},
-        {id: 'id_member1', userId: 'otherUserId', name: 'member1', email: 'email_member1', tasks: []},
+        {id: 'id_member1', name: 'member1', email: 'email_member1', tasks: []},
     ];
     // console.log('currendUserId - ',currentUserId);
     // members[0].userId = currentUser.id;
@@ -293,27 +293,32 @@ describe('Delete taskHeads', () => {
     let accessToken;
     beforeEach(done => {
         // Register user first
-        User.create(name, email, password, true, (err, user, info) => {
-            // Add Token
-            Token.create(clientId, user.id, predefine.oauth2.type.password, (err, newToken) => {
-                accessToken = newToken.accessToken;
+        User.createMany((err, users) => {
+            const loggedinUser = users[0];
+            const otherUser = users[1];
 
-                savedTaskHeads.length = 0;
-                TaskHeadDBController.deleteAll(err => {
+                // Add Token
+                Token.create(clientId, loggedinUser.id, predefine.oauth2.type.password, (err, newToken) => {
+                    accessToken = newToken.accessToken;
 
-                    members[0].userId = user.id;
-                    // Create 3 taskHeads
-                    taskHeads.forEach((taskHead, i) => {
-                        TaskHeadDBController.create(taskHead, (err, newTaskHead) => {
-                            savedTaskHeads.push(newTaskHead);
+                    savedTaskHeads.length = 0;
+                    TaskHeadDBController.deleteAll(err => {
 
-                            if (taskHeads.length - 1 === i) {
-                                done();
-                            }
+                        members[0].userId = loggedinUser.id;
+                        members[1].userId = otherUser.id;
+                        // Create 3 taskHeads
+                        taskHeads.forEach((taskHead, i) => {
+                            TaskHeadDBController.create(taskHead, (err, newTaskHead) => {
+                                savedTaskHeads.push(newTaskHead);
+
+                                if (taskHeads.length - 1 === i) {
+                                    done();
+                                }
+                            });
                         });
                     });
                 });
-            });
+
         });
     });
     afterEach(done => {
@@ -321,23 +326,6 @@ describe('Delete taskHeads', () => {
         User.deleteAll(err => {
             Token.deleteAll(err => {
                 done();
-            });
-        });
-    });
-
-    beforeEach(done => {
-        savedTaskHeads.length = 0;
-        TaskHeadDBController.deleteAll(err => {
-
-            // Create 3 taskHeads
-            taskHeads.forEach((taskHead, i) => {
-                TaskHeadDBController.create(taskHead, (err, newTaskHead) => {
-                    savedTaskHeads.push(newTaskHead);
-
-                    if (taskHeads.length - 1 === i) {
-                        done();
-                    }
-                });
             });
         });
     });

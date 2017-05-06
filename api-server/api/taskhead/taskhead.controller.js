@@ -1,4 +1,5 @@
 const TaskHeadDBController = require(__appbase_dirname + '/models/task/taskhead.controller');
+const NotificationController = require(__appbase_dirname + '/api-server/api/notification/notification.controller');
 
 exports.create = (req, res) => {
 
@@ -49,20 +50,51 @@ exports.updateDetails = (req, res) => {
     });
 };
 
+const SendNotifications = (fromUser, titleAndMembersOfUpdatedTaskHeads) => {
+    console.log('entered into sendNotifications');
+
+    titleAndMembersOfUpdatedTaskHeads.forEach((updated, i) => {
+        const toUserIds = [];
+        updated.members.forEach((member, i) => {
+            toUserIds.push(member.userId);
+        });
+        const taskHeadTitle = updated.title;
+        NotificationController.exitTaskHead(toUserIds, fromUser, taskHeadTitle, (success) => {
+            if (!success) {
+                console.log('send notifications to fcm server is failed');
+            }
+
+            if(updated.length-1===i) {
+                console.log('success to send all notifications');
+            }
+        });
+    });
+};
+
 exports.deleteMulti = (req, res) => {
 
     let deletingTaskHeadIds = req.body.ids;
     if (!deletingTaskHeadIds) {
         return res.sendStatus(400);
     }
-    const userId = req.user.id;
-    TaskHeadDBController.deleteMulti(userId, deletingTaskHeadIds, (err, isRemoved) => {
+    const fromUser = {
+        id: req.user.id,
+        name: req.user.name
+    };
+    TaskHeadDBController.deleteMulti(req.user.id, deletingTaskHeadIds, (err, titleAndMembersOfUpdatedTaskHeads) => {
         if (err) {
             return res.sendStatus(401);
         }
-        if (!isRemoved) {
+        if (!titleAndMembersOfUpdatedTaskHeads) {
             return res.sendStatus(400);
         }
+        // updated arr length is 0, returns only 200 status code
+        if (titleAndMembersOfUpdatedTaskHeads.length === 0) {
+            return res.sendStatus(200);
+        }
+        // else, Send notifications to other members and returns response
+        console.log('..............');
+        SendNotifications(fromUser, titleAndMembersOfUpdatedTaskHeads);
         return res.sendStatus(200);
     });
 };

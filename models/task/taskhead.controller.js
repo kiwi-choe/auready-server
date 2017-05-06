@@ -49,11 +49,9 @@ const _deleteOne = (id, done) => {
 const deleteMemberByUserId = (userId, taskhead, done) => {
 
     // Delete the member from member array
-    function findMembers(member) {
+    let deletingIndex = taskhead.members.findIndex(member => {
         return (member.userId === userId);
-    }
-
-    let deletingIndex = taskhead.members.findIndex(findMembers);
+    });
     if(deletingIndex>=0) {
         taskhead.members.splice(deletingIndex, 1);
     }
@@ -67,9 +65,15 @@ const deleteMemberByUserId = (userId, taskhead, done) => {
 
 const _deleteMulti = (userId, ids, done) => {
 
-    // 1. Check members
+    let titleAndMembersOfUpdatedTaskHeads = [];
     ids.forEach((id, i) => {
         TaskHead.findOne({id: id}, (err, taskhead) => {
+            if(err) return done(err);
+            if(!taskhead){
+                console.log('no taskhead');
+                return done(null, false);
+            }
+
             // member is 0 or 1, delete the taskhead
             if (taskhead.members.length <= 1) {
                 _deleteOne(id, (err, isRemoved) => {
@@ -81,24 +85,32 @@ const _deleteMulti = (userId, ids, done) => {
                     }
 
                     if (ids.length - 1 === i) {
-                        return done(null, true);
+                        titleAndMembersOfUpdatedTaskHeads.length = 0;
+                        return done(null, titleAndMembersOfUpdatedTaskHeads);
                     }
                 });
             }
             else {
-                deleteMemberByUserId(userId, taskhead, (err, updatedTaskHead) => {
+                deleteMemberByUserId(userId, taskhead, (err, updated) => {
                     if(err) {
                         return done(err);
                     }
-                    if(!updatedTaskHead) {
+                    if(!updated) {
                         return done(null, false);
                     }
-
+                    //  make json
+                    let titleAndMembers = {
+                        title: updated.title,
+                        members: updated.members
+                    };
+                    titleAndMembersOfUpdatedTaskHeads.push(titleAndMembers);
+                    // returns all updatedTaskHeads
                     if (ids.length - 1 === i) {
-                        return done(null, true);
+                        return done(null, titleAndMembersOfUpdatedTaskHeads);
                     }
                 });
             }
+
         });
     });
 };
