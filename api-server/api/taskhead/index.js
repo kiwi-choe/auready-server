@@ -19,4 +19,7 @@ router.delete('/member/:id', controller.deleteMember);
 // Read taskHeads of the user - search by members.name
 router.get('/:userid', controller.getTaskHeads);
 
+// Read a taskHead by query id
+router.get('/', controller.getTaskHead);
+
 module.exports = router;

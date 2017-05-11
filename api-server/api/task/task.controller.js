@@ -89,15 +89,18 @@ exports.updateOfMember = (req, res) => {
 
     const memberId = req.query.memberid;
     if(!memberId) {
-        console.log('params memberId is ', memberId);
+        console.log('query memberId is ', memberId);
         return res.sendStatus(404);
     }
 
-    TaskDBController.updateOfMember(memberId, req.body, (err, updated) => {
+    TaskDBController.updateOfMember(memberId, req.body, (err, updated, noMemberErr) => {
         if(err) {
             return res.sendStatus(400);
         }
         if(!updated) {
+            if(noMemberErr === 204) {
+                return res.sendStatus(204);
+            }
             return res.sendStatus(400);
         }
         return res.sendStatus(200);

@@ -65,7 +65,7 @@ const deleteMemberByUserId = (userId, taskhead, done) => {
 
 const _deleteMulti = (userId, ids, done) => {
 
-    let titleAndMembersOfUpdatedTaskHeads = [];
+    let updatedTaskHeads = [];
     ids.forEach((id, i) => {
         TaskHead.findOne({id: id}, (err, taskhead) => {
             if(err) return done(err);
@@ -85,28 +85,23 @@ const _deleteMulti = (userId, ids, done) => {
                     }
 
                     if (ids.length - 1 === i) {
-                        titleAndMembersOfUpdatedTaskHeads.length = 0;
-                        return done(null, titleAndMembersOfUpdatedTaskHeads);
+                        updatedTaskHeads.length = 0;
+                        return done(null, updatedTaskHeads);
                     }
                 });
             }
             else {
-                deleteMemberByUserId(userId, taskhead, (err, updated) => {
+                deleteMemberByUserId(userId, taskhead, (err, updatedTaskHead) => {
                     if(err) {
                         return done(err);
                     }
-                    if(!updated) {
+                    if(!updatedTaskHead) {
                         return done(null, false);
                     }
-                    //  make json
-                    let titleAndMembers = {
-                        title: updated.title,
-                        members: updated.members
-                    };
-                    titleAndMembersOfUpdatedTaskHeads.push(titleAndMembers);
+                    updatedTaskHeads.push(updatedTaskHead);
                     // returns all updatedTaskHeads
                     if (ids.length - 1 === i) {
-                        return done(null, titleAndMembersOfUpdatedTaskHeads);
+                        return done(null, updatedTaskHeads);
                     }
                 });
             }

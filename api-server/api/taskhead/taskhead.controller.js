@@ -50,21 +50,21 @@ exports.updateDetails = (req, res) => {
     });
 };
 
-const SendNotifications = (fromUser, titleAndMembersOfUpdatedTaskHeads) => {
+const SendNotifications = (fromUser, updatedTaskHeads) => {
     console.log('entered into sendNotifications');
 
-    titleAndMembersOfUpdatedTaskHeads.forEach((updated, i) => {
+    updatedTaskHeads.forEach((updatedTaskHead, i) => {
         const toUserIds = [];
-        updated.members.forEach((member, i) => {
+        for (let member of updatedTaskHead.members) {
             toUserIds.push(member.userId);
-        });
-        const taskHeadTitle = updated.title;
+        }
+        const taskHeadTitle = updatedTaskHead.title;
         NotificationController.exitTaskHead(toUserIds, fromUser, taskHeadTitle, (success) => {
             if (!success) {
                 console.log('send notifications to fcm server is failed');
             }
 
-            if(updated.length-1===i) {
+            if (updatedTaskHeads.length - 1 === i) {
                 console.log('success to send all notifications');
             }
         });
@@ -81,20 +81,20 @@ exports.deleteMulti = (req, res) => {
         id: req.user.id,
         name: req.user.name
     };
-    TaskHeadDBController.deleteMulti(req.user.id, deletingTaskHeadIds, (err, titleAndMembersOfUpdatedTaskHeads) => {
+    TaskHeadDBController.deleteMulti(req.user.id, deletingTaskHeadIds, (err, updatedTaskHeads) => {
         if (err) {
             return res.sendStatus(401);
         }
-        if (!titleAndMembersOfUpdatedTaskHeads) {
+        if (!updatedTaskHeads) {
             return res.sendStatus(400);
         }
         // updated arr length is 0, returns only 200 status code
-        if (titleAndMembersOfUpdatedTaskHeads.length === 0) {
+        if (updatedTaskHeads.length === 0) {
             return res.sendStatus(200);
         }
         // else, Send notifications to other members and returns response
         console.log('..............');
-        SendNotifications(fromUser, titleAndMembersOfUpdatedTaskHeads);
+        SendNotifications(fromUser, updatedTaskHeads);
         return res.sendStatus(200);
     });
 };
@@ -120,6 +120,7 @@ exports.deleteMember = (req, res) => {
 // Get taskHeads of the member
 exports.getTaskHeads = (req, res) => {
 
+    console.log('entered into getTaskHeads - member');
     TaskHeadDBController.readByUserId(req.params.userid, (err, taskheads) => {
         if (err) {
             return res.sendStatus(400);
@@ -131,6 +132,30 @@ exports.getTaskHeads = (req, res) => {
         else {
             console.log('taskheads - ', taskheads);
             return res.status(200).json(taskheads);
+        }
+    });
+};
+
+// Get a taskHead by id
+exports.getTaskHead = (req, res) => {
+
+    console.log('entered into getTaskHead');
+    const taskheadId = req.query.id;
+    if(!taskheadId) {
+        console.log('query id is ', taskheadId);
+        return res.sendStatus(404);
+    }
+    TaskHeadDBController.readById(taskheadId, (err, taskhead) => {
+        if (err) {
+            return res.sendStatus(400);
+        }
+        if (!taskhead) {
+            console.log('\nno taskhead');
+            return res.sendStatus(204);
+        }
+        else {
+            console.log('taskhead - ', taskhead);
+            return res.status(200).json(taskhead);
         }
     });
 };

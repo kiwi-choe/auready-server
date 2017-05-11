@@ -197,7 +197,7 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
         });
     });
 
-    describe('GET taskHeads ', () => {
+    describe('GET ', () => {
 
         const membersA = [
             {id: 'member0_id', userId: 'stubbed_userId0', name: 'member0', email: 'email_member0', tasks: []},
@@ -268,6 +268,19 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
                 .end((err, res) => {
                     if (err) throw err;
                     res.status.should.equal(200);
+                    done();
+                });
+        });
+
+        it('Get /taskheads/:id returns 200', done => {
+            request
+                .get('/taskheads/?id=' + taskHeads[0].id)
+                .set({Authorization: 'Bearer' + ' ' + accessToken})
+                .expect(200)
+                .end((err, res) => {
+                    if (err) throw err;
+                    res.status.should.equal(200);
+                    res.body.should.have.property('id', 'TaskHead0_id');
                     done();
                 });
         });

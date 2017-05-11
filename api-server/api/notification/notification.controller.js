@@ -78,6 +78,8 @@ exports.sendNotification = (type, toUserId, fromUser, done) => {
 
 exports.exitTaskHead = (toUserIds, fromUser, taskHeadTitle, done) => {
 
+    const notiTitle = 'Group TaskHead';
+    const notiBody = fromUser.name + '님이 ' + taskHeadTitle + ' 에서 나갔습니다.';
     // 1. Get the instanceId of toUsers
     toUserIds.forEach((id, i) => {
         User.getInstanceIdByUserId(id, (err, instanceId) => {
@@ -91,16 +93,14 @@ exports.exitTaskHead = (toUserIds, fromUser, taskHeadTitle, done) => {
                 return done(false);
             }
 
-            const noti_title = 'Group TaskHead';
-            const noti_body = fromUser.name + '님이 ' + taskHeadTitle + ' 에서 나갔습니다.';
             let message = {
                 to: instanceId,
                 data: {
-                    noti_type: TYPES.exit_group_taskhead,
+                    notiType: TYPES.exit_group_taskhead,
                     fromUserId: fromUser.id,
                     fromUserName: fromUser.name,
-                    notiTitle: noti_title,
-                    notiBody: noti_body
+                    notiTitle: notiTitle,
+                    notiBody: notiBody
                 }
             };
             console.log('\nmessage - ', message);

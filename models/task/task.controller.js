@@ -105,8 +105,8 @@ const _updateOfMember = (memberId, updatingTasks, done) => {
             return done(err);
         }
         if(!taskhead) {
-            console.log('no taskhead');
-            return done(null, false);
+            console.log('There is no taskhead of ', memberId);
+            return done(null, false, 204);
         }
 
         let updatingMemberIndex = taskhead.members.findIndex(member => {
