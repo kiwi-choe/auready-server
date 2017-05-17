@@ -12,13 +12,13 @@ exports.friendRequest = (req, res) => {
     };
 
     NotificationController.sendNotification(TYPES.friend_request, toUserId, fromUser, isSuccess => {
-        if(!isSuccess) {
+        if (!isSuccess) {
             console.log('send a notification to fcm server is failed');
             return res.sendStatus(500);
         }
 
         RelationshipDBController.create(fromUser.id, toUserId, (err, relationship, info) => {
-            if(err) {
+            if (err) {
                 return res.sendStatus(400);
             }
             if (!relationship) {
@@ -86,7 +86,7 @@ exports.getFriends = (req, res) => {
                 return res.sendStatus(404); // Not found - users by ids
             }
             console.log(friends);
-            if(!friends) {
+            if (!friends) {
                 return res.sendStatus(204); // Not found
             }
             // and set the response body, 'friends' - id, name, email
@@ -110,12 +110,23 @@ exports.getPendingRequest = (req, res) => {
             console.log(info);
             return res.sendStatus(204); // no pending relationship
         }
-        // loop
-        let fromUsers = relationships.map(item => {
+
+        let ids = relationships.map(item => {
             return item.fromUserId;
         });
-        return res.status(200).json({
-            fromUsers: fromUsers
+        UserController.getUsersByIds(ids, (err, users) => {
+            if (err) {
+                console.log('Not found - users by ids');
+                return res.sendStatus(404);
+            }
+            if (!users) {
+                console.log('Not found');
+                return res.sendStatus(204);
+            }
+            console.log('users - ', users);
+            return res.status(200).json({
+                fromUsers: users
+            });
         });
     });
 };

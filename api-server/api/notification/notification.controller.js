@@ -54,7 +54,7 @@ exports.sendNotification = (type, toUserId, fromUser, done) => {
         let message = {
             to: instanceId,
             data: {
-                noti_type: type,
+                notiType: type,
                 fromUserId: fromUser.id,
                 fromUserName: fromUser.name,
                 notiTitle: noti_title,
