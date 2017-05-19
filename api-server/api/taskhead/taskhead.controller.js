@@ -117,6 +117,22 @@ exports.deleteMember = (req, res) => {
     });
 };
 
+// Get members by taskHeadId
+exports.getMembers = (req, res) => {
+    console.log('entered into getMembers');
+    const taskHeadId = req.params.id;
+    TaskHeadDBController.readMembers(taskHeadId, (err, members) => {
+        if(err) {
+            return res.sendStatus(401);
+        }
+        if(!members) {
+            return res.sendStatus(400);
+        }
+        console.log('members- ', members);
+        return res.status(200).json(members);
+    });
+};
+
 // Get taskHeads of the member
 exports.getTaskHeads = (req, res) => {
 

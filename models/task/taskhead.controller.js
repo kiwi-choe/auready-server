@@ -245,6 +245,18 @@ const _deleteAll = done => {
     });
 };
 
+const _readMembers = (taskHeadId, done) => {
+    _readById(taskHeadId, (err, taskHead) => {
+        if(err) {
+            return done(err);
+        }
+        if(!taskHead) {
+            return done(null, false);
+        }
+        return done(null, taskHead.members);
+    });
+};
+
 module.exports = {
     create: _create,
     readById: _readById,
@@ -253,5 +265,6 @@ module.exports = {
     deleteMulti: _deleteMulti,
     updateDetails: _updateDetails,
     deleteMember: _deleteMember,
+    readMembers: _readMembers,
     deleteAll: _deleteAll
 }

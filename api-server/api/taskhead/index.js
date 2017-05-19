@@ -16,6 +16,8 @@ router.delete('/', controller.deleteMulti);
 // Delete a member - [나가기] 기능
 router.delete('/member/:id', controller.deleteMember);
 
+router.get('/:id/members', controller.getMembers);
+
 // Read taskHeads of the user - search by members.name
 router.get('/:userid', controller.getTaskHeads);
 

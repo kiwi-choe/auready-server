@@ -284,6 +284,18 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
                     done();
                 });
         });
+
+        it('Get /:id/members returns 200', done => {
+            request
+                .get('/taskheads/' + taskHeads[0].id + '/members')
+                .set({Authorization: 'Bearer' + ' ' + accessToken})
+                .expect(200)
+                .end((err, res) => {
+                    if (err) throw err;
+                    res.status.should.equal(200);
+                    done();
+                });
+        });
     });
 
 });

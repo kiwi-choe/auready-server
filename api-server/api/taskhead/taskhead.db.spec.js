@@ -530,6 +530,18 @@ describe('There are taskheads in DB to Delete multi taskheads', () => {
             });
         });
     });
+
+    it('read members', done => {
+        const members = savedTaskHeads[1].members;
+        TaskHead.readById(savedTaskHeads[1].id, (err, taskHead) => {
+            if(!taskHead) {
+                assert.fail('no taskHead');
+                done();
+            }
+            assert.equal(taskHead.members.length, members.length);
+            done();
+        });
+    });
 });
 
 describe('Get taskheads', () => {
