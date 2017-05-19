@@ -305,5 +305,21 @@ describe('There is a taskhead in DB ', () => {
             });
         });
 
+        it('read tasks by memberid', done => {
+            const memberId = test_members[0].id;
+            TaskHeadModel.findOne({'members.id': memberId}, (err, taskHead) => {
+                if(err) done(err);
+                if(!taskHead) {
+                    console.log('no taskhead');
+                    done();
+                }
+                let foundMemberIndex = taskHead.members.findIndex(member => {
+                    return member.id === memberId;
+                });
+                const taskArr = taskHead.members[foundMemberIndex].tasks;
+                console.log(taskArr);
+                done();
+            });
+        });
     });
 });

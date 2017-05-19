@@ -245,5 +245,17 @@ describe('Task - need the accessToken to access API resources and pre saved Task
                     done();
                 });
         });
+
+        it('GET /tasks/:memberid returns 200', done => {
+            request
+                .get('/tasks/' + test_members[0].id)
+                .set({Authorization: 'Bearer' + ' ' + accessToken})
+                .expect(200)
+                .end((err, res) => {
+                    if (err) throw err;
+                    res.status.should.equal(200);
+                    done();
+                });
+        });
     });
 });

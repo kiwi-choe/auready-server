@@ -207,12 +207,28 @@ const _deleteAll = (id, done) => {
     });
 };
 
+const _readByMemberId = (memberId, done) => {
+    TaskHead.findOne({'members.id': memberId}, (err, taskHead) => {
+        if(err) return done(err);
+        if(!taskHead) {
+            console.log('no taskhead');
+            return done(null, false);
+        }
+        let foundMemberIndex = taskHead.members.findIndex(member => {
+            return member.id === memberId;
+        });
+        const taskArr = taskHead.members[foundMemberIndex].tasks;
+        return done(null, taskArr);
+    });
+};
+
 module.exports = {
     create: _create,
     delete: _delete,
     updateOfTaskHead: _updateOfTaskHead,
     updateOfMember: _updateOfMember,
     readById: _readById,
+    readByMemberId: _readByMemberId,
     deleteMulti: _deleteMulti,
     deleteAll: _deleteAll
 }

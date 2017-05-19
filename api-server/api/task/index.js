@@ -15,4 +15,8 @@ router.delete('/:id', controller.delete);
 router.put('/:taskheadid', controller.updateOfTaskHead);
 // Update tasks of a member
 router.put('/', controller.updateOfMember);
+
+// Get tasks of a member
+router.get('/:memberid', controller.getTasksOfMember);
+
 module.exports = router;

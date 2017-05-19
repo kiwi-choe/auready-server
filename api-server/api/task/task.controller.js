@@ -106,3 +106,18 @@ exports.updateOfMember = (req, res) => {
         return res.sendStatus(200);
     });
 };
+
+exports.getTasksOfMember = (req, res) => {
+    console.log('entered into getTasksOfMember');
+    const memberId = req.params.memberid;
+    TaskDBController.readByMemberId(memberId, (err, tasks) => {
+        if(err) {
+            return res.sendStatus(400);
+        }
+        if(!tasks) {
+            console.log('no tasks');
+            return res.sendStatus(204);
+        }
+        return res.status(200).json(tasks);
+    });
+};
