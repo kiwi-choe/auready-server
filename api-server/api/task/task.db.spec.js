@@ -92,21 +92,6 @@ describe('There is a taskhead in DB ', () => {
 
         });
 
-        it('delete a task - xxx refactoring', done => {
-            let id = test_tasks[0].id;
-            console.log('deleting id - ', id);
-            TaskHeadModel.update({'members.tasks.id': id},
-                // {'$pull': {'members': { 'tasks': {id: id}}}}, (err, updated) => {
-                {$pull: {members: {tasks: {id: id}}}}, (err, updated) => {
-                    console.log(updated);
-                    // Check updated taskhead
-                    TaskHeadModel.findOne({id: savedTaskHead.id}, (err, taskhead) => {
-                        console.log(taskhead.members);
-                        done();
-                    });
-                });
-        });
-
         it('delete a task test', done => {
             let id = test_tasks[0].id;
             console.log('deleting id - ', id);
@@ -145,14 +130,16 @@ describe('There is a taskhead in DB ', () => {
             });
         });
 
+
         it('updating task index is 1', done => {
+
             const taskObj = {
+                id: test_tasks[1].id,
                 description: 'desUPDATE!!!!!',
                 completed: true
             };
 
-            const updatingTask = test_tasks[1];
-            TaskHeadModel.findOne({'members.tasks.id': updatingTask.id}, (err, taskhead) => {
+            TaskHeadModel.findOne({'members.tasks.id': taskObj.id}, (err, taskhead) => {
                 if (err) {
                     assert.fail('called with wrong id');
                     done();
@@ -161,33 +148,24 @@ describe('There is a taskhead in DB ', () => {
                     assert.fail('called with wrong id');
                     done();
                 }
+                for(let member of taskhead.members) {
+                    for(let i in member.tasks) {
+                        if (member.tasks[i].id === taskObj.id) {
+                            // Update a task of this taskhead
+                            console.log('\nmember.tasks[i] - ', member.tasks[i]);
+                            member.tasks[i].description = taskObj.description;
+                            member.tasks[i].completed = taskObj.completed;
 
-                console.log('\n\n--------before \n taskhead.members[0].tasks - ', taskhead.members[0].tasks);
-                // extract the updating task from tasks array
-                const taskArr = taskhead.members[0].tasks;
-                let updatingTaskIndex = taskArr.findIndex((task) => {
-                    return task.id === updatingTask.id;
-                });
-
-                assert.equal(updatingTaskIndex, 1, 'savedTaskHead index same to updatingTaskIndex');
-
-                // Overwrite data
-                taskArr[updatingTaskIndex].description = taskObj.description;
-                taskArr[updatingTaskIndex].completed = taskObj.completed;
-                console.log('\ntaskArr - ', taskArr);
-                // Update taskhead
-                taskhead.save((err, updatedTaskHead) => {
-                    if (err) {
-                        assert.fail('fail to update');
+                            taskhead.save((err, updated) => {
+                                console.log('updated - ', updated.members[0].tasks);
+                                console.log('updated - ', updated.members[1].tasks);
+                                assert.equal(updated.members[0].tasks[i].id, taskObj.id);
+                                assert.equal(updated.members[0].tasks[i].description, taskObj.description);
+                                done();
+                            });
+                        }
                     }
-
-                    if (!updatedTaskHead) {
-                        assert.fail('fail to update');
-                        done();
-                    }
-                    console.log('\n\n--------after \n updatedTaskHead.member[0] - ', updatedTaskHead.members[0]);
-                    done();
-                });
+                }
             });
         });
 
@@ -221,52 +199,6 @@ describe('There is a taskhead in DB ', () => {
                     }
                     assert.equal(updated.members[0].tasks[0].description, updatingTasks[0].description);
                     console.log(updated.members[0].tasks);
-                    done();
-                });
-            });
-        });
-
-        it('updating tasks with tasks.id', done => {
-            const taskObj = {
-                description: 'desUPDATE!!!!!',
-                completed: true
-            };
-
-            const updatingTask = test_tasks[1];
-            TaskHeadModel.findOne({'members.tasks.id': updatingTask.id}, (err, taskhead) => {
-                if (err) {
-                    assert.fail('called with wrong id');
-                    done();
-                }
-                if (!taskhead) {
-                    assert.fail('called with wrong id');
-                    done();
-                }
-
-                console.log('\n\n--------before \n taskhead.members[0].tasks - ', taskhead.members[0].tasks);
-                // extract the updating task from tasks array
-                const taskArr = taskhead.members[0].tasks;
-                let updatingTaskIndex = taskArr.findIndex((task) => {
-                    return task.id === updatingTask.id;
-                });
-
-                assert.equal(updatingTaskIndex, 1, 'savedTaskHead index same to updatingTaskIndex');
-
-                // Overwrite data
-                taskArr[updatingTaskIndex].description = taskObj.description;
-                taskArr[updatingTaskIndex].completed = taskObj.completed;
-                console.log('\ntaskArr - ', taskArr);
-                // Update taskhead
-                taskhead.save((err, updatedTaskHead) => {
-                    if (err) {
-                        assert.fail('fail to update');
-                    }
-
-                    if (!updatedTaskHead) {
-                        assert.fail('fail to update');
-                        done();
-                    }
-                    console.log('\n\n--------after \n updatedTaskHead.member[0] - ', updatedTaskHead.members[0]);
                     done();
                 });
             });

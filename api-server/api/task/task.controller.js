@@ -1,9 +1,8 @@
 const TaskDBController = require(__appbase_dirname + '/models/task/task.controller');
-const TaskHeadDBController = require(__appbase_dirname + '/models/task/taskhead.controller');
-const TaskHead = require(__appbase_dirname + '/models/task/taskhead');
 
 exports.create = (req, res) => {
 
+    console.log('entered into create');
     const memberId = req.params.memberid;
     if(!memberId) {
         console.log('memberId is ' + memberId);
@@ -20,34 +19,14 @@ exports.create = (req, res) => {
             return res.sendStatus(400);
         }
         if(createdTask) {
-            console.log(createdTask);
+            console.log('createdTask - ', createdTask);
             return res.sendStatus(201);
         }
         return res.sendStatus(400);
     });
 };
 
-exports.deleteMulti = (req, res) => {
-
-    let deletingTaskIds = req.body.ids;
-    if(!deletingTaskIds) {
-        return res.sendStatus(400);
-    }
-
-    TaskDBController.deleteMulti(deletingTaskIds, (err, isRemoved) => {
-        if (err) {
-            return res.sendStatus(401);
-        }
-        if (!isRemoved) {
-            return res.sendStatus(400);
-        } else {
-            return res.sendStatus(200);
-        }
-    });
-};
-
 exports.delete = (req, res) => {
-
     console.log('entered into delete');
     TaskDBController.delete(req.params.id, (err, isRemoved) => {
         if(err) {
@@ -64,9 +43,9 @@ exports.delete = (req, res) => {
 exports.updateOfTaskHead = (req, res) => {
     console.log('\nentered into update tasks');
 
-    const taskheadId = req.params.taskheadid;
+    const taskheadId = req.params.id;
     if(!taskheadId) {
-        console.log('req params taskheadid is ', taskheadId);
+        console.log('req params id is ', taskheadId);
         return res.sendStatus(400);
     }
 
@@ -84,12 +63,11 @@ exports.updateOfTaskHead = (req, res) => {
 };
 
 exports.updateOfMember = (req, res) => {
-    console.log(req.query);
     console.log('\nentered into updateOfMember');
 
-    const memberId = req.query.memberid;
+    const memberId = req.params.id;
     if(!memberId) {
-        console.log('query memberId is ', memberId);
+        console.log('params memberId is ', memberId);
         return res.sendStatus(404);
     }
 
@@ -107,6 +85,30 @@ exports.updateOfMember = (req, res) => {
     });
 };
 
+exports.changeCompletedOfTask = (req, res) => {
+    console.log('entered into changeCompletedOfTask');
+    const taskId = req.params.id;
+    if(!taskId) {
+        console.log('params taskId is ', taskId);
+        return res.sendStatus(404);
+    }
+    const taskInfo = {
+        id: req.body.id,
+        description: req.body.description,
+        completed: req.body.completed,
+        order: req.body.order
+    };
+    TaskDBController.changeCompleted(taskId, taskInfo, (err, updated) => {
+        if(err) {
+            return res.sendStatus(400);
+        }
+        if(!updated) {
+            return res.sendStatus(400);
+        }
+        return res.sendStatus(200);
+    });
+};
+
 exports.getTasksOfMember = (req, res) => {
     console.log('entered into getTasksOfMember');
     const memberId = req.params.memberid;
@@ -118,6 +120,7 @@ exports.getTasksOfMember = (req, res) => {
             console.log('no tasks');
             return res.sendStatus(204);
         }
+        console.log('tasks - ', tasks);
         return res.status(200).json(tasks);
     });
 };

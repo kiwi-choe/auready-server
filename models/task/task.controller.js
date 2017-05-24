@@ -122,63 +122,46 @@ const _updateOfMember = (memberId, updatingTasks, done) => {
             if(!updated) {
                 return done(null, false);
             }
-            console.log('updated.members[0] -', updated.members[0]);
-            console.log('updated.members[1] -', updated.members[1]);
             return done(null, updated);
         });
     });
 };
 
-const _readById = (id, done) => {
-    TaskHead.findOne({'members.task.id': id}, (err, taskHead) => {
-        if (err) return done(err);
-        if (!taskHead) return done(null, false);
-        if (taskHead.members[0]) {
-            if (taskHead.members[0].tasks[0]) {
+const _changeCompleted = (taskId, taskInfo, done) => {
 
-            }
-        }
-        const taskByTaskId = taskHead.members[0].tasks[0];
-        if (!taskByTaskId) return done(null, false);
-    });
-};
-
-const _deleteMulti = (ids, done) => {
-
-    // find tasks including this task ids
-    TaskHead.findOne({'members.tasks.id': {$in: ids}}, (err, taskhead) => {
+    TaskHead.findOne({'members.tasks.id': taskId}, (err, taskhead) => {
         if (err) {
             return done(err);
         }
         if (!taskhead) {
-            console.log('couldn\'t find the taskhead');
+            console.log('called with wrong id');
             return done(null, false);
         }
 
-        // found taskhead's member is only one coz task's id is unique - taskhead.member.length: 1
-        // delete tasks from task array
-        const taskArr = taskhead.members[0].tasks;
-        ids.forEach((deletingTaskId, i) => {
-            let deletingIndex = taskArr.findIndex((task) => {
-                return task.id === deletingTaskId;
-            });
-            let deletedTask = taskArr.splice(deletingIndex, 1);
-            console.log('\ndeletedTask - ', deletedTask);
+        for (let i in taskhead.members) {
+            const member = taskhead.members[i];
+            for (let j in member.tasks) {
+                if (member.tasks[j].id === taskId) {
+                    // Update a task of this taskhead
+                    member.tasks[j].description = taskInfo.description;
+                    member.tasks[j].completed = taskInfo.completed;
+                    member.tasks[j].order = taskInfo.order;
 
-            if (ids.length - 1 === i) {
-                // Update taskhead
-                taskhead.save((err, updatedTaskHead) => {
-                    if (err) {
-                        return done(err);
-                    }
-                    if (updatedTaskHead) {
-                        console.log('\nupdatedTaskHead.member[0].tasks - ', updatedTaskHead.members[0].tasks);
-                        return done(null, updatedTaskHead);
-                    }
-                    return done(null, false);
-                });
+                    taskhead.save((err, updated) => {
+                        if (err) return done(err);
+                        if (!updated) return done(null, false);
+                        // Check the new tasks are saved
+                        const updatedTasks = updated.members[i].tasks;
+                        if (updatedTasks) {
+                            console.log('updatedTasks - ', updatedTasks);
+                            return done(null, true);
+                        }
+                        return done(null, false);
+                    });
+                }
             }
-        });
+
+        }
     });
 };
 
@@ -227,8 +210,7 @@ module.exports = {
     delete: _delete,
     updateOfTaskHead: _updateOfTaskHead,
     updateOfMember: _updateOfMember,
-    readById: _readById,
+    changeCompleted: _changeCompleted,
     readByMemberId: _readByMemberId,
-    deleteMulti: _deleteMulti,
     deleteAll: _deleteAll
 }

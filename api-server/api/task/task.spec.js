@@ -27,7 +27,7 @@ const test_tasks1 = [
 ];
 const test_members = [
     {id: 'stubbedMemberId0', name: 'member0', email: 'email_member0', tasks: test_tasks},
-    {id: 'stubbedMemberId1', name: 'member1', email: 'email_member1', tasks: test_tasks}
+    {id: 'stubbedMemberId1', name: 'member1', email: 'email_member1', tasks: test_tasks1}
 ];
 const test_taskhead = {
     id: 'stubbedTaskHeadId',
@@ -106,60 +106,9 @@ describe('Task - need the accessToken to access API resources and pre saved Task
     });
 
     describe('DELETE or PUT /tasks', () => {
-        let savedTasks = [];
-        beforeEach(done => {
-            // Remove All tasks of taskhead
-            savedTasks.length = 0;
-            TaskController.deleteAll(savedTaskHead.id, (err, isRemoved) => {
-                assert.ifError(err);
-                isRemoved.should.be.true('isRemoved should be true');
-
-                // Create 3 tasks
-                test_tasks.forEach((task, i) => {
-                    TaskController.create(savedTaskHead.members[0].id, task, (err, newTask) => {
-                        savedTasks.push(newTask);
-
-                        if (test_tasks.length - 1 === i) {
-                            assert.equal(savedTasks.length, 3);
-                            done();
-                        }
-                    });
-                });
-
-            });
-        });
-
-        it('DELETE /tasks/ returns 200', done => {
-            let deletingTaskIds = [];
-            deletingTaskIds.push(savedTasks[0].id);
-            deletingTaskIds.push(savedTasks[2].id);
-
-            request
-                .delete('/tasks/')
-                .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .expect(200)
-                .send({ids: deletingTaskIds})
-                .end((err, res) => {
-                    if (err) throw err;
-                    res.status.should.equal(200);
-                    done();
-                });
-        });
-
-        it('DELETE tasks - deletingTaskIds is undefined - returns 400', done => {
-            request
-                .delete('/tasks/')
-                .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .expect(400)
-                .end((err, res) => {
-                    if (err) throw err;
-                    res.status.should.equal(400);
-                    done();
-                });
-        });
 
         it('DELETE /tasks/:id returns 200', done => {
-            const deletingTaskId = savedTasks[0].id;
+            const deletingTaskId = test_tasks[0].id;
             request
                 .delete('/tasks/' + deletingTaskId)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
@@ -185,7 +134,7 @@ describe('Task - need the accessToken to access API resources and pre saved Task
 
         it('PUT /tasks/ - no params returns 400', done => {
             request
-                .put('/tasks/')
+                .put('/tasks/taskhead/')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .expect(400)
                 .end((err, res) => {
@@ -195,7 +144,7 @@ describe('Task - need the accessToken to access API resources and pre saved Task
                 });
         });
 
-        it('PUT /tasks/:taskheadid 1 returns 200', done => {
+        it('PUT /tasks/taskhead/:id 1 returns 200', done => {
             const updatingTasks = [
                 {id: test_tasks[0].id, description: 'updating DES0', completed: false, order: 0},
                 {id: test_tasks[1].id, description: 'updating DES1', completed: false, order: 0}];
@@ -207,7 +156,7 @@ describe('Task - need the accessToken to access API resources and pre saved Task
                     {memberid: test_members[1].id, tasks: updatingTasks1}
                 ];
             request
-                .put('/tasks/' + test_taskhead.id)
+                .put('/tasks/taskhead/' + test_taskhead.id)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .send(memberTasks)
                 .expect(200)
@@ -218,13 +167,13 @@ describe('Task - need the accessToken to access API resources and pre saved Task
                 });
         });
 
-        it('PUT /tasks/?memberid= memberid value returns 200', done => {
+        it('PUT /tasks/member/:id value returns 200', done => {
             const updatingTasks = [
                 {id: test_tasks[0].id, description: 'updating DES0', completed: false, order: 0},
                 {id: test_tasks[1].id, description: 'updating DES1', completed: false, order: 0}];
 
             request
-                .put('/tasks/?memberid=' + test_members[0].id)
+                .put('/tasks/member/' + test_members[0].id)
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .send(updatingTasks)
                 .expect(200)
@@ -234,7 +183,19 @@ describe('Task - need the accessToken to access API resources and pre saved Task
                     done();
                 });
         });
-        it('PUT /tasks/?memberid= returns 404', done => {
+        it('PUT /tasks/member/ returns 404', done => {
+            request
+                .put('/tasks/member/')
+                .set({Authorization: 'Bearer' + ' ' + accessToken})
+                .expect(404)
+                .end((err, res) => {
+                    if (err) throw err;
+                    res.status.should.equal(404);
+                    done();
+                });
+        });
+
+        it('PUT /tasks/ with no params returns 404', done => {
             request
                 .put('/tasks/')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
@@ -242,6 +203,21 @@ describe('Task - need the accessToken to access API resources and pre saved Task
                 .end((err, res) => {
                     if (err) throw err;
                     res.status.should.equal(404);
+                    done();
+                });
+        });
+
+        it('PUT /tasks/:id returns 200', done => {
+            const updatingTask = {id: test_tasks[2].id, description: 'updating DES0', completed: true, order: 0};
+
+            request
+                .put('/tasks/' + updatingTask.id)
+                .set({Authorization: 'Bearer' + ' ' + accessToken})
+                .send(updatingTask)
+                .expect(200)
+                .end((err, res) => {
+                    if (err) throw err;
+                    res.status.should.equal(200);
                     done();
                 });
         });
