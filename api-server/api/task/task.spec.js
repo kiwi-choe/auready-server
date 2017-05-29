@@ -72,15 +72,15 @@ describe('Task - need the accessToken to access API resources and pre saved Task
     });
 
     describe('POST /tasks', () => {
-        it('it should not POST a task without memberId field and returns 400', done => {
+        it('it should not POST a task without memberId field and returns 404', done => {
             request
                 .post('/tasks/')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .send({task: taskObj})
-                .expect(400)
+                .expect(404)
                 .end((err, res) => {
                     if (err) throw err;
-                    res.status.should.equal(400);
+                    res.status.should.equal(404);
                     done();
                 });
         });
@@ -107,39 +107,14 @@ describe('Task - need the accessToken to access API resources and pre saved Task
 
     describe('DELETE or PUT /tasks', () => {
 
-        it('DELETE /tasks/:id returns 200', done => {
-            const deletingTaskId = test_tasks[0].id;
-            request
-                .delete('/tasks/' + deletingTaskId)
-                .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .expect(200)
-                .end((err, res) => {
-                    if (err) throw err;
-                    res.status.should.equal(200);
-                    done();
-                });
-        });
-
-        it('DELETE a task - deletingTaskId is wrong id - returns 400', done => {
-            request
-                .delete('/tasks/' + 'wrong id')
-                .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .expect(400)
-                .end((err, res) => {
-                    if (err) throw err;
-                    res.status.should.equal(400);
-                    done();
-                });
-        });
-
-        it('PUT /tasks/ - no params returns 400', done => {
+        it('PUT /tasks/ - no params returns 404', done => {
             request
                 .put('/tasks/taskhead/')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .expect(400)
+                .expect(404)
                 .end((err, res) => {
                     if (err) throw err;
-                    res.status.should.equal(400);
+                    res.status.should.equal(404);
                     done();
                 });
         });
@@ -191,33 +166,6 @@ describe('Task - need the accessToken to access API resources and pre saved Task
                 .end((err, res) => {
                     if (err) throw err;
                     res.status.should.equal(404);
-                    done();
-                });
-        });
-
-        it('PUT /tasks/ with no params returns 404', done => {
-            request
-                .put('/tasks/')
-                .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .expect(404)
-                .end((err, res) => {
-                    if (err) throw err;
-                    res.status.should.equal(404);
-                    done();
-                });
-        });
-
-        it('PUT /tasks/:id returns 200', done => {
-            const updatingTask = {id: test_tasks[2].id, description: 'updating DES0', completed: true, order: 0};
-
-            request
-                .put('/tasks/' + updatingTask.id)
-                .set({Authorization: 'Bearer' + ' ' + accessToken})
-                .send(updatingTask)
-                .expect(200)
-                .end((err, res) => {
-                    if (err) throw err;
-                    res.status.should.equal(200);
                     done();
                 });
         });

@@ -148,8 +148,8 @@ describe('There is a taskhead in DB ', () => {
                     assert.fail('called with wrong id');
                     done();
                 }
-                for(let member of taskhead.members) {
-                    for(let i in member.tasks) {
+                for (let member of taskhead.members) {
+                    for (let i in member.tasks) {
                         if (member.tasks[i].id === taskObj.id) {
                             // Update a task of this taskhead
                             console.log('\nmember.tasks[i] - ', member.tasks[i]);
@@ -189,17 +189,157 @@ describe('There is a taskhead in DB ', () => {
                 Array.prototype.push.apply(taskArr, updatingTasks);
 
                 taskhead.save((err, updated) => {
-                    if(err) {
+                    if (err) {
                         assert.ifError(err);
                         done();
                     }
-                    if(!updated) {
+                    if (!updated) {
                         assert.fail();
                         done();
                     }
                     assert.equal(updated.members[0].tasks[0].description, updatingTasks[0].description);
                     console.log(updated.members[0].tasks);
                     done();
+                });
+            });
+        });
+
+        it('ADD or Edit tasks of memberid - comparing tasks', done => {
+            const memberId = test_members[0].id;
+            const paramsTasks = [
+                {id: test_tasks[0].id, description: 'updating DES0', completed: false, order: 0},
+                {id: 'new task id', description: 'NEW TASK', completed: false, order: 0}
+            ];
+            TaskHeadModel.findOne({'members.id': memberId}, (err, taskhead) => {
+
+                let updatingMemberIndex = taskhead.members.findIndex(member => {
+                    return member.id === memberId;
+                });
+                const taskArr = taskhead.members[updatingMemberIndex].tasks;
+
+                const NOT_FOUND = -1;
+                const newTasks = [];
+                paramsTasks.forEach((updatingTask, i) => {
+
+                    // if taskArr do not contains paramsTasks,
+                    const indexOfTask = taskArr.findIndex(task => {
+                        return task.id === updatingTask.id;
+                    });
+                    if (indexOfTask === NOT_FOUND) {
+                        // add the task - gather new tasks into temp array
+                        newTasks.push(updatingTask);
+                    } else {
+                        // overwrite the task into the index
+                        taskArr[indexOfTask] = updatingTask;
+                    }
+
+                    if (i === paramsTasks.length - 1) {
+                        if (newTasks.length > 0) {
+                            Array.prototype.push.apply(taskArr, newTasks);
+
+                            taskhead.save((err, updated) => {
+                                if (err) {
+                                    assert.ifError(err);
+                                    done();
+                                }
+                                if (!updated) {
+                                    assert.fail();
+                                    done();
+                                }
+                                // Check ADD is succeeded
+                                assert.equal(updated.members[updatingMemberIndex].tasks.length, 4);
+                                // Check EDIT is succeeded
+                                if (updated.members[updatingMemberIndex].tasks[0].id === paramsTasks[0].id) {
+                                    assert.equal(updated.members[updatingMemberIndex].tasks[0].description, paramsTasks[0].description);
+                                }
+                                done();
+                            });
+                        }
+                    }
+                });
+            });
+        });
+
+        it('ADD or Edit or Delete tasks of memberid - comparing tasks', done => {
+            const memberId = test_members[0].id;
+            /*
+             * index 0; Edit
+             * index 1; Delete
+             * new task; Add
+             * */
+            const paramsTasks = [
+                {id: test_tasks[0].id, description: 'updating DES0', completed: false, order: 0},
+                {id: 'new task id', description: 'NEW TASK', completed: false, order: 0},
+                {id: 'stubbedTaskId2', description: 'des2', completed: false, order: 0}
+            ];
+            TaskHeadModel.findOne({'members.id': memberId}, (err, taskhead) => {
+
+                if (!taskhead) {
+                    console.log('no member');
+                    done();
+                }
+                let updatingMemberIndex = taskhead.members.findIndex(member => {
+                    return member.id === memberId;
+                });
+                const taskArr = taskhead.members[updatingMemberIndex].tasks;
+
+                // Start to Delete
+                const NOT_FOUND = -1;
+                const loopTaskArr = [];
+                Array.prototype.push.apply(loopTaskArr, taskArr);
+                loopTaskArr.forEach((task, i) => {
+                    const indexOfUpdatingTask = paramsTasks.findIndex(updatingTask => {
+                        return updatingTask.id === task.id;
+                    });
+                    if (indexOfUpdatingTask === NOT_FOUND) {
+                        // Delete the task
+                        taskArr.splice(i, 1);
+                    }
+                    // End of Delete
+                    if (i === loopTaskArr.length - 1) {
+                        // Add or Edit
+                        const newTasks = [];
+                        paramsTasks.forEach((updatingTask, i) => {
+
+                            // if taskArr do not contains paramsTasks,
+                            const indexOfTask = taskArr.findIndex(task => {
+                                return task.id === updatingTask.id;
+                            });
+                            if (indexOfTask === NOT_FOUND) {
+                                // add the task - gather new tasks into temp array
+                                newTasks.push(updatingTask);
+                            } else {
+                                // overwrite the task into the index
+                                taskArr[indexOfTask] = updatingTask;
+                            }
+
+
+                            if (i === paramsTasks.length - 1) {
+                                if (newTasks.length > 0) {
+                                    Array.prototype.push.apply(taskArr, newTasks);
+                                }
+                                taskhead.save((err, updated) => {
+                                    if (err) {
+                                        assert.ifError(err);
+                                        done();
+                                    }
+                                    if (!updated) {
+                                        assert.fail();
+                                        done();
+                                    }
+                                    // Check ADD is succeeded
+                                    assert.equal(updated.members[updatingMemberIndex].tasks.length, 3);
+                                    // Check EDIT is succeeded
+                                    if (updated.members[updatingMemberIndex].tasks[0].id === paramsTasks[0].id) {
+                                        assert.equal(updated.members[updatingMemberIndex].tasks[0].description, paramsTasks[0].description);
+                                    }
+                                    // Check DEL is succeeded
+                                    console.log(updated.members[updatingMemberIndex].tasks);
+                                    done();
+                                });
+                            }
+                        });
+                    }
                 });
             });
         });
@@ -240,8 +380,8 @@ describe('There is a taskhead in DB ', () => {
         it('read tasks by memberid', done => {
             const memberId = test_members[0].id;
             TaskHeadModel.findOne({'members.id': memberId}, (err, taskHead) => {
-                if(err) done(err);
-                if(!taskHead) {
+                if (err) done(err);
+                if (!taskHead) {
                     console.log('no taskhead');
                     done();
                 }

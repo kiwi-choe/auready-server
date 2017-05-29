@@ -24,40 +24,6 @@ const _create = (memberId, newTask, done) => {
     });
 };
 
-const _delete = (id, done) => {
-    TaskHead.findOne({'members.tasks.id': id}, (err, taskhead) => {
-        if (err) {
-            return done(err);
-        }
-        if (!taskhead) {
-            console.log('no taskhead');
-            return done(null, false);
-        }
-
-        for (let i in taskhead.members) {
-            const member = taskhead.members[i];
-            for (let j in member.tasks) {
-                if (member.tasks[j].id === id) {
-                    // Remove a task of this taskhead
-                    member.tasks.splice(j, 1);
-
-                    taskhead.save((err, updated) => {
-                        if (err) return done(err);
-                        if (!updated) return done(null, false);
-                        // Check the new tasks are saved
-                        const updatedTasks = updated.members[i].tasks;
-                        if (updatedTasks) {
-                            return done(null, true);
-                        }
-                        return done(null, false);
-                    });
-                }
-            }
-
-        }
-    });
-};
-
 /*
  * Update tasks of a taskHead
  * ; Clear the existing tasks of a taskHead and push new updating tasks
@@ -101,10 +67,10 @@ const _updateOfTaskHead = (taskHeadId, memberTasks, done) => {
 
 const _updateOfMember = (memberId, updatingTasks, done) => {
     TaskHead.findOne({'members.id': memberId}, (err, taskhead) => {
-        if(err) {
+        if (err) {
             return done(err);
         }
-        if(!taskhead) {
+        if (!taskhead) {
             console.log('There is no taskhead of ', memberId);
             return done(null, false, 204);
         }
@@ -113,55 +79,51 @@ const _updateOfMember = (memberId, updatingTasks, done) => {
             return member.id === memberId;
         });
         const taskArr = taskhead.members[updatingMemberIndex].tasks;
-        // Init
-        taskArr.length = 0;
-        Array.prototype.push.apply(taskArr, updatingTasks);
-
-        taskhead.save((err, updated) => {
-            if(err) return done(err);
-            if(!updated) {
-                return done(null, false);
+        // Start to Delete
+        const NOT_FOUND = -1;
+        const loopTaskArr = [];
+        Array.prototype.push.apply(loopTaskArr, taskArr);
+        loopTaskArr.forEach((task, i) => {
+            const indexOfUpdatingTask = updatingTasks.findIndex(updatingTask => {
+                return updatingTask.id === task.id;
+            });
+            if (indexOfUpdatingTask === NOT_FOUND) {
+                // Delete the task
+                taskArr.splice(i, 1);
             }
-            return done(null, updated);
-        });
-    });
-};
-
-const _changeCompleted = (taskId, taskInfo, done) => {
-
-    TaskHead.findOne({'members.tasks.id': taskId}, (err, taskhead) => {
-        if (err) {
-            return done(err);
-        }
-        if (!taskhead) {
-            console.log('called with wrong id');
-            return done(null, false);
-        }
-
-        for (let i in taskhead.members) {
-            const member = taskhead.members[i];
-            for (let j in member.tasks) {
-                if (member.tasks[j].id === taskId) {
-                    // Update a task of this taskhead
-                    member.tasks[j].description = taskInfo.description;
-                    member.tasks[j].completed = taskInfo.completed;
-                    member.tasks[j].order = taskInfo.order;
-
-                    taskhead.save((err, updated) => {
-                        if (err) return done(err);
-                        if (!updated) return done(null, false);
-                        // Check the new tasks are saved
-                        const updatedTasks = updated.members[i].tasks;
-                        if (updatedTasks) {
-                            console.log('updatedTasks - ', updatedTasks);
-                            return done(null, true);
-                        }
-                        return done(null, false);
+            // End of Delete
+            if (i === loopTaskArr.length - 1) {
+                console.log('Start to add or edit');
+                // Start to Add or Edit
+                const newTasks = [];
+                updatingTasks.forEach((updatingTask, i) => {
+                    const indexOfTask = taskArr.findIndex(task => {
+                        return task.id === updatingTask.id;
                     });
-                }
-            }
+                    // if taskArr do not contains updatingTasks,
+                    if (indexOfTask === NOT_FOUND) {
+                        // add the task - gather new tasks into temp array
+                        newTasks.push(updatingTask);
+                    } else {
+                        // overwrite the task into the index
+                        taskArr[indexOfTask] = updatingTask;
+                    }
 
-        }
+                    if (i === updatingTasks.length - 1) {
+                        if (newTasks.length > 0) {
+                            Array.prototype.push.apply(taskArr, newTasks);
+                        }
+                        taskhead.save((err, updated) => {
+                            if (err) return done(err);
+                            if (!updated) {
+                                return done(null, false);
+                            }
+                            return done(null, updated.members[updatingMemberIndex].tasks);
+                        });
+                    }
+                });
+            }
+        });
     });
 };
 
@@ -192,8 +154,8 @@ const _deleteAll = (id, done) => {
 
 const _readByMemberId = (memberId, done) => {
     TaskHead.findOne({'members.id': memberId}, (err, taskHead) => {
-        if(err) return done(err);
-        if(!taskHead) {
+        if (err) return done(err);
+        if (!taskHead) {
             console.log('no taskhead');
             return done(null, false);
         }
@@ -207,10 +169,8 @@ const _readByMemberId = (memberId, done) => {
 
 module.exports = {
     create: _create,
-    delete: _delete,
     updateOfTaskHead: _updateOfTaskHead,
     updateOfMember: _updateOfMember,
-    changeCompleted: _changeCompleted,
     readByMemberId: _readByMemberId,
     deleteAll: _deleteAll
 }
