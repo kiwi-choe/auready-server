@@ -348,12 +348,23 @@ describe('There are taskheads in DB to Delete multi taskheads', () => {
             id: 'stubbed_taskheadId0',
             title: 'titleOfTaskHead0',
             color: 222,
+            orders: [{
+                userId: memberOne[0].userId,
+                orderNum: 0
+            }],
             members: memberOne
         },
         {
             id: 'stubbed_taskheadId1',
             title: 'titleOfTaskHead1',
             color: 222,
+            orders: [{
+                userId: membersTwo[0].userId,
+                orderNum: 0
+            }, {
+                userId: membersTwo[1].userId,
+                orderNum: 0
+            }],
             members: membersTwo
         }
     ];
@@ -534,12 +545,43 @@ describe('There are taskheads in DB to Delete multi taskheads', () => {
     it('read members', done => {
         const members = savedTaskHeads[1].members;
         TaskHead.readById(savedTaskHeads[1].id, (err, taskHead) => {
-            if(!taskHead) {
+            if (!taskHead) {
                 assert.fail('no taskHead');
                 done();
             }
             assert.equal(taskHead.members.length, members.length);
             done();
+        });
+    });
+
+    it('update orders', done => {
+        const userId = memberOne[0].userId;
+        const orderOfTaskHeads = [{
+            taskHeadId: taskHeads[0].id,
+            orderNum: 1
+        }, {
+            taskHeadId: taskHeads[1].id,
+            orderNum: 2
+        }];
+
+        orderOfTaskHeads.forEach((orderOfTaskHead, i) => {
+            TaskHeadModel.findOne({id: orderOfTaskHead.taskHeadId}, (err, taskhead) => {
+                const updatingOrderIndex = taskhead.orders.findIndex(order => {
+                    return order.userId === userId;
+                });
+                taskhead.orders[updatingOrderIndex].orderNum = orderOfTaskHead.orderNum;
+                taskhead.save((err, updatedTaskHead) => {
+                    if(!updatedTaskHead) {
+                        assert.fail('update fail');
+                        done();
+                    }
+                    console.log('updatedTaskHead - ', updatedTaskHead);
+                    if(i === orderOfTaskHeads.length-1) {
+                        done();
+                    }
+                });
+            });
+
         });
     });
 });

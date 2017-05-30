@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const taskSchema = mongoose.Schema({
-    // order: Number,       // extending function
     id: String,             // generated in Client
     modifiedTime: Number,   // == createdTime
     description: String,
@@ -21,11 +20,19 @@ const memberSchema = mongoose.Schema({
     _id: false
 });
 
+const orderOfTaskHeadSchema = mongoose.Schema({
+    userId: String,
+    orderNum: Number
+}, {
+    _id: false
+});
+
 const taskHeadSchema = mongoose.Schema({
     id: String,         // generated in Client
     title: String,
     color: Number,
     modifiedTime: Number,    // == createdTime
+    orders: [orderOfTaskHeadSchema],
     members: [memberSchema]
 });
 

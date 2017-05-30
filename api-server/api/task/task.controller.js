@@ -50,12 +50,14 @@ exports.updateOfMember = (req, res) => {
 
     TaskDBController.updateOfMember(memberId, req.body, (err, updated, noMemberErr) => {
         if (err) {
+            console.log('err');
             return res.sendStatus(400);
         }
         if (!updated) {
             if (noMemberErr === 204) {
                 return res.sendStatus(204);
             }
+            console.log('updated fail');
             return res.sendStatus(400);
         }
         console.log(updated);
@@ -74,7 +76,6 @@ exports.getTasksOfMember = (req, res) => {
             console.log('no tasks');
             return res.sendStatus(204);
         }
-        console.log('tasks - ', tasks);
         return res.status(200).json(tasks);
     });
 };

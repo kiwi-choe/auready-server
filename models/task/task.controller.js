@@ -57,7 +57,6 @@ const _updateOfTaskHead = (taskHeadId, memberTasks, done) => {
                 taskhead.save((err, updatedTaskHead) => {
                     if (err) return done(err);
                     if (!updatedTaskHead) return done(null, false);
-                    console.log('updatedTaskHead - ', updatedTaskHead);
                     return done(null, updatedTaskHead);
                 });
             }
@@ -65,6 +64,14 @@ const _updateOfTaskHead = (taskHeadId, memberTasks, done) => {
     });
 };
 
+/*
+ * 4 Cases
+ * tasksOfDB : paramTasks
+ * 0 : 0     nothing
+ * 0 : >0    ADD only
+ * >0 : 0    DEL only
+ * >0 : >0   ADD|DEL|EDIT
+ * */
 const _updateOfMember = (memberId, updatingTasks, done) => {
     TaskHead.findOne({'members.id': memberId}, (err, taskhead) => {
         if (err) {
@@ -78,52 +85,86 @@ const _updateOfMember = (memberId, updatingTasks, done) => {
         let updatingMemberIndex = taskhead.members.findIndex(member => {
             return member.id === memberId;
         });
-        const taskArr = taskhead.members[updatingMemberIndex].tasks;
-        // Start to Delete
-        const NOT_FOUND = -1;
-        const loopTaskArr = [];
-        Array.prototype.push.apply(loopTaskArr, taskArr);
-        loopTaskArr.forEach((task, i) => {
-            const indexOfUpdatingTask = updatingTasks.findIndex(updatingTask => {
-                return updatingTask.id === task.id;
+        const UPDATE = () => {
+            taskhead.save((err, updated) => {
+                if (err) return done(err);
+                if (!updated) {
+                    return done(null, false);
+                }
+                console.log('updated', updated.members[updatingMemberIndex].tasks);
+                return done(null, updated.members[updatingMemberIndex].tasks);
             });
-            if (indexOfUpdatingTask === NOT_FOUND) {
-                // Delete the task
-                taskArr.splice(i, 1);
-            }
-            // End of Delete
-            if (i === loopTaskArr.length - 1) {
-                console.log('Start to add or edit');
-                // Start to Add or Edit
-                const newTasks = [];
-                updatingTasks.forEach((updatingTask, i) => {
-                    const indexOfTask = taskArr.findIndex(task => {
-                        return task.id === updatingTask.id;
-                    });
-                    // if taskArr do not contains updatingTasks,
-                    if (indexOfTask === NOT_FOUND) {
-                        // add the task - gather new tasks into temp array
-                        newTasks.push(updatingTask);
-                    } else {
-                        // overwrite the task into the index
-                        taskArr[indexOfTask] = updatingTask;
-                    }
+        };
 
-                    if (i === updatingTasks.length - 1) {
-                        if (newTasks.length > 0) {
-                            Array.prototype.push.apply(taskArr, newTasks);
-                        }
-                        taskhead.save((err, updated) => {
-                            if (err) return done(err);
-                            if (!updated) {
-                                return done(null, false);
+        const taskArr = taskhead.members[updatingMemberIndex].tasks;
+        console.log('taskArr - ', taskArr);
+        console.log('updatingTasks - ', updatingTasks);
+
+        if (taskArr.length === 0) {
+            if (updatingTasks.length === 0) {
+                // nothing
+                return done(null, taskhead);
+            } else {
+                // ADD only
+                Array.prototype.push.apply(taskArr, updatingTasks);
+                UPDATE();
+            }
+        }
+        else {
+            if (updatingTasks.length === 0) {
+                // DEL only
+                // taskArr.length = 0;
+                taskArr.splice(0, taskArr.length);
+                taskhead.save((err, updated) => {
+                    if (err) return done(err);
+                    if (!updated) {
+                        return done(null, false);
+                    }
+                    console.log('updated', updated.members[updatingMemberIndex].tasks);
+                    return done(null, updated.members[updatingMemberIndex].tasks);
+                });
+                // UPDATE();
+            } else {
+                // Start to Delete
+                const NOT_FOUND = -1;
+                const loopTaskArr = [];
+                Array.prototype.push.apply(loopTaskArr, taskArr);
+                loopTaskArr.forEach((task, i) => {
+                    const indexOfUpdatingTask = updatingTasks.findIndex(updatingTask => {
+                        return updatingTask.id === task.id;
+                    });
+                    if (indexOfUpdatingTask === NOT_FOUND) {
+                        // Delete the task
+                        let deletingIndex = taskArr.indexOf(task);
+                        taskArr.splice(deletingIndex, 1);
+                    }
+                    // End of Delete
+                    if (i === loopTaskArr.length - 1) {
+                        console.log('Start to add or edit');
+                        // Start to Add or Edit
+                        const newTasks = [];
+                        updatingTasks.forEach((updatingTask, i) => {
+                            const indexOfTask = taskArr.findIndex(task => {
+                                return task.id === updatingTask.id;
+                            });
+                            // if taskArr do not contains updatingTasks,
+                            if (indexOfTask === NOT_FOUND) {
+                                // add the task - gather new tasks into temp array
+                                newTasks.push(updatingTask);
+                            } else {
+                                // overwrite the task into the index
+                                taskArr[indexOfTask] = updatingTask;
                             }
-                            return done(null, updated.members[updatingMemberIndex].tasks);
+
+                            if (i === updatingTasks.length - 1) {
+                                Array.prototype.push.apply(taskArr, newTasks);
+                                UPDATE();
+                            }
                         });
                     }
                 });
             }
-        });
+        }
     });
 };
 

@@ -52,7 +52,7 @@ const deleteMemberByUserId = (userId, taskhead, done) => {
     let deletingIndex = taskhead.members.findIndex(member => {
         return (member.userId === userId);
     });
-    if(deletingIndex>=0) {
+    if (deletingIndex >= 0) {
         taskhead.members.splice(deletingIndex, 1);
     }
     taskhead.save((err, updatedTaskHead) => {
@@ -68,8 +68,8 @@ const _deleteMulti = (userId, ids, done) => {
     let updatedTaskHeads = [];
     ids.forEach((id, i) => {
         TaskHead.findOne({id: id}, (err, taskhead) => {
-            if(err) return done(err);
-            if(!taskhead){
+            if (err) return done(err);
+            if (!taskhead) {
                 console.log('no taskhead');
                 return done(null, false);
             }
@@ -92,10 +92,10 @@ const _deleteMulti = (userId, ids, done) => {
             }
             else {
                 deleteMemberByUserId(userId, taskhead, (err, updatedTaskHead) => {
-                    if(err) {
+                    if (err) {
                         return done(err);
                     }
-                    if(!updatedTaskHead) {
+                    if (!updatedTaskHead) {
                         return done(null, false);
                     }
                     updatedTaskHeads.push(updatedTaskHead);
@@ -194,19 +194,55 @@ const _updateDetails = (taskHeadId, details, done) => {
                             }
                             return done(null, result);
                         });
+                    } else {
+                        updateTaskHead(taskHeadId, newMembers, details, (err, result) => {
+                            if (err) {
+                                return done(err);
+                            }
+                            return done(null, result);
+                        });
                     }
-
-                    updateTaskHead(taskHeadId, newMembers, details, (err, result) => {
-                        if (err) {
-                            return done(err);
-                        }
-                        return done(null, result);
-                    });
                 }   // end of updating
             }); // end of checking duplication
         }
 
     }); //end of checking TaskHead is exist
+};
+
+const _updateOrders = (userId, updatingOrders, done) => {
+    updatingOrders.forEach((updating, i) => {
+        TaskHead.findOne({id: updating.taskHeadId}, (err, taskhead) => {
+            if(err) {
+                return done(err);
+            }
+            if(!taskhead) {
+                console.log('couldn\'t find the taskhead');
+                return done(null, false);
+            }
+            const NOT_FOUND = -1;
+            const updatingOrderIndex = taskhead.orders.findIndex(order => {
+                return order.userId === userId;
+            });
+            if(updatingOrderIndex === NOT_FOUND) {
+                console.log('couldn\'t match userId in orders field');
+                return done(null, false);
+            }
+
+            taskhead.orders[updatingOrderIndex].orderNum = updating.orderNum;
+            taskhead.save((err, updatedTaskHead) => {
+                if (err) {
+                    return done(err);
+                }
+                if (!updatedTaskHead) {
+                    return done(null, false);
+                }
+                console.log('updatedTaskHead title, orders - ', updatedTaskHead.title + ', ' + updatedTaskHead.orders);
+                if (i === updatingOrders.length - 1) {
+                    return done(null, true);
+                }
+            });
+        });
+    });
 };
 
 const _deleteMember = (memberId, done) => {
@@ -247,10 +283,10 @@ const _deleteAll = done => {
 
 const _readMembers = (taskHeadId, done) => {
     _readById(taskHeadId, (err, taskHead) => {
-        if(err) {
+        if (err) {
             return done(err);
         }
-        if(!taskHead) {
+        if (!taskHead) {
             return done(null, false);
         }
         return done(null, taskHead.members);
@@ -264,6 +300,7 @@ module.exports = {
     deleteOne: _deleteOne,
     deleteMulti: _deleteMulti,
     updateDetails: _updateDetails,
+    updateOrders: _updateOrders,
     deleteMember: _deleteMember,
     readMembers: _readMembers,
     deleteAll: _deleteAll

@@ -2,13 +2,14 @@ const TaskHeadDBController = require(__appbase_dirname + '/models/task/taskhead.
 const NotificationController = require(__appbase_dirname + '/api-server/api/notification/notification.controller');
 
 exports.create = (req, res) => {
-
     const taskHeadInfo = {
         id: req.body.id,
         title: req.body.title,
         color: req.body.color,
+        orders: req.body.orders,
         members: req.body.members
     };
+
     TaskHeadDBController.create(taskHeadInfo, (err, newTaskHead) => {
         if (err) {
             return res.sendStatus(400);
@@ -32,6 +33,7 @@ exports.deleteOne = (req, res) => {
 
 exports.updateDetails = (req, res) => {
 
+    console.log('entered into updateDetails');
     const details = {
         id: req.body.id,
         title: req.body.title,
@@ -44,9 +46,25 @@ exports.updateDetails = (req, res) => {
         }
         if (!result) {
             return res.sendStatus(400);
-        } else {
-            return res.sendStatus(200);
         }
+        return res.sendStatus(200);
+    });
+};
+
+exports.updateOrders = (req, res) => {
+    const updatingOrders = req.body;
+    if(updatingOrders.constructor === Object && Object.keys(updatingOrders).length === 0) {
+        console.log('Object missing');
+        return res.sendStatus(400);
+    }
+    TaskHeadDBController.updateOrders(req.user.id, updatingOrders, (err, result) => {
+        if (err) {
+            return res.sendStatus(401);
+        }
+        if (!result) {
+            return res.sendStatus(400);
+        }
+        return res.sendStatus(200);
     });
 };
 
@@ -122,10 +140,10 @@ exports.getMembers = (req, res) => {
     console.log('entered into getMembers');
     const taskHeadId = req.params.id;
     TaskHeadDBController.readMembers(taskHeadId, (err, members) => {
-        if(err) {
+        if (err) {
             return res.sendStatus(401);
         }
-        if(!members) {
+        if (!members) {
             return res.sendStatus(400);
         }
         console.log('members- ', members);
@@ -157,7 +175,7 @@ exports.getTaskHead = (req, res) => {
 
     console.log('entered into getTaskHead');
     const taskheadId = req.query.id;
-    if(!taskheadId) {
+    if (!taskheadId) {
         console.log('query id is ', taskheadId);
         return res.sendStatus(404);
     }

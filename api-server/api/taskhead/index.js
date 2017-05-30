@@ -8,7 +8,9 @@ router.post('/', controller.create);
 router.delete('/:id', controller.deleteOne);
 
 // Update details - title, members
-router.put('/:id', controller.updateDetails);
+router.put('/:id/details', controller.updateDetails);
+// Update orders
+router.put('/orders', controller.updateOrders);
 
 // Delete taskheads
 router.delete('/', controller.deleteMulti);

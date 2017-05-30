@@ -15,24 +15,28 @@ const email = 'kiwi3@gmail.com';
 const password = '123';
 
 const TaskHeadDBController = require('../../../models/task/taskhead.controller.js');
+let currentUserId;
 const test_members = [{
     id: 'id_member1',
-    userId: 'stubbed_userId',
+    userId: currentUserId,
     name: 'member1',
     email: 'email_member1',
-    tasks: []}
-];
+    tasks: []
+}];
 const test_taskhead = {
     id: 'stubIdOfTaskHead',
     title: 'titleOfTaskHead',
     color: 222,  // default color
+    orders: [{
+        userId: currentUserId,
+        orderNum: 0
+    }],
     members: test_members
 };
 
 describe('TaskHeadDBController - need the accessToken to access API resources ', () => {
 
     let accessToken;
-    let currentUserId;
     beforeEach(done => {
         // Register user first
         User.create(name, email, password, true, (err, user, info) => {
@@ -78,6 +82,8 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
         beforeEach(done => {
             TaskHeadDBController.deleteAll(err => {
 
+                test_members[0].userId = currentUserId;
+                test_taskhead.orders[0].userId = currentUserId;
                 TaskHeadDBController.create(test_taskhead, (err, newTaskHead) => {
                     taskHead = newTaskHead;
                     done();
@@ -115,7 +121,7 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
                 {id: 'id_member2', userId: 'stubbed_userId2', name: 'member2', email: 'email_member2', tasks: []}
             ];
             request
-                .put('/taskheads/' + 'wrongId')
+                .put('/taskheads/' + 'wrongId' + '/details')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .send({
                     id: test_taskhead.id,
@@ -136,7 +142,7 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
                 {id: 'id_member2', userId: 'stubbed_userId2', name: 'member2', email: 'email_member2', tasks: []}
             ];
             request
-                .put('/taskheads/' + taskHead.id)
+                .put('/taskheads/' + taskHead.id + '/details')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .send({
                     id: test_taskhead.id,
@@ -155,7 +161,7 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
         it('PUT /taskheads/:id returns 400 - with existing members ', done => {
             let existingMembers = taskHead.members;
             request
-                .put('/taskheads/' + taskHead.id)
+                .put('/taskheads/' + taskHead.id + '/details')
                 .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .send({
                     id: test_taskhead.id,
@@ -163,6 +169,32 @@ describe('TaskHeadDBController - need the accessToken to access API resources ',
                     color: test_taskhead.color,
                     members: existingMembers
                 })
+                .expect(200)
+                .end((err, res) => {
+                    if (err) throw err;
+                    res.status.should.equal(200);
+                    done();
+                });
+        });
+
+        it('PUT /taskheads/orders returns 200', done => {
+            request
+                .put('/taskheads/orders/')
+                .set({Authorization: 'Bearer' + ' ' + accessToken})
+                .send([
+                    {taskHeadId: taskHead.id, orderNum: 2}
+                ])
+                .expect(200)
+                .end((err, res) => {
+                    if (err) throw err;
+                    res.status.should.equal(200);
+                    done();
+                });
+        });
+        it('PUT /taskheads/orders with no body returns 400', done => {
+            request
+                .put('/taskheads/orders/')
+                .set({Authorization: 'Bearer' + ' ' + accessToken})
                 .expect(400)
                 .end((err, res) => {
                     if (err) throw err;
@@ -322,27 +354,27 @@ describe('Delete taskHeads', () => {
             const loggedinUser = users[0];
             const otherUser = users[1];
 
-                // Add Token
-                Token.create(clientId, loggedinUser.id, predefine.oauth2.type.password, (err, newToken) => {
-                    accessToken = newToken.accessToken;
+            // Add Token
+            Token.create(clientId, loggedinUser.id, predefine.oauth2.type.password, (err, newToken) => {
+                accessToken = newToken.accessToken;
 
-                    savedTaskHeads.length = 0;
-                    TaskHeadDBController.deleteAll(err => {
+                savedTaskHeads.length = 0;
+                TaskHeadDBController.deleteAll(err => {
 
-                        members[0].userId = loggedinUser.id;
-                        members[1].userId = otherUser.id;
-                        // Create 3 taskHeads
-                        taskHeads.forEach((taskHead, i) => {
-                            TaskHeadDBController.create(taskHead, (err, newTaskHead) => {
-                                savedTaskHeads.push(newTaskHead);
+                    members[0].userId = loggedinUser.id;
+                    members[1].userId = otherUser.id;
+                    // Create 3 taskHeads
+                    taskHeads.forEach((taskHead, i) => {
+                        TaskHeadDBController.create(taskHead, (err, newTaskHead) => {
+                            savedTaskHeads.push(newTaskHead);
 
-                                if (taskHeads.length - 1 === i) {
-                                    done();
-                                }
-                            });
+                            if (taskHeads.length - 1 === i) {
+                                done();
+                            }
                         });
                     });
                 });
+            });
 
         });
     });
