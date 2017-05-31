@@ -112,9 +112,9 @@ const _deleteMulti = (userId, ids, done) => {
 
 /*
  * Update details
- * ; title, color, members(only adding)
+ * ; title, color, members(only adding), orders
  * */
-const updateTaskHead = (taskHeadId, newMembers, details, done) => {
+const updateTaskHead = (taskHeadId, newMembers, newOrders, details, done) => {
 
     let options;
     if (!newMembers) {
@@ -126,7 +126,10 @@ const updateTaskHead = (taskHeadId, newMembers, details, done) => {
         };
     } else {
         options = {
-            $push: {members: {$each: newMembers}},
+            $push: {
+                members: {$each: newMembers},
+                orders: {$each: newOrders}
+            },
             $set: {
                 title: details.title,
                 color: details.color
@@ -144,9 +147,6 @@ const updateTaskHead = (taskHeadId, newMembers, details, done) => {
 
 const _updateDetails = (taskHeadId, details, done) => {
 
-    console.log('taskheadId', taskHeadId);
-    console.log('details', details);
-
     const members = details.members;
 
     // 1. Check if this taskHead is exist
@@ -163,7 +163,7 @@ const _updateDetails = (taskHeadId, details, done) => {
         // 2.1 If no member
         if (members.length === 0) {
             // Update
-            updateTaskHead(taskHeadId, false, details, (err, result) => {
+            updateTaskHead(taskHeadId, false, false, details, (err, result) => {
                 if (err) {
                     return done(err);
                 }
@@ -173,6 +173,7 @@ const _updateDetails = (taskHeadId, details, done) => {
         // 2.2 If there are adding members
         // 3. Duplication check to add new members
         let newMembers = [];
+        let newOrders = [];
         for (let i = 0, len = members.length; i < len; i++) {
             let newMember = members[i];
             TaskHead.find({'members.id': newMember.id}, (err, taskheads) => {
@@ -181,6 +182,17 @@ const _updateDetails = (taskHeadId, details, done) => {
                 }
                 if (taskheads.length === 0) {
                     newMembers.push(newMember);
+                    // push new order of the member
+                    let indexOfMember = details.orders.findIndex(order => {
+                        return order.userId === newMember.userId;
+                    });
+                    // no index of the member
+                    if(indexOfMember === -1) {
+                        // make new order
+                        newOrders.push({userId: newMember.userId, orderNum: 0});
+                    } else {
+                        newOrders.push(details.orders[indexOfMember]);
+                    }
                 }
 
                 // Start to update
@@ -188,14 +200,14 @@ const _updateDetails = (taskHeadId, details, done) => {
 
                     if (newMembers.length === 0) {
                         console.log('there is no new member to add');
-                        updateTaskHead(taskHeadId, false, details, (err, result) => {
+                        updateTaskHead(taskHeadId, false, false, details, (err, result) => {
                             if (err) {
                                 return done(err);
                             }
                             return done(null, result);
                         });
                     } else {
-                        updateTaskHead(taskHeadId, newMembers, details, (err, result) => {
+                        updateTaskHead(taskHeadId, newMembers, newOrders, details, (err, result) => {
                             if (err) {
                                 return done(err);
                             }
@@ -212,10 +224,10 @@ const _updateDetails = (taskHeadId, details, done) => {
 const _updateOrders = (userId, updatingOrders, done) => {
     updatingOrders.forEach((updating, i) => {
         TaskHead.findOne({id: updating.taskHeadId}, (err, taskhead) => {
-            if(err) {
+            if (err) {
                 return done(err);
             }
-            if(!taskhead) {
+            if (!taskhead) {
                 console.log('couldn\'t find the taskhead');
                 return done(null, false);
             }
@@ -223,7 +235,7 @@ const _updateOrders = (userId, updatingOrders, done) => {
             const updatingOrderIndex = taskhead.orders.findIndex(order => {
                 return order.userId === userId;
             });
-            if(updatingOrderIndex === NOT_FOUND) {
+            if (updatingOrderIndex === NOT_FOUND) {
                 console.log('couldn\'t match userId in orders field');
                 return done(null, false);
             }

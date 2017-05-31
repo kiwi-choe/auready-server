@@ -38,6 +38,7 @@ exports.updateDetails = (req, res) => {
         id: req.body.id,
         title: req.body.title,
         color: req.body.color,
+        orders: req.body.orders,
         members: req.body.members
     };
     TaskHeadDBController.updateDetails(req.params.id, details, (err, result) => {

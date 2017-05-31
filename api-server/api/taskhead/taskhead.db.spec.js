@@ -51,27 +51,29 @@ describe('TaskHeadDBController model', () => {
 
 describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
 
-    let existingTaskHead;
 
     const existingMembers = [
         {id: 'stubbed_memberId0', userId: 'userId0', name: 'member0', email: 'email_member1', tasks: []}
     ];
+    const originalTaskHead = {
+        id: 'stubbed_taskheadId',
+        title: 'titleOfTaskHead',
+        color: 222,
+        orders: [
+            {userId: existingMembers[0].userId, orderNum: 5}
+        ],
+        members: existingMembers
+    };
     beforeEach(done => {
         TaskHead.deleteAll(err => {
-            // Push test_members to create members
-            test_taskhead.members.length = 0;
-            test_taskhead.members.push(...existingMembers);
-            existingTaskHead = null;
-            TaskHead.create(test_taskhead, (err, newTaskHead) => {
-                existingTaskHead = newTaskHead;
-
+            TaskHead.create(originalTaskHead, (err, newTaskHead) => {
                 done();
             });
         });
     });
 
     it('DELETE a taskhead', done => {
-        TaskHead.deleteOne(existingTaskHead.id, (err, isRemoved) => {
+        TaskHead.deleteOne(originalTaskHead.id, (err, isRemoved) => {
             assert.ifError(err);
             console.log('\n' + isRemoved);
             done();
@@ -82,8 +84,8 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
         const updatingTaskHead = test_taskhead;
         updatingTaskHead.title = 'updatingTaskHead';
 
-        console.log('\n-----------------before update ', existingTaskHead);
-        TaskHeadModel.update({id: existingTaskHead.id},
+        console.log('\n-----------------before update ', originalTaskHead);
+        TaskHeadModel.update({id: originalTaskHead.id},
             updatingTaskHead, (err, result) => {
                 if (err) {
                     assert.ifError(err);
@@ -92,7 +94,7 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
                     assert.fail();
                 }
                 // Find updated taskhead, check taskhead
-                TaskHead.readById(existingTaskHead.id, (err, updatedTaskHead) => {
+                TaskHead.readById(originalTaskHead.id, (err, updatedTaskHead) => {
                     console.log('-----------------after update ');
                     console.log(updatedTaskHead);
                     assert.equal(updatedTaskHead.title, updatingTaskHead.title);
@@ -106,13 +108,13 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
         // new member: 'member2'
         // the array does not include the existing members.
         const newMembers = test_members;
-        console.log('\n-----------------before update ', existingTaskHead);
+        console.log('\n-----------------before update ', originalTaskHead);
 
         // Duplication check
         newMembers.forEach((newMember, i) => {
             // There is no member with newMember.id
             TaskHeadModel.find({
-                id: existingTaskHead.id,
+                id: originalTaskHead.id,
                 'members.id': newMember.id
             }, (err, found) => {
                 if (found.length !== 0) {
@@ -123,7 +125,7 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
                 }
                 // push new member and update
                 TaskHeadModel.update(
-                    {id: existingTaskHead.id},
+                    {id: originalTaskHead.id},
                     {$push: {members: newMember}},
                     (err, result) => {
                         if (err) {
@@ -133,7 +135,7 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
                             assert.fail();
                         }
                         // Find updated taskhead, check members
-                        TaskHead.readById(existingTaskHead.id, (err, updatedTaskHead) => {
+                        TaskHead.readById(originalTaskHead.id, (err, updatedTaskHead) => {
                             console.log('-----------------after update ');
                             console.log(updatedTaskHead);
 
@@ -162,12 +164,12 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
             color: 555,
             members: paramMembers
         };
-        console.log('\n-----------------before update ', existingTaskHead);
+        console.log('\n-----------------before update ', originalTaskHead);
 
         // Duplication check to add new members
         let newMembers = [];
         paramMembers.forEach((member, i) => {
-            TaskHead.readById(existingTaskHead.id, (err, taskhead) => {
+            TaskHead.readById(originalTaskHead.id, (err, taskhead) => {
                 if (!taskhead) {
                     console.log('taskhead id is wrong');
                     if (i === paramMembers.length - 1) {
@@ -192,7 +194,7 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
                         }
                         // Update
                         TaskHeadModel.update(
-                            {id: existingTaskHead.id},     // query
+                            {id: originalTaskHead.id},     // query
                             {
                                 $push: {members: {$each: newMembers}},    // options
                                 $set: {title: updatingTaskHead.title, color: updatingTaskHead.color}
@@ -204,15 +206,15 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
                                     assert.fail();
                                 }
                                 // Find updated taskhead, check taskhead
-                                TaskHead.readById(existingTaskHead.id, (err, updatedTaskHead) => {
+                                TaskHead.readById(originalTaskHead.id, (err, updatedTaskHead) => {
                                     console.log('-----------------after update ');
                                     console.log(updatedTaskHead);
                                     assert.equal(updatedTaskHead.title, updatingTaskHead.title);
                                     assert.equal(updatedTaskHead.color, updatingTaskHead.color);
                                     assert.equal(updatedTaskHead.members.length, 3);
                                     updatedTaskHead.members.forEach((member, i) => {
-                                        if (member.name === existingTaskHead.members[0].name) {
-                                            assert.deepEqual(member.id, existingTaskHead.members[0].id);
+                                        if (member.name === originalTaskHead.members[0].name) {
+                                            assert.deepEqual(member.id, originalTaskHead.members[0].id);
                                         }
 
                                         if (i === updatedTaskHead.members.length - 1) {
@@ -241,7 +243,7 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
         // 1. Check if this taskHead is exist
         TaskHead.readById(updatingTaskHead.id, (err, taskhead) => {
             if (!taskhead) {
-                assert.fail(taskhead, existingTaskHead, "taskhead id is wrong");
+                assert.fail(taskhead, originalTaskHead, "taskhead id is wrong");
                 done();
             }
 
@@ -252,7 +254,7 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
 
                 // Update
                 TaskHeadModel.update(
-                    {id: existingTaskHead.id},     // query
+                    {id: originalTaskHead.id},     // query
                     {
                         $set: {title: updatingTaskHead.title, color: updatingTaskHead.color}
                     }, (err, result) => {
@@ -263,7 +265,7 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
                             assert.fail();
                         }
                         // Find updated taskhead, check taskhead
-                        TaskHead.readById(existingTaskHead.id, (err, updatedTaskHead) => {
+                        TaskHead.readById(originalTaskHead.id, (err, updatedTaskHead) => {
                             console.log('-----------------after update ');
                             console.log(updatedTaskHead);
                             assert.equal(updatedTaskHead.title, updatingTaskHead.title);
@@ -277,6 +279,109 @@ describe('There is a taskhead in DB for UPDATE, DELETE test', () => {
             // push new members rotating for loop
         });
     });
+
+    it('Update details - orders test', done => {
+
+        // new member: 'member2', 'member3'
+        // WARN! but this array includes the existing member.
+        const paramMembers = [
+            {id: 'stubbed_memberId0', userId: 'userId0', name: 'member0', email: 'email_member0', tasks: []},
+            {id: 'new memberId2', userId: 'userId2', name: 'member2', email: 'email_member2', tasks: []},
+            {id: 'new memberId3', userId: 'userId3', name: 'member3', email: 'email_member3', tasks: []}
+        ];
+        const paramOrders = [
+            {userId: paramMembers[1].userId, orderNum: 0},
+            {userId: paramMembers[2].userId, orderNum: 0}
+        ];
+
+        let updatingTaskHead = {
+            id: 'stubbed_taskheadId',
+            title: 'updatingTaskHead',
+            color: 555,
+            orders: paramOrders,
+            members: paramMembers
+        };
+        console.log('\n-----------------before update ', originalTaskHead);
+
+        // Duplication check to add new members
+        let newMembers = [];
+        let newOrders = [];
+        paramMembers.forEach((member, i) => {
+            TaskHead.readById(originalTaskHead.id, (err, taskhead) => {
+                if (!taskhead) {
+                    console.log('taskhead id is wrong');
+                    if (i === paramMembers.length - 1) {
+                        done();
+                    }
+                    return;
+                }
+
+                // There is no member with newMember.name
+                TaskHeadModel.find({'members.id': member.id}, (err, found) => {
+                    if (found.length === 0) {
+                        // push new member
+                        newMembers.push(member);
+                        // push new order of the member
+                        let indexOfMember = paramOrders.findIndex(order => {
+                            return order.userId === member.userId;
+                        });
+                        // no index of the member
+                        if(indexOfMember === -1) {
+                            // make new order
+                            newOrders.push({userId: member.userId, orderNum: 0});
+                        } else {
+                            newOrders.push(paramOrders[indexOfMember]);
+                        }
+                    }
+
+                    // when end of paramMembers,
+                    if (i === paramMembers.length - 1) {
+
+                        // console.log('----------------- newMembers \n', newMembers);
+                        if (newMembers.length === 0) {
+                            done();
+                        }
+                        // Update
+                        TaskHeadModel.update(
+                            {id: originalTaskHead.id},     // query
+                            {// options
+                                $push: {
+                                    members: {$each: newMembers},
+                                    orders: {$each: newOrders}
+                                },
+                                $set: {title: updatingTaskHead.title, color: updatingTaskHead.color}
+                            }, (err, result) => {
+                                if (err) {
+                                    assert.ifError(err);
+                                }
+                                if (!result.n) {
+                                    assert.fail();
+                                }
+                                // Find updated taskhead, check taskhead
+                                TaskHead.readById(originalTaskHead.id, (err, updatedTaskHead) => {
+                                    console.log('-----------------after update ');
+                                    console.log(updatedTaskHead);
+                                    assert.equal(updatedTaskHead.title, updatingTaskHead.title);
+                                    assert.equal(updatedTaskHead.color, updatingTaskHead.color);
+                                    assert.equal(updatedTaskHead.members.length, 3);
+                                    updatedTaskHead.members.forEach((member, i) => {
+                                        if (member.name === originalTaskHead.members[0].name) {
+                                            assert.deepEqual(member.id, originalTaskHead.members[0].id);
+                                        }
+
+                                        if (i === updatedTaskHead.members.length - 1) {
+                                            done();
+                                        }
+                                    });
+                                });
+                            });
+                    }
+                });
+            });
+        });
+    });
+
+
 });
 
 describe('Update a taskhead - delete a member', () => {
@@ -571,12 +676,12 @@ describe('There are taskheads in DB to Delete multi taskheads', () => {
                 });
                 taskhead.orders[updatingOrderIndex].orderNum = orderOfTaskHead.orderNum;
                 taskhead.save((err, updatedTaskHead) => {
-                    if(!updatedTaskHead) {
+                    if (!updatedTaskHead) {
                         assert.fail('update fail');
                         done();
                     }
                     console.log('updatedTaskHead - ', updatedTaskHead);
-                    if(i === orderOfTaskHeads.length-1) {
+                    if (i === orderOfTaskHeads.length - 1) {
                         done();
                     }
                 });
