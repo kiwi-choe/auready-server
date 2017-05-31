@@ -22,14 +22,25 @@ exports.register = (req, res) => {
     });
 };
 
-/*
- * 1. Get an instanceId of toUser
- * 2. Send the message to FCM server
- * 3. returns the result
- * */
-exports.sendNotification = (type, toUserId, fromUser, done) => {
+exports.auready = (req, res) => {
+    console.log('get /notifications/auready');
 
-    // 1. Get an instanceId of toUser
+    const toUserId = req.params.userId;
+    const fromUser = {
+        id: req.user.id,
+        name: req.user.name
+    };
+    _sendNotification(TYPES.auready, toUserId, fromUser, isSuccess => {
+        if (!isSuccess) {
+            console.log('send notification failed');
+            return res.sendStatus(400);
+        }
+        return res.sendStatus(200);
+    });
+};
+
+const _sendNotification = (type, toUserId, fromUser, done) => {
+// 1. Get an instanceId of toUser
     User.getInstanceIdByUserId(toUserId, (err, instanceId) => {
         if (err) {
             console.log('get instanceId is failed');
@@ -49,6 +60,9 @@ exports.sendNotification = (type, toUserId, fromUser, done) => {
         } else if (type === TYPES.exit_group_taskhead) {
             noti_title = 'Group TaskHead';
             noti_body = '';
+        } else if (type === TYPES.auready) {
+            noti_title = 'A U Ready';
+            noti_body = 'Move- Move-';
         }
 
         let message = {
@@ -74,6 +88,15 @@ exports.sendNotification = (type, toUserId, fromUser, done) => {
         });
 
     });
+};
+
+/*
+ * 1. Get an instanceId of toUser
+ * 2. Send the message to FCM server
+ * 3. returns the result
+ * */
+exports.sendNotification = (type, toUserId, fromUser, done) => {
+    _sendNotification(type, toUserId, fromUser, done);
 };
 
 exports.exitTaskHead = (toUserIds, fromUser, taskHeadTitle, done) => {
