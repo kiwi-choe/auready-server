@@ -26,7 +26,7 @@ const _create = (memberId, newTask, done) => {
 
 /*
  * Update tasks of a taskHead
- * ; Clear the existing tasks of a taskHead and push new updating tasks
+ * ; Updating order and description only, not adding, deleting
  * */
 const _updateOfTaskHead = (taskHeadId, memberTasks, done) => {
 
@@ -47,11 +47,19 @@ const _updateOfTaskHead = (taskHeadId, memberTasks, done) => {
                 console.log('no member with id ', memberTask.memberid);
                 return done(null, false);
             }
-
             // Updating tasks
             const taskArr = taskhead.members[updatingMemberIndex].tasks;
-            taskArr.length = 0;
-            Array.prototype.push.apply(taskArr, memberTask.tasks);
+
+            // for only editing description and order, validate that the task exists
+            for (let task of memberTask.tasks) {
+                const indexOfUpdatingTask = taskArr.findIndex(updatingTask => {
+                    return updatingTask.id === task.id;
+                });
+                if (indexOfUpdatingTask !== -1) {
+                    // overwrite the task
+                    taskArr[indexOfUpdatingTask] = task;
+                }
+            }
 
             if (i === memberTasks.length - 1) {
                 taskhead.save((err, updatedTaskHead) => {
@@ -91,7 +99,6 @@ const _updateOfMember = (memberId, updatingTasks, done) => {
                 if (!updated) {
                     return done(null, false);
                 }
-                console.log('updated', updated.members[updatingMemberIndex].tasks);
                 return done(null, updated.members[updatingMemberIndex].tasks);
             });
         };
@@ -106,24 +113,18 @@ const _updateOfMember = (memberId, updatingTasks, done) => {
                 return done(null, taskhead);
             } else {
                 // ADD only
+                console.log('ADD only');
                 Array.prototype.push.apply(taskArr, updatingTasks);
                 UPDATE();
             }
         }
         else {
             if (updatingTasks.length === 0) {
+                console.log('DEL only');
                 // DEL only
                 // taskArr.length = 0;
                 taskArr.splice(0, taskArr.length);
-                taskhead.save((err, updated) => {
-                    if (err) return done(err);
-                    if (!updated) {
-                        return done(null, false);
-                    }
-                    console.log('updated', updated.members[updatingMemberIndex].tasks);
-                    return done(null, updated.members[updatingMemberIndex].tasks);
-                });
-                // UPDATE();
+                UPDATE();
             } else {
                 // Start to Delete
                 const NOT_FOUND = -1;

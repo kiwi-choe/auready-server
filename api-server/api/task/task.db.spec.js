@@ -498,6 +498,63 @@ describe('There is a taskhead in DB ', () => {
             });
         });
 
+
+        it('Edit tasks of member; description, order only - comparing tasks', done => {
+            const memberId = test_members[0].id;
+            /*
+             * index 0; Edit
+             * index 1; New
+             * */
+            const paramsTasks = [
+                // {id: test_tasks[0].id, description: 'updating DES0', completed: false, order: 0},
+                {id: 'new task id', description: 'NEW TASK', completed: false, order: 0}
+            ];
+            TaskHeadModel.findOne({'members.id': memberId}, (err, taskhead) => {
+
+                if (!taskhead) {
+                    console.log('no member');
+                    done();
+                }
+                let updatingMemberIndex = taskhead.members.findIndex(member => {
+                    return member.id === memberId;
+                });
+                const taskArr = taskhead.members[updatingMemberIndex].tasks;
+
+                paramsTasks.forEach((task, i) => {
+
+                    const indexOfUpdatingTask = taskArr.findIndex(updatingTask => {
+                        return updatingTask.id === task.id;
+                    });
+                    if(indexOfUpdatingTask === -1) {
+                        console.log('no task for updating, return 200');
+                        done();
+                    } else {
+                        // overwrite the task
+                        taskArr[indexOfUpdatingTask] = task;
+                    }
+
+                    if(paramsTasks.length-1 === i) {
+                        taskhead.save((err, updated) => {
+                            if (err) {
+                                assert.ifError(err);
+                                done();
+                            }
+                            if (!updated) {
+                                assert.fail();
+                                done();
+                            }
+                            // Check EDIT is succeeded
+                            if (updated.members[updatingMemberIndex].tasks[0].id === paramsTasks[0].id) {
+                                assert.equal(updated.members[updatingMemberIndex].tasks[0].description, paramsTasks[0].description);
+                            }
+                            console.log(updated.members[updatingMemberIndex].tasks);
+                            done();
+                        });
+                    }
+                });
+            });
+        });
+
         it('updating tasks with taskHeadId, find members and tasks without mongodb query', done => {
             const taskHeadId = savedTaskHead.id;
             const updatingTasks = [
