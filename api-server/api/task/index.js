@@ -5,7 +5,7 @@ const controller = require('./task.controller');
 
 router.post('/:memberid', controller.create);
 
-// Update all tasks of a taskhead; description, order only if the task exists
+// Update all tasks of a taskhead; description only if the task exists
 router.put('/taskhead/:id', controller.updateOfTaskHead);
 
 // Update tasks of a member

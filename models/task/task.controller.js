@@ -26,7 +26,7 @@ const _create = (memberId, newTask, done) => {
 
 /*
  * Update tasks of a taskHead
- * ; Updating order and description only, not adding, deleting
+ * ; Updating description only
  * */
 const _updateOfTaskHead = (taskHeadId, memberTasks, done) => {
 
@@ -57,7 +57,7 @@ const _updateOfTaskHead = (taskHeadId, memberTasks, done) => {
                 });
                 if (indexOfUpdatingTask !== -1) {
                     // overwrite the task
-                    taskArr[indexOfUpdatingTask] = task;
+                    taskArr[indexOfUpdatingTask].description = task.description;
                 }
             }
 
