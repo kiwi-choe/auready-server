@@ -11,6 +11,12 @@ router.put('/taskhead/:id', controller.updateOfTaskHead);
 // Update tasks of a member
 router.put('/member/:id', controller.updateOfMember);
 
+// Add a new task
+router.put('/member/:id/add', controller.addTask);
+
+// Delete a task
+router.put('/member/:memberid/del/:id', controller.deleteTask);
+
 // Get tasks of a member
 router.get('/:memberid', controller.getTasksOfMember);
 

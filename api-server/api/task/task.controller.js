@@ -50,7 +50,7 @@ exports.updateOfMember = (req, res) => {
 
     TaskDBController.updateOfMember(memberId, req.body, (err, updated, noMemberErr) => {
         if (err) {
-            console.log('err');
+            console.log('err - ', err);
             return res.sendStatus(400);
         }
         if (!updated) {
@@ -60,7 +60,47 @@ exports.updateOfMember = (req, res) => {
             console.log('updated fail');
             return res.sendStatus(400);
         }
-        console.log(updated);
+        return res.status(200).json(updated);
+    });
+};
+
+exports.addTask = (req, res) => {
+    console.log('entered into addTask');
+
+    const memberId = req.params.id;
+    TaskDBController.addTask(memberId, req.body.newTask, req.body.editingTasks, (err, updated, noMemberErr) => {
+        if (err) {
+            console.log('err - ', err);
+            return res.sendStatus(400);
+        }
+        if (!updated) {
+            if (noMemberErr === 204) {
+                return res.sendStatus(204);
+            }
+            console.log('updated fail');
+            return res.sendStatus(400);
+        }
+        return res.status(200).json(updated);
+    });
+};
+
+exports.deleteTask = (req, res) => {
+    console.log('entered into deleteTask');
+
+    const memberId = req.params.memberid;
+    const taskHeadId = req.params.id;
+    TaskDBController.deleteTask(memberId, taskHeadId, req.body, (err, updated, noMemberErr) => {
+        if (err) {
+            console.log('err - ', err);
+            return res.sendStatus(400);
+        }
+        if (!updated) {
+            if (noMemberErr === 204) {
+                return res.sendStatus(204);
+            }
+            console.log('updated fail');
+            return res.sendStatus(400);
+        }
         return res.status(200).json(updated);
     });
 };

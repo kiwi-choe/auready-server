@@ -73,12 +73,8 @@ const _updateOfTaskHead = (taskHeadId, memberTasks, done) => {
 };
 
 /*
- * 4 Cases
- * tasksOfDB : paramTasks
- * 0 : 0     nothing
- * 0 : >0    ADD only
- * >0 : 0    DEL only
- * >0 : >0   ADD|DEL|EDIT
+ * comparing tasks
+ * if the task exists, update
  * */
 const _updateOfMember = (memberId, updatingTasks, done) => {
     TaskHead.findOne({'members.id': memberId}, (err, taskhead) => {
@@ -93,79 +89,150 @@ const _updateOfMember = (memberId, updatingTasks, done) => {
         let updatingMemberIndex = taskhead.members.findIndex(member => {
             return member.id === memberId;
         });
-        const UPDATE = () => {
+
+        const taskArr = taskhead.members[updatingMemberIndex].tasks;
+        if (taskArr.length === 0) {
+            console.log('returns just 0, and done');
+            return done(null, taskArr);
+        }
+        // Start to edit
+        const NOT_FOUND = -1;
+        updatingTasks.forEach((updatingTask, i) => {
+            // if taskArr do not contains paramsTasks,
+            const indexOfTask = taskArr.findIndex(task => {
+                return task.id === updatingTask.id;
+            });
+            if (indexOfTask !== NOT_FOUND) {
+                // overwrite the task into the index
+                taskArr[indexOfTask] = updatingTask;
+            } else {
+                console.log('wrong task id of updatingTasks - ', updatingTask.id);
+            }
+
+            if (i === updatingTasks.length - 1) {
+                taskhead.save((err, updated) => {
+                    if (err) return done(err);
+                    if (!updated) {
+                        return done(null, false);
+                    }
+                    return done(null, updated.members[updatingMemberIndex].tasks);
+                });
+            }
+        });
+    });
+};
+
+const _addTask = (memberId, newTask, updatingTasks, done) => {
+
+    TaskHead.findOne({'members.id': memberId}, (err, taskhead) => {
+        if (err) {
+            return done(err);
+        }
+        if (!taskhead) {
+            console.log('There is no taskhead of ', memberId);
+            return done(null, false, 204);
+        }
+
+        let updatingMemberIndex = taskhead.members.findIndex(member => {
+            return member.id === memberId;
+        });
+        const taskArr = taskhead.members[updatingMemberIndex].tasks;
+
+        const ADD = () => {
+            taskArr.push(newTask);
             taskhead.save((err, updated) => {
                 if (err) return done(err);
                 if (!updated) {
                     return done(null, false);
                 }
+                console.log(updated.members[updatingMemberIndex].tasks);
                 return done(null, updated.members[updatingMemberIndex].tasks);
             });
         };
 
+        if(updatingTasks.length === 0) {
+            console.log('only add');
+            ADD();
+        }
+        // Add and Edit
+        const NOT_FOUND = -1;
+        updatingTasks.forEach((updatingTask, i) => {
+            // if taskArr do not contains paramsTasks,
+            const indexOfTask = taskArr.findIndex(task => {
+                return task.id === updatingTask.id;
+            });
+            if (indexOfTask !== NOT_FOUND) {
+                // overwrite the task into the index
+                taskArr[indexOfTask] = updatingTask;
+            } else {
+                console.log('wrong task id of updatingTasks - ', updatingTask.id);
+            }
+
+            if (i === updatingTasks.length - 1) {
+                ADD();
+            }
+        });
+
+    });
+};
+
+const _deleteTask = (memberId, taskId, updatingTasks, done) => {
+    TaskHead.findOne({'members.id': memberId}, (err, taskhead) => {
+        if (err) {
+            return done(err);
+        }
+        if (!taskhead) {
+            console.log('There is no taskhead of ', memberId);
+            return done(null, false, 204);
+        }
+
+        let updatingMemberIndex = taskhead.members.findIndex(member => {
+            return member.id === memberId;
+        });
         const taskArr = taskhead.members[updatingMemberIndex].tasks;
-        console.log('taskArr - ', taskArr);
-        console.log('updatingTasks - ', updatingTasks);
+
+        const DEL = () => {
+            const indexOfDeletingTask = taskArr.findIndex(task => {
+                return task.id === taskId;
+            });
+            taskArr.splice(indexOfDeletingTask, 1);
+            taskhead.save((err, updated) => {
+                if (err) return done(err);
+                if (!updated) {
+                    return done(null, false);
+                }
+                console.log(updated.members[updatingMemberIndex].tasks);
+                return done(null, updated.members[updatingMemberIndex].tasks);
+            });
+        };
 
         if (taskArr.length === 0) {
-            if (updatingTasks.length === 0) {
-                // nothing
-                return done(null, taskhead);
-            } else {
-                // ADD only
-                console.log('ADD only');
-                Array.prototype.push.apply(taskArr, updatingTasks);
-                UPDATE();
-            }
+            console.log('no tasks to delete and edit');
+            return done(null, false);
         }
-        else {
-            if (updatingTasks.length === 0) {
-                console.log('DEL only');
-                // DEL only
-                // taskArr.length = 0;
-                taskArr.splice(0, taskArr.length);
-                UPDATE();
-            } else {
-                // Start to Delete
-                const NOT_FOUND = -1;
-                const loopTaskArr = [];
-                Array.prototype.push.apply(loopTaskArr, taskArr);
-                loopTaskArr.forEach((task, i) => {
-                    const indexOfUpdatingTask = updatingTasks.findIndex(updatingTask => {
-                        return updatingTask.id === task.id;
-                    });
-                    if (indexOfUpdatingTask === NOT_FOUND) {
-                        // Delete the task
-                        let deletingIndex = taskArr.indexOf(task);
-                        taskArr.splice(deletingIndex, 1);
-                    }
-                    // End of Delete
-                    if (i === loopTaskArr.length - 1) {
-                        console.log('Start to add or edit');
-                        // Start to Add or Edit
-                        const newTasks = [];
-                        updatingTasks.forEach((updatingTask, i) => {
-                            const indexOfTask = taskArr.findIndex(task => {
-                                return task.id === updatingTask.id;
-                            });
-                            // if taskArr do not contains updatingTasks,
-                            if (indexOfTask === NOT_FOUND) {
-                                // add the task - gather new tasks into temp array
-                                newTasks.push(updatingTask);
-                            } else {
-                                // overwrite the task into the index
-                                taskArr[indexOfTask] = updatingTask;
-                            }
 
-                            if (i === updatingTasks.length - 1) {
-                                Array.prototype.push.apply(taskArr, newTasks);
-                                UPDATE();
-                            }
-                        });
-                    }
-                });
-            }
+        if(updatingTasks.length === 0) {
+            console.log('only del');
+            DEL();
         }
+        // Del and Edit
+        const NOT_FOUND = -1;
+        updatingTasks.forEach((updatingTask, i) => {
+            // if taskArr do not contains paramsTasks,
+            const indexOfTask = taskArr.findIndex(task => {
+                return task.id === updatingTask.id;
+            });
+            if (indexOfTask !== NOT_FOUND) {
+                // overwrite the task into the index
+                taskArr[indexOfTask] = updatingTask;
+            } else {
+                console.log('wrong task id of updatingTasks - ', updatingTask.id);
+            }
+
+            if (i === updatingTasks.length - 1) {
+                DEL();
+            }
+        });
     });
 };
 
@@ -213,6 +280,8 @@ module.exports = {
     create: _create,
     updateOfTaskHead: _updateOfTaskHead,
     updateOfMember: _updateOfMember,
+    addTask: _addTask,
+    deleteTask: _deleteTask,
     readByMemberId: _readByMemberId,
     deleteAll: _deleteAll
 }
