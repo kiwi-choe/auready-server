@@ -17,6 +17,12 @@ router.put('/member/:id/add', controller.addTask);
 // Delete a task
 router.put('/member/:memberid/del/:id', controller.deleteTask);
 
+// Change completed of a task
+router.put('/member/:memberid/completed/:id', controller.changeCompleted);
+
+// Change orders
+router.put('/member/:id/orders', controller.changeOrders);
+
 // Get tasks of a member
 router.get('/:memberid', controller.getTasksOfMember);
 

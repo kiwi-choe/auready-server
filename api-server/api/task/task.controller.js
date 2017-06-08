@@ -105,6 +105,40 @@ exports.deleteTask = (req, res) => {
     });
 };
 
+exports.changeCompleted = (req, res) => {
+    console.log('entered into changeCompleted');
+
+    TaskDBController.changeCompleted(req.params.memberid, req.params.id, req.body, (err, updated, noMemberErr) => {
+        if(err) {
+            return res.sendStatus(400);
+        }
+        if(!updated) {
+            if(noMemberErr === 204) {
+                return res.sendStatus(204);
+            }
+            return res.sendStatus(400);
+        }
+        return res.status(200).json(updated);
+    });
+};
+
+exports.changeOrders = (req, res) => {
+    console.log('entered into changeOrders');
+
+    TaskDBController.changeOrders(req.params.id, req.body, (err, updated, noMemberErr) => {
+        if(err) {
+            return res.sendStatus(400);
+        }
+        if(!updated) {
+            if(noMemberErr === 204) {
+                return res.sendStatus(204);
+            }
+            return res.sendStatus(400);
+        }
+        return res.status(200).json(updated);
+    });
+};
+
 exports.getTasksOfMember = (req, res) => {
     console.log('entered into getTasksOfMember');
     const memberId = req.params.memberid;

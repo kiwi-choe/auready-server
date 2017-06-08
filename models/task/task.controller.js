@@ -162,8 +162,8 @@ const _addTask = (memberId, newTask, updatingTasks, done) => {
                 return task.id === updatingTask.id;
             });
             if (indexOfTask !== NOT_FOUND) {
-                // overwrite the task into the index
-                taskArr[indexOfTask] = updatingTask;
+                // set description, order the task into the index
+                taskArr[indexOfTask].description = updatingTask.description;
             } else {
                 console.log('wrong task id of updatingTasks - ', updatingTask.id);
             }
@@ -223,14 +223,115 @@ const _deleteTask = (memberId, taskId, updatingTasks, done) => {
                 return task.id === updatingTask.id;
             });
             if (indexOfTask !== NOT_FOUND) {
-                // overwrite the task into the index
-                taskArr[indexOfTask] = updatingTask;
+                // set description, order the task into the index
+                taskArr[indexOfTask].description = updatingTask.description;
             } else {
                 console.log('wrong task id of updatingTasks - ', updatingTask.id);
             }
 
             if (i === updatingTasks.length - 1) {
                 DEL();
+            }
+        });
+    });
+};
+
+const _changedCompleted = (memberId, taskId, updatingTasks, done) => {
+    TaskHead.findOne({'members.id': memberId}, (err, taskhead) => {
+        if (err) {
+            return done(err);
+        }
+        if (!taskhead) {
+            console.log('There is no taskhead of ', memberId);
+            return done(null, false, 204);
+        }
+
+        let updatingMemberIndex = taskhead.members.findIndex(member => {
+            return member.id === memberId;
+        });
+        const taskArr = taskhead.members[updatingMemberIndex].tasks;
+
+        if (taskArr.length === 0 || updatingTasks.length === 0) {
+            console.log('no tasks to edit and change completed');
+            return done(null, false);
+        }
+        // Change completed of a task and Edit descriptions
+        const NOT_FOUND = -1;
+        updatingTasks.forEach((updatingTask, i) => {
+            // if taskArr do not contains paramsTasks,
+            const indexOfTask = taskArr.findIndex(task => {
+                return task.id === updatingTask.id;
+            });
+            if (indexOfTask !== NOT_FOUND) {
+                // set description into the index
+                taskArr[indexOfTask].description = updatingTask.description;
+            } else {
+                console.log('wrong task id of updatingTasks - ', updatingTask.id);
+            }
+
+            if (i === updatingTasks.length - 1) {
+                // Change completed
+                const indexOfChangingCompletedId = taskArr.findIndex(task => {
+                    return task.id === taskId;
+                });
+                taskArr[indexOfChangingCompletedId].completed = !taskArr[indexOfChangingCompletedId].completed;
+
+                taskhead.save((err, updated) => {
+                    if (err) return done(err);
+                    if (!updated) {
+                        return done(null, false);
+                    }
+                    console.log(updated.members[updatingMemberIndex].tasks);
+                    return done(null, updated.members[updatingMemberIndex].tasks);
+                });
+            }
+        });
+    });
+};
+
+const _changeOrders = (memberId, updatingTasks, done) => {
+    TaskHead.findOne({'members.id': memberId}, (err, taskhead) => {
+        if (err) {
+            return done(err);
+        }
+        if (!taskhead) {
+            console.log('There is no taskhead of ', memberId);
+            return done(null, false, 204);
+        }
+
+        let updatingMemberIndex = taskhead.members.findIndex(member => {
+            return member.id === memberId;
+        });
+        const taskArr = taskhead.members[updatingMemberIndex].tasks;
+
+        if (taskArr.length === 0 || updatingTasks.length === 0) {
+            console.log('no tasks to edit descriptions and orders');
+            return done(null, false);
+        }
+        // Change completed of a task and Edit descriptions
+        const NOT_FOUND = -1;
+        updatingTasks.forEach((updatingTask, i) => {
+            // if taskArr do not contains paramsTasks,
+            const indexOfTask = taskArr.findIndex(task => {
+                return task.id === updatingTask.id;
+            });
+            if (indexOfTask !== NOT_FOUND) {
+                // set description, order the task into the index
+                taskArr[indexOfTask].description = updatingTask.description;
+                taskArr[indexOfTask].order = updatingTask.order;
+            } else {
+                console.log('wrong task id of updatingTasks - ', updatingTask.id);
+            }
+
+            if (i === updatingTasks.length - 1) {
+                taskhead.save((err, updated) => {
+                    if (err) return done(err);
+                    if (!updated) {
+                        return done(null, false);
+                    }
+                    console.log(updated.members[updatingMemberIndex].tasks);
+                    return done(null, updated.members[updatingMemberIndex].tasks);
+                });
             }
         });
     });
@@ -282,6 +383,8 @@ module.exports = {
     updateOfMember: _updateOfMember,
     addTask: _addTask,
     deleteTask: _deleteTask,
+    changeCompleted: _changedCompleted,
+    changeOrders: _changeOrders,
     readByMemberId: _readByMemberId,
     deleteAll: _deleteAll
 }
