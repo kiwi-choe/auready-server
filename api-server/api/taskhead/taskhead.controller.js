@@ -74,8 +74,11 @@ const SendNotifications = (fromUser, updatedTaskHeads) => {
 
     updatedTaskHeads.forEach((updatedTaskHead, i) => {
         const toUserIds = [];
+        // except fromUser id
         for (let member of updatedTaskHead.members) {
-            toUserIds.push(member.userId);
+            if(member.userId !== fromUser.id) {
+                toUserIds.push(member.userId);
+            }
         }
         const taskHeadTitle = updatedTaskHead.title;
         NotificationController.exitTaskHead(toUserIds, fromUser, taskHeadTitle, (success) => {
