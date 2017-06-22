@@ -98,11 +98,24 @@ const _deleteAll = done => {
     });
 };
 
+const _findByUserId = (userId, done) =>{
+    Token.findOne({userId: userId}, (err, token) =>{
+        if(err) {
+            return done(err);
+        }
+        if(!token) {
+            return done(null, false);
+        }
+        return done(null, token);
+    });
+};
+
 // create the model for users and expose it to our app
 module.exports = {
     create: _create,
     update: _update,
     validate: _validate,
     delete: _delete,
-    deleteAll: _deleteAll
+    deleteAll: _deleteAll,
+    findByUserId: _findByUserId
 }

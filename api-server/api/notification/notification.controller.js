@@ -1,4 +1,5 @@
 const User = require(__appbase_dirname + '/api-server/api/user/user.controller');
+const TokenController = require(__appbase_dirname + '/models/token.controller');
 
 const FCM = require('fcm-push');
 const fcmServerKey = require(__appbase_dirname + '/predefine').fcmServerKey.key;
@@ -39,54 +40,81 @@ exports.auready = (req, res) => {
     });
 };
 
-const _sendNotification = (type, toUserId, fromUser, done) => {
-// 1. Get an instanceId of toUser
-    User.getInstanceIdByUserId(toUserId, (err, instanceId) => {
-        if (err) {
-            console.log('get instanceId is failed');
+const _checkToUserIsLoggedIn = (toUserId, done) => {
+    TokenController.findByUserId(toUserId, (err, token) => {
+        if(err) {
+            console.log('toUser is not logged in user');
             return done(false);
         }
-
-        if (!instanceId) {
-            console.log('\ncouldnt find instanceId');
+        if(!token) {
+            console.log('toUser is not logged in user');
             return done(false);
         }
-
-        let noti_body;
-        let noti_title;
-        if (type === TYPES.friend_request) {
-            noti_title = '친구 요청';
-            noti_body = fromUser.name + ' 님이 친구하고 싶답니다.';
-        } else if (type === TYPES.exit_group_taskhead) {
-            noti_title = 'Group TaskHead';
-            noti_body = '';
-        } else if (type === TYPES.auready) {
-            noti_title = 'A U Ready';
-            noti_body = 'Move- Move-';
-        }
-
-        let message = {
-            to: instanceId,
-            data: {
-                notiType: type,
-                fromUserId: fromUser.id,
-                fromUserName: fromUser.name,
-                notiTitle: noti_title,
-                notiBody: noti_body
-            }
-        };
-
-        console.log('\nmessage - ', message);
-
-        fcm.send(message, (err, res) => {
-            if (err) {
-                console.log('something has gone wrong!, err- ', err);
+        // Validate the accessToken
+        TokenController.validate(token, (err, token) => {
+            if(err) {
+                console.log('accessToken validate returns err');
                 return done(false);
             }
-            console.log('Successfully sent with response:', res);
             return done(true);
         });
+    });
+};
 
+const _sendNotification = (type, toUserId, fromUser, done) => {
+    // Check toUserId is logged in
+    _checkToUserIsLoggedIn(toUserId, (isOkToSendNotification) => {
+        if(!isOkToSendNotification) {
+            return done(false);
+        }
+        // 1. Get an instanceId of toUser
+        User.getInstanceIdByUserId(toUserId, (err, instanceId) => {
+            if (err) {
+                console.log('get instanceId is failed');
+                return done(false);
+            }
+
+            if (!instanceId) {
+                console.log('\ncouldn\'t find instanceId');
+                return done(false);
+            }
+
+            let noti_body;
+            let noti_title;
+            if (type === TYPES.friend_request) {
+                noti_title = '친구 요청';
+                noti_body = fromUser.name + ' 님이 친구하고 싶답니다.';
+            } else if (type === TYPES.exit_group_taskhead) {
+                noti_title = 'Group TaskHead';
+                noti_body = '';
+            } else if (type === TYPES.auready) {
+                noti_title = 'A U Ready';
+                noti_body = 'Move- Move-';
+            }
+
+            let message = {
+                to: instanceId,
+                data: {
+                    notiType: type,
+                    fromUserId: fromUser.id,
+                    fromUserName: fromUser.name,
+                    notiTitle: noti_title,
+                    notiBody: noti_body
+                }
+            };
+
+            console.log('\nmessage - ', message);
+
+            fcm.send(message, (err, res) => {
+                if (err) {
+                    console.log('something has gone wrong!, err- ', err);
+                    return done(false);
+                }
+                console.log('Successfully sent with response:', res);
+                return done(true);
+            });
+
+        });
     });
 };
 
